@@ -85,8 +85,12 @@ exe as untrusted. `install-gui.ps1` copies the binary to
 a Start Menu shortcut:
 
 ```powershell
-.\install-gui.ps1 -Build
+powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
 ```
+
+(The `-ExecutionPolicy Bypass` is only needed when the machine's policy blocks
+unsigned scripts; `install-gui.ps1` is a plain text file you can also read and
+run line by line.)
 
 | feature | notes |
 | --- | --- |
@@ -161,10 +165,27 @@ pitch curves) and compares both implementations (`--repeat 3`, medians):
 | json → mid | 17.04 s | 0.096 s | **178×** | byte-identical |
 | json → ufdata | 4.73 s | 0.057 s | **83×** | byte-identical |
 
+Real projects hit a different code path: the `.acep` writer smooths a 119-tap
+kernel over the whole song for every vocal pattern, so `ustx → acep` is the
+slowest conversion of both implementations. Measured on a 4 minute OpenUtau
+project (579 notes, 21 patterns, `--repeat 3`, medians):
+
+| conversion | Python | Rust | speed-up | output |
+| --- | --- | --- | --- | --- |
+| ustx → acep | 24.66 s | 0.147 s | **168×** | identical apart from the random track colours |
+
 ```powershell
 cargo build --release
 & $py scripts\bench.py --repeat 5
+# a real OpenUtau song (any .ustx file works, --input accepts a path)
+& $py scripts\bench.py --pairs ustx:acep --input D:\path\to\song.ustx --repeat 3
 ```
+
+Rust used to be as slow as Python on this file: `math.sumprod` was ported as a
+per-product Shewchuk expansion (≈ 119 products × growing partial list per sample
+instead of CPython's constant-size triple-length accumulator), and every pattern
+re-convolved the timeline from second 0. See `acep/music_math.rs` and
+`acep/base_pitch_curve.rs`.
 
 ## Known differences
 

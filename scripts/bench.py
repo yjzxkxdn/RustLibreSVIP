@@ -12,7 +12,9 @@ bytes.
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
+import json
 import os
 import pathlib
 import statistics
@@ -68,6 +70,44 @@ def file_digest(path: pathlib.Path) -> str:
     except UnicodeDecodeError:
         pass
     return hashlib.sha256(data).hexdigest()
+
+
+def acep_project(path: pathlib.Path) -> dict | None:
+    """Decode the project payload of an `.acep` file, or None if unreadable."""
+    try:
+        import zstandard
+    except ImportError:
+        return None
+    try:
+        outer = json.loads(path.read_text("utf-8"))
+        raw = zstandard.ZstdDecompressor().decompress(base64.b64decode(outer["content"]))
+        return json.loads(raw)
+    except (ValueError, KeyError, zstandard.ZstdError):
+        return None
+
+
+def strip_random_colors(value):
+    """ACE Studio picks a random track colour, in Python as well as in Rust."""
+    if isinstance(value, dict):
+        return {
+            key: (
+                "<random>"
+                if key in {"color", "colorIndex", "textColor", "headerColor"}
+                else strip_random_colors(item)
+            )
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [strip_random_colors(item) for item in value]
+    return value
+
+
+def acep_digest(path: pathlib.Path) -> str | None:
+    project = acep_project(path)
+    if project is None:
+        return None
+    text = json.dumps(strip_random_colors(project), sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def main() -> int:
@@ -139,6 +179,10 @@ def main() -> int:
             speedup = py_time / rs_time if rs_time else float("inf")
             size = py_out.stat().st_size if py_out.exists() else 0
             marker = "identical" if raw_same else ("identical(uuid)" if same else "DIFFERENT")
+            if not same and target_ext == "acep":
+                py_digest = acep_digest(py_out)
+                if py_digest is not None and py_digest == acep_digest(rs_out):
+                    marker = "identical(colour)"
             print(
                 f"{source_ext}->{target_ext:<9}{py_time:>12.3f}{rs_time:>11.3f}"
                 f"{speedup:>8.2f}x{size:>10}  {marker}"

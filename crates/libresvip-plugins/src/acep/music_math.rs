@@ -101,15 +101,67 @@ pub fn exact_sum(values: impl IntoIterator<Item = f64>) -> f64 {
     sum.value()
 }
 
-/// `math.sumprod(left, right)`: the exact sum of the exact products.
-pub fn exact_sumprod(left: &[f64], right: &[f64]) -> f64 {
-    let mut sum = ExactSum::new();
-    for (x, y) in left.iter().zip(right.iter()) {
-        let product = x * y;
-        sum.add(product);
-        sum.add(x.mul_add(*y, -product));
+/// `DoubleLength` / `TripleLength` and their error-free transformations, from
+/// CPython's `Modules/mathmodule.c` (Ogita/Rump/Oishi).
+#[derive(Clone, Copy)]
+struct DoubleLength {
+    hi: f64,
+    lo: f64,
+}
+
+/// `dl_sum` — Algorithm 3.1, `a + b` as a double-length number.
+fn dl_sum(a: f64, b: f64) -> DoubleLength {
+    let x = a + b;
+    let z = x - a;
+    let y = (a - (x - z)) + (b - z);
+    DoubleLength { hi: x, lo: y }
+}
+
+/// `dl_mul` — Algorithm 3.5, `x * y` as a double-length number.
+fn dl_mul(x: f64, y: f64) -> DoubleLength {
+    let z = x * y;
+    let zz = x.mul_add(y, -z);
+    DoubleLength { hi: z, lo: zz }
+}
+
+#[derive(Clone, Copy, Default)]
+struct TripleLength {
+    hi: f64,
+    lo: f64,
+    tiny: f64,
+}
+
+/// `tl_fma` — Algorithm 5.10 with SumKVert for K=3, i.e. `total + x * y`.
+fn tl_fma(x: f64, y: f64, total: TripleLength) -> TripleLength {
+    let pr = dl_mul(x, y);
+    let sm = dl_sum(total.hi, pr.hi);
+    let r1 = dl_sum(total.lo, pr.lo);
+    let r2 = dl_sum(r1.hi, sm.lo);
+    TripleLength {
+        hi: sm.hi,
+        lo: r2.hi,
+        tiny: total.tiny + r1.lo + r2.lo,
     }
-    sum.value()
+}
+
+/// `tl_to_d` — the correctly rounded double of a triple-length number.
+fn tl_to_d(total: TripleLength) -> f64 {
+    let last = dl_sum(total.lo, total.hi);
+    total.tiny + last.lo + last.hi
+}
+
+/// `math.sumprod(left, right)`.
+///
+/// CPython 3.12 accumulates the products in a [`TripleLength`] (≈ 150 bits) and
+/// rounds once at the end, so this is both the reference behaviour and O(n) in
+/// constant space — unlike [`exact_sum`], whose Shewchuk expansion costs
+/// O(n · partials) per call.
+pub fn exact_sumprod(left: &[f64], right: &[f64]) -> f64 {
+    let mut total = TripleLength::default();
+    for (x, y) in left.iter().zip(right.iter()) {
+        total = tl_fma(*x, *y, total);
+    }
+    tl_to_d(total)
 }
 
 /// `linear_interpolation(x, start, end)`.
@@ -211,5 +263,37 @@ impl HermiteInterpolator {
             }
         }
         ys
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Expected values were produced by `math.sumprod` (CPython 3.12).
+    #[test]
+    fn sumprod_matches_cpython() {
+        let cases: [(&[f64], &[f64], f64); 4] = [
+            (&[1.0, 1e16, -1e16, 1.0], &[1.0, 1.0, 1.0, 1.0], 2.0),
+            (&[0.1, 0.2, 0.3], &[1e-3, 2e-3, 3e-3], 0.0014),
+            (
+                &[1.0 / 3.0, 1.0 / 7.0, 1.0 / 9.0],
+                &[3.14159, 2.71828, 1.41421],
+                1.5926568253968252,
+            ),
+            (&[0.5; 119], &[1.0 / 119.0; 119], 0.5),
+        ];
+        for (left, right, expected) in cases {
+            assert_eq!(exact_sumprod(left, right).to_bits(), expected.to_bits());
+        }
+    }
+
+    /// The compensated sums are only useful if they beat a naive `fold`.
+    #[test]
+    fn compensated_sums_beat_naive_summation() {
+        let values = [1.0f64, 1e100, 1.0, -1e100];
+        let naive: f64 = values.iter().sum();
+        assert_eq!(naive, 0.0);
+        assert_eq!(exact_sum(values.iter().copied()), 2.0);
     }
 }

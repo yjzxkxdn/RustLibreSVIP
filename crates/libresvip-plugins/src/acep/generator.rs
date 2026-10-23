@@ -415,8 +415,15 @@ impl AceGenerator {
     fn generate_pitch_curves(&self, curve: &ParamCurve) -> Result<AcepParamCurveList> {
         let mut ace_curves = AcepParamCurveList::new();
         let (left_bound, right_bound) = self.bounds()?;
-        let base_pitch =
-            BasePitchCurve::new(&self.ace_note_list, &self.synchronizer, self.pattern_start);
+        let base_pitch = BasePitchCurve::new(
+            &self.ace_note_list,
+            &self.synchronizer,
+            self.pattern_start,
+            // `build_curve` never queries a tick below `left_bound`; one bar of
+            // slack absorbs rounding in `tick_step`.
+            self.synchronizer
+                .get_actual_secs_from_ticks((left_bound - 480).max(0)),
+        );
         let segments = self.segment_groups(curve, left_bound, right_bound);
         for segment in segments {
             if let Some((mut ace_curve, mut tick, tick_step, curve_end)) =

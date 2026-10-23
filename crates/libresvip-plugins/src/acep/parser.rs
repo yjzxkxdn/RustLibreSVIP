@@ -469,7 +469,7 @@ impl AceParser {
         let mut curve = ParamCurve::default();
         curve.points.push(Point::start_point());
         if !ace_curves.0.is_empty() {
-            let base_pitch = BasePitchCurve::new(ace_note_list, &self.synchronizer, 0);
+            let base_pitch = BasePitchCurve::new(ace_note_list, &self.synchronizer, 0, 0.0);
             for ace_curve in ace_curves.0.iter() {
                 let mut pos = ace_curve.offset;
                 curve
