@@ -84,7 +84,6 @@ fn wrap(text: &str, width: usize) -> Vec<String> {
 /// `uuid_str()` — a random v4 UUID.
 pub fn uuid_str() -> String {
     use std::cell::Cell;
-    use std::time::{SystemTime, UNIX_EPOCH};
 
     thread_local! {
         static STATE: Cell<u64> = Cell::new(0);
@@ -92,11 +91,9 @@ pub fn uuid_str() -> String {
     let mut seed = STATE.with(|state| {
         let mut value = state.get();
         if value == 0 {
-            let nanos = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .map(|duration| duration.as_nanos() as u64)
-                .unwrap_or(0x9E37_79B9_7F4A_7C15);
-            value = nanos ^ (std::process::id() as u64).wrapping_mul(0x2545_F491_4F6C_DD1D);
+            let nanos = crate::platform::unix_nanos() as u64;
+            value = nanos
+                ^ (u64::from(crate::platform::process_id())).wrapping_mul(0x2545_F491_4F6C_DD1D);
             if value == 0 {
                 value = 0x9E37_79B9_7F4A_7C15;
             }

@@ -98,7 +98,7 @@ impl SvsPlugin for SvipPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let stream = msnrbf::reader::read(&bytes)?;
         let model = msnrbf::reader::build_app_model(&stream)?;
         let input_options = parser::InputOptions {
@@ -140,7 +140,7 @@ impl SvsPlugin for SvipPlugin {
         let model = generator::BinarySvipGenerator::new(output_options)
             .generate_project(project)?;
         let bytes = msnrbf::writer::write(&file_version, &model)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

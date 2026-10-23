@@ -109,7 +109,7 @@ impl SvsPlugin for UstxPlugin {
             breath_lyrics: options.str("breath_lyrics", "Asp AP"),
             silence_lyrics: options.str("silence_lyrics", "R SP"),
         };
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = to_unicode(&bytes);
         let mut ustx_project: model::UstxProject = serde_yaml::from_str(&text)?;
         parser::resolve_audio_paths(&mut ustx_project, path);
@@ -123,7 +123,7 @@ impl SvsPlugin for UstxPlugin {
         let ustx_project = generator::UstxGenerator::new(&output_options)
             .generate_project(project)?;
         let text = serde_yaml::to_string(&ustx_project)?;
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

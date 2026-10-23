@@ -85,7 +85,7 @@ impl SvsPlugin for VsqPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let breath = match options.str("breath", "ignore").trim() {
             "keep" => parser::BreathOption::Keep,
             "ignore" => parser::BreathOption::Ignore,
@@ -113,7 +113,7 @@ impl SvsPlugin for VsqPlugin {
             lyric_encoding: options.str("lyric_encoding", "SHIFT_JIS"),
         };
         let bytes = generator::generate_project(project, &output_options)?;
-        std::fs::write(path, &bytes).at_path(path)?;
+        libresvip_core::io::write(path, &bytes).at_path(path)?;
         Ok(())
     }
 }

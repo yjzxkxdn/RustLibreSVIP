@@ -1,7 +1,6 @@
 //! Port of `libresvip.plugins.ace.ace_generator`.
 
 use std::path::Path;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use libresvip_core::core::constants::{DEFAULT_BPM, TICKS_IN_BEAT};
 use libresvip_core::core::time_sync::TimeSynchronizer;
@@ -56,10 +55,7 @@ pub fn generate_project(project: &Project, options: &Options) -> AceProject {
         })
         .unwrap_or(0.0);
     let first_signature = project.time_signature_list.first();
-    let song_id = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|duration| duration.as_millis() as i64)
-        .unwrap_or(0);
+    let song_id = (libresvip_core::platform::unix_nanos() / 1_000_000) as i64;
     AceProject {
         version: 2,
         debug_info: Some(AceDebugInfo::default()),
@@ -191,7 +187,7 @@ fn generate_bgm_info(
         let duration = audio_track_info(&track.audio_file_path, false)
             .map(|info| info.duration)
             .unwrap_or(0.0);
-        let md5 = std::fs::read(path).map(|contents| md5_hex(&contents)).unwrap_or_default();
+        let md5 = libresvip_core::io::read(path).map(|contents| md5_hex(&contents)).unwrap_or_default();
         bgm_tracks.push(AceBgmTrack {
             bpm: None,
             end_time: start_time + duration,

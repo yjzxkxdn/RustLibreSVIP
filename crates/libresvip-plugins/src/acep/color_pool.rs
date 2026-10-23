@@ -28,13 +28,10 @@ pub fn get_color(index: i64) -> String {
 pub fn random_color_index() -> i64 {
     use std::collections::hash_map::RandomState;
     use std::hash::{BuildHasher, Hasher};
-    use std::time::{SystemTime, UNIX_EPOCH};
 
     let mut hasher = RandomState::new().build_hasher();
-    if let Ok(duration) = SystemTime::now().duration_since(UNIX_EPOCH) {
-        hasher.write_u128(duration.as_nanos());
-    }
-    hasher.write_u32(std::process::id());
+    hasher.write_u128(libresvip_core::platform::unix_nanos());
+    hasher.write_u32(libresvip_core::platform::process_id());
     (hasher.finish() % count_color() as u64) as i64
 }
 

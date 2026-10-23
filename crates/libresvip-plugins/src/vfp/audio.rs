@@ -17,7 +17,7 @@ pub struct AudioTrackInfo {
 }
 
 pub fn audio_track_info(path: &Path) -> Option<AudioTrackInfo> {
-    let bytes = match std::fs::read(path) {
+    let bytes = match libresvip_core::io::read(path) {
         Ok(bytes) => bytes,
         Err(_) => {
             show_warning(format!(

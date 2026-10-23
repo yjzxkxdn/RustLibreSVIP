@@ -45,7 +45,7 @@ impl SvsPlugin for VogPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let chart = model::read_chart_json(&bytes)?;
         let vogen_project: model::VogenProject = serde_json::from_slice(&chart)?;
         parser::VogenParser::new(options).parse_project(&vogen_project)
@@ -64,7 +64,7 @@ impl SvsPlugin for VogPlugin {
         let vogen_project = generator::VogenGenerator::new(options).generate_project(&project)?;
         let chart = model::to_json(&vogen_project)?;
         let archive = model::write_archive(chart.as_bytes());
-        std::fs::write(path, archive).at_path(path)?;
+        libresvip_core::io::write(path, archive).at_path(path)?;
         Ok(())
     }
 }

@@ -118,7 +118,7 @@ impl SvsPlugin for VprPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let sequence = read_zip_entry(&bytes, "Project/sequence.json")?;
         let vpr_project: model::VocaloidProject = serde_json::from_slice(&sequence)?;
         if options.bool("extract_audio", false) {
@@ -138,7 +138,7 @@ impl SvsPlugin for VprPlugin {
         const FILE_EXTERNAL_ATTR: u32 = 0o600u32 << 16;
         let mut audio_blobs: Vec<(String, Vec<u8>)> = Vec::new();
         for (wav_name, wav_path) in &generator.wav_paths {
-            let data = std::fs::read(wav_path).at_path(wav_path)?;
+            let data = libresvip_core::io::read(wav_path).at_path(wav_path)?;
             audio_blobs.push((format!("Project/Audio/{wav_name}"), data));
         }
 
@@ -160,7 +160,7 @@ impl SvsPlugin for VprPlugin {
             });
         }
         let archive = zip::write_zip(&entries);
-        std::fs::write(path, archive).at_path(path)?;
+        libresvip_core::io::write(path, archive).at_path(path)?;
         Ok(())
     }
 }
@@ -204,7 +204,7 @@ fn extract_audio(path: &Path, bytes: &[u8], vpr_project: &model::VocaloidProject
             file.read_to_end(&mut data).map_err(|error| {
                 LibreSvipError::msg(format!("cannot read archive entry {archive_path}: {error}"))
             })?;
-            std::fs::write(&destination, data).at_path(&destination)?;
+            libresvip_core::io::write(&destination, data).at_path(&destination)?;
         }
     }
     Ok(())

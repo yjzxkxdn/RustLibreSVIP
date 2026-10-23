@@ -317,5 +317,5 @@ pub fn dump_model(model: &DspxModel) -> Vec<u8> {
     let json = serde_json::to_string(model).unwrap_or_else(|_| String::from("{}"));
     // `ZSTD_compress` (one-shot), like Python's `zstd.compress`: the frame
     // records the decompressed size in its header.
-    zstd::bulk::compress(json.as_bytes(), 3).unwrap_or_else(|_| json.into_bytes())
+    libresvip_core::compression::compress(json.as_bytes(), 3).unwrap_or_else(|_| json.into_bytes())
 }

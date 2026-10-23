@@ -51,7 +51,7 @@ impl SvsPlugin for VxBetaPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let vx_file = binary::VxFile::parse(&bytes)?;
         let input_options = parser::InputOptions {
             import_pitch: options.bool("import_pitch", true),
@@ -66,7 +66,7 @@ impl SvsPlugin for VxBetaPlugin {
         };
         let vx_file = generator::generate_project(project, &output_options)?;
         let bytes = vx_file.build()?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

@@ -18,5 +18,16 @@ regex = { workspace = true }
 encoding_rs = { workspace = true }
 base64 = { workspace = true }
 
+# Native builds link the reference C implementation (identical output to the
+# Python build); wasm32 uses a pure-Rust decoder plus a stored-block frame
+# writer instead, because there is no C toolchain for that target here.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+zstd = { version = "0.13", default-features = false }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# `std` (default) provides `io::Read` for `StreamingDecoder`, `hash` verifies
+# frame checksums.
+ruzstd = "0.8"
+
 [dev-dependencies]
 serde_json = { workspace = true }

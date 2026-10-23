@@ -102,7 +102,7 @@ impl<'a> PocketSingerGenerator<'a> {
             return None;
         }
         let track_info = audio_track_info(&instrumental_track.audio_file_path, false)?;
-        let audio_content = std::fs::read(audio_path).ok()?;
+        let audio_content = libresvip_core::io::read(audio_path).ok()?;
         let audio_name = audio_path
             .file_name()
             .map(|name| name.to_string_lossy().into_owned())

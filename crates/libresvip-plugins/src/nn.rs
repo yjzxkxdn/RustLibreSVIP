@@ -50,7 +50,7 @@ impl SvsPlugin for NnPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = to_unicode(&bytes);
         let nn_project = parser::parse_text(&text)?;
         parser::NiaoNiaoParser::new(options).parse_project(&nn_project)
@@ -68,7 +68,7 @@ impl SvsPlugin for NnPlugin {
         };
         let nn_project = generator::NiaoniaoGenerator::new(options).generate_project(&project)?;
         let text = model::render(&nn_project);
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

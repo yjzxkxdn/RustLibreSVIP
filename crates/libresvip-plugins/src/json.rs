@@ -37,7 +37,7 @@ impl SvsPlugin for JsonPlugin {
     }
 
     fn load(&self, path: &Path, _options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = String::from_utf8_lossy(&bytes);
         Ok(serde_json::from_str(&text)?)
     }
@@ -49,7 +49,7 @@ impl SvsPlugin for JsonPlugin {
         } else {
             serde_json::to_string(project)?
         };
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

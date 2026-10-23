@@ -411,7 +411,7 @@ impl SvsPlugin for AssPlugin {
         let text = generate_project(project, options)?;
         let encoding = options.str("encoding", "utf-8");
         let bytes = encode_text(&text, &encoding)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

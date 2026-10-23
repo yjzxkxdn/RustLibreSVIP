@@ -95,7 +95,7 @@ fn parse_wav(data: &[u8]) -> Option<SoundFileInfo> {
 /// Returns `None` for missing/unrecognised files; a missing file additionally
 /// raises the same warning as the Python implementation.
 pub fn audio_track_info(path: &str, only_wav: bool) -> Option<SoundFileInfo> {
-    let data = match std::fs::read(path) {
+    let data = match libresvip_core::io::read(path) {
         Ok(data) => data,
         Err(_) => {
             show_warning(format!(

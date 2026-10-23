@@ -49,7 +49,7 @@ impl SvsPlugin for MusicXmlPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let input_options = options::InputOptions::from_options(options);
         parser::parse_project(
             &bytes,
@@ -62,7 +62,7 @@ impl SvsPlugin for MusicXmlPlugin {
         let generator = generator::MusicXmlGenerator::new(options);
         let score = generator.generate_project(project);
         let text = xml::render_document(&score);
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

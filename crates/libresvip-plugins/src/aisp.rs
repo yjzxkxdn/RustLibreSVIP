@@ -41,7 +41,7 @@ impl SvsPlugin for AiSingersPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let content = std::str::from_utf8(&bytes)
             .map_err(|error| LibreSvipError::Validation(format!("invalid UTF-8: {error}")))?;
         let (head, body) = match content.split_once('\n') {
@@ -55,7 +55,7 @@ impl SvsPlugin for AiSingersPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let content = generator::generate_project(project, options)?;
-        std::fs::write(path, content.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, content.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

@@ -88,7 +88,7 @@ impl SvsPlugin for DiffSingerPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = std::str::from_utf8(&bytes)
             .map_err(|error| LibreSvipError::Parse(format!("invalid utf-8: {error}")))?;
         let ds_project = model::parse_project(text)?;
@@ -147,7 +147,7 @@ impl SvsPlugin for DiffSingerPlugin {
         }
 
         let text = model::dump_project(&series, Some(indent));
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

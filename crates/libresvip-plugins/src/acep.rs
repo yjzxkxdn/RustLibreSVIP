@@ -53,7 +53,7 @@ impl SvsPlugin for AcepPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let content = if path
             .extension()
             .map(|extension| extension.eq_ignore_ascii_case("acet"))
@@ -84,7 +84,7 @@ impl SvsPlugin for AcepPlugin {
         let options = OutputOptions::from_options(options);
         let acep_project = AceGenerator::new(options.clone()).generate_project(project)?;
         let bytes = io::compress_project(&acep_project, options.serialization)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }
@@ -166,9 +166,9 @@ mod differential {
             return;
         }
         let output = root.join("rs");
-        std::fs::create_dir_all(&output).unwrap();
+        libresvip_core::io::create_dir_all(&output).unwrap();
         for entry in std::fs::read_dir(&output).unwrap() {
-            let _ = std::fs::remove_file(entry.unwrap().path());
+            let _ = libresvip_core::io::remove_file(entry.unwrap().path());
         }
         for entry in std::fs::read_dir(root.join("cases")).unwrap() {
             let path = entry.unwrap().path();
@@ -176,26 +176,26 @@ mod differential {
             for label in LABELS {
                 let target = output.join(format!("{stem}.load.{label}.json"));
                 match PLUGIN.load(&path, &case_options(label)) {
-                    Ok(project) => std::fs::write(
+                    Ok(project) => libresvip_core::io::write(
                         target,
                         serde_json::to_vec(&project).unwrap(),
                     )
                     .unwrap(),
-                    Err(_) => std::fs::write(target.with_extension("err"), "ERR").unwrap(),
+                    Err(_) => libresvip_core::io::write(target.with_extension("err"), "ERR").unwrap(),
                 }
             }
         }
         for entry in std::fs::read_dir(root.join("dumps")).unwrap() {
             let path = entry.unwrap().path();
             let stem = path.file_stem().unwrap().to_string_lossy().to_string();
-            let Ok(bytes) = std::fs::read(&path) else {
+            let Ok(bytes) = libresvip_core::io::read(&path) else {
                 continue;
             };
             let project: Project = serde_json::from_slice(&bytes).unwrap();
             for label in LABELS {
                 let target = output.join(format!("{stem}.dump.{label}.acep"));
                 if PLUGIN.dump(&target, &project, &case_options(label)).is_err() {
-                    std::fs::write(target, "ERR").unwrap();
+                    libresvip_core::io::write(target, "ERR").unwrap();
                 }
             }
         }

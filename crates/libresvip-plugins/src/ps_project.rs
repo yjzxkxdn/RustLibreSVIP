@@ -85,7 +85,7 @@ impl SvsPlugin for PocketSingerPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let content = std::fs::read(path).at_path(path)?;
+        let content = libresvip_core::io::read(path).at_path(path)?;
         let entries = zip_aes::read_archive(&content, POCKET_SINGER_PASSWORD)?;
         let config = find_entry(&entries, "config.json")
             .ok_or_else(|| LibreSvipError::Validation("missing config.json".to_owned()))?;
@@ -100,7 +100,7 @@ impl SvsPlugin for PocketSingerPlugin {
                 if !target.exists() {
                     let archive_name = format!("{}.{}", bgm_info.file_name, bgm_info.file_type);
                     if let Some(audio_entry) = find_entry(&entries, &archive_name) {
-                        std::fs::write(&target, &audio_entry.data).at_path(&target)?;
+                        libresvip_core::io::write(&target, &audio_entry.data).at_path(&target)?;
                     }
                 }
             }
@@ -133,7 +133,7 @@ impl SvsPlugin for PocketSingerPlugin {
             (metadata.ace_file_name.clone(), generator.buffer.clone()),
         ];
         for (audio_name, audio_path) in &generator.audio_paths {
-            let data = std::fs::read(audio_path).at_path(audio_path)?;
+            let data = libresvip_core::io::read(audio_path).at_path(audio_path)?;
             entries.push((audio_name.clone(), data));
         }
         let entry_refs: Vec<(&str, &[u8])> = entries
@@ -141,7 +141,7 @@ impl SvsPlugin for PocketSingerPlugin {
             .map(|(name, data)| (name.as_str(), data.as_slice()))
             .collect();
         let buffer = zip_aes::write_archive(&entry_refs, POCKET_SINGER_PASSWORD)?;
-        std::fs::write(path, buffer).at_path(path)?;
+        libresvip_core::io::write(path, buffer).at_path(path)?;
         Ok(())
     }
 }

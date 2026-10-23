@@ -54,7 +54,7 @@ impl SvsPlugin for VfpPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let project_json = read_zip_entry(&bytes, "project.json")?;
         let vox_project: model::VoxProject = serde_json::from_slice(&project_json)?;
         if options.bool("extract_audio", false) {
@@ -79,7 +79,7 @@ impl SvsPlugin for VfpPlugin {
 
         let mut audio_blobs: Vec<(&String, Vec<u8>)> = Vec::new();
         for (name, audio_path) in &generator.audio_paths {
-            let bytes = std::fs::read(audio_path).at_path(audio_path)?;
+            let bytes = libresvip_core::io::read(audio_path).at_path(audio_path)?;
             audio_blobs.push((name, bytes));
         }
 
@@ -112,7 +112,7 @@ impl SvsPlugin for VfpPlugin {
             });
         }
         let archive = zip::write_zip(&entries);
-        std::fs::write(path, archive).at_path(path)?;
+        libresvip_core::io::write(path, archive).at_path(path)?;
         Ok(())
     }
 }
@@ -179,7 +179,7 @@ fn extract_audio_resources(
                 continue;
             }
             let resource = read_zip_entry(bytes, &format!("resources/{key}"))?;
-            std::fs::write(&target, resource).at_path(&target)?;
+            libresvip_core::io::write(&target, resource).at_path(&target)?;
         }
     }
     Ok(())

@@ -2,7 +2,6 @@
 
 use std::collections::hash_map::RandomState;
 use std::hash::{BuildHasher, Hash, Hasher};
-use std::time::UNIX_EPOCH;
 
 /// Python's `round(value)` for a single argument: round half to even.
 #[inline]
@@ -16,12 +15,8 @@ pub fn py_round(value: f64) -> i64 {
 fn entropy_u64() -> u64 {
     let state = RandomState::new();
     let mut hasher = state.build_hasher();
-    UNIX_EPOCH
-        .elapsed()
-        .map(|elapsed| elapsed.as_nanos())
-        .unwrap_or(0)
-        .hash(&mut hasher);
-    std::process::id().hash(&mut hasher);
+    libresvip_core::platform::unix_nanos().hash(&mut hasher);
+    libresvip_core::platform::process_id().hash(&mut hasher);
     hasher.finish()
 }
 

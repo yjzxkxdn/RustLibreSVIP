@@ -91,9 +91,9 @@ impl SvsPlugin for DspxPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let raw = if bytes.starts_with(&ZSTD_MAGIC) {
-            zstd::decode_all(&bytes[..])?
+            libresvip_core::compression::decompress(&bytes[..])?
         } else {
             bytes
         };
@@ -119,7 +119,7 @@ impl SvsPlugin for DspxPlugin {
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let model = generator::generate_project(project, options);
         let data = generator::dump_model(&model);
-        std::fs::write(path, data).at_path(path)?;
+        libresvip_core::io::write(path, data).at_path(path)?;
         Ok(())
     }
 }

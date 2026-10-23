@@ -139,7 +139,7 @@ impl SvsPlugin for SrtPlugin {
         let options = OutputOptions::from_options(options);
         let text = generate_project(project, &options)?;
         let bytes = encode_strict(&text, &options.encoding)?;
-        std::fs::write(path, &bytes).at_path(path)?;
+        libresvip_core::io::write(path, &bytes).at_path(path)?;
         Ok(())
     }
 }

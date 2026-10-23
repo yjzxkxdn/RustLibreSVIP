@@ -65,7 +65,7 @@ impl SvsPlugin for PpsfPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let content = std::fs::read(path).at_path(path)?;
+        let content = libresvip_core::io::read(path).at_path(path)?;
         if content.starts_with(b"PK") {
             let text = read_ppsf_json(&content)?;
             let ppsf_project = model::PpsfProject::from_json(&text)?;
@@ -84,7 +84,7 @@ impl SvsPlugin for PpsfPlugin {
         let ppsf_project = generator::PiaproStudioGenerator::new(options).generate_project(project)?;
         let text = ppsf_project.to_json()?;
         let buffer = write_stored_zip(PPSF_JSON_ENTRY, text.as_bytes());
-        std::fs::write(path, buffer).at_path(path)?;
+        libresvip_core::io::write(path, buffer).at_path(path)?;
         Ok(())
     }
 }

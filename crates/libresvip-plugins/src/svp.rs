@@ -47,7 +47,7 @@ impl SvsPlugin for SvpPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let bytes = if bytes.last() == Some(&0) {
             &bytes[..bytes.len() - 1]
         } else {
@@ -77,7 +77,7 @@ impl SvsPlugin for SvpPlugin {
         if version_compatibility != VERSION_ABOVE_2_0_0 {
             data.push(0);
         }
-        std::fs::write(path, data).at_path(path)?;
+        libresvip_core::io::write(path, data).at_path(path)?;
         Ok(())
     }
 }

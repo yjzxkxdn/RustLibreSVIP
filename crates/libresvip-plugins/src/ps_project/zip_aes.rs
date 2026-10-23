@@ -223,10 +223,7 @@ pub fn read_archive(bytes: &[u8], password: &[u8]) -> Result<Vec<ZipEntry>> {
 // ---------------------------------------------------------------------------
 
 pub(crate) fn dos_date_time() -> (u16, u16) {
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|duration| duration.as_secs())
-        .unwrap_or(0);
+    let now = libresvip_core::platform::unix_seconds();
     // Days since the Unix epoch converted to a civil UTC date.
     let days = (now / 86_400) as i64;
     let seconds = now % 86_400;
@@ -263,12 +260,8 @@ fn entropy_bytes(len: usize) -> Vec<u8> {
     while output.len() < len {
         let state = RandomState::new();
         let mut hasher = state.build_hasher();
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map(|duration| duration.as_nanos())
-            .unwrap_or(0)
-            .hash(&mut hasher);
-        std::process::id().hash(&mut hasher);
+        libresvip_core::platform::unix_nanos().hash(&mut hasher);
+        libresvip_core::platform::process_id().hash(&mut hasher);
         counter.hash(&mut hasher);
         output.extend_from_slice(&hasher.finish().to_le_bytes());
         counter += 1;

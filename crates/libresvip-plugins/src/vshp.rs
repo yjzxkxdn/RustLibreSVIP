@@ -52,7 +52,7 @@ impl SvsPlugin for VshpPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let project_data = model::parse_project(&bytes)?;
         let input_options = parser::InputOptions {
             wave_to_singing: options.bool("wave_to_singing", true),

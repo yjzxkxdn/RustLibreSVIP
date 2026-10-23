@@ -177,18 +177,11 @@ impl Acep2Header {
 }
 
 fn zstd_compress(data: &[u8]) -> Result<Vec<u8>> {
-    zstd::bulk::compress(data, zstd::DEFAULT_COMPRESSION_LEVEL)
-        .map_err(|error| LibreSvipError::msg(format!("zstd compression failed: {error}")))
+    libresvip_core::compression::compress(data, 3)
 }
 
 fn zstd_decompress(data: &[u8]) -> Result<Vec<u8>> {
-    let mut decoder = zstd::stream::read::Decoder::new(Cursor::new(data))
-        .map_err(|error| LibreSvipError::msg(format!("zstd decompression failed: {error}")))?;
-    let mut output = Vec::new();
-    decoder
-        .read_to_end(&mut output)
-        .map_err(|error| LibreSvipError::msg(format!("zstd decompression failed: {error}")))?;
-    Ok(output)
+    libresvip_core::compression::decompress(data)
 }
 
 fn cbor_to_json(value: CborValue) -> Result<Value> {

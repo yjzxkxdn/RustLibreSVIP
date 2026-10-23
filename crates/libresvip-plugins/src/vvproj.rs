@@ -37,7 +37,7 @@ impl SvsPlugin for VoiceVoxPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = to_unicode(&bytes);
         let value = pyjson::parse(&text)?;
         let voicevox_project = model::VoiceVoxProject::from_json(&value)?;
@@ -51,7 +51,7 @@ impl SvsPlugin for VoiceVoxPlugin {
         let voicevox_project =
             generator::generate_project(project, &generator::OutputOptions)?;
         let text = pyjson::dumps(&voicevox_project.to_json(), true, true);
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

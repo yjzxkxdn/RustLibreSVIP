@@ -50,7 +50,7 @@ impl SvsPlugin for XvsqPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let input_options = parser::InputOptions {
             import_instrumental_track: options.bool("import_instrumental_track", true),
             import_pitch: options.bool("import_pitch", true),
@@ -67,7 +67,7 @@ impl SvsPlugin for XvsqPlugin {
             pretty_xml: options.bool("pretty_xml", true),
         };
         let text = generator::generate_project(project, &output_options)?;
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

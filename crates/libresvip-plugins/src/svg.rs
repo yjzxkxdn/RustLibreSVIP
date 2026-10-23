@@ -142,7 +142,7 @@ impl SvsPlugin for SvgPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let drawing = generator::generate_project(project, options)?;
-        std::fs::write(path, drawing.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, drawing.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

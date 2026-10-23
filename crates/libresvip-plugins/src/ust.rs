@@ -62,7 +62,7 @@ impl SvsPlugin for UstPlugin {
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
         let encoding = options.str("encoding", "SHIFT_JIS");
         let import_pitch = options.bool("import_pitch", true);
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = encode::decode(&bytes, &encoding);
         let ust_project = grammar::parse_ust(&text)?;
         ust_parser::UstParser::new(import_pitch).parse_project(&ust_project)
@@ -77,7 +77,7 @@ impl SvsPlugin for UstPlugin {
         };
         let ust_project = generator.generate_project(project)?;
         let bytes = template::render_ust(&ust_project, &encoding)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

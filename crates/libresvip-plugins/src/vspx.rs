@@ -51,7 +51,7 @@ impl SvsPlugin for VocalSharpPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let vspx_project = xml::parse(&bytes)?;
         parser::VocalSharpParser::new(options).parse_project(&vspx_project)
     }
@@ -61,7 +61,7 @@ impl SvsPlugin for VocalSharpPlugin {
         let mut generator = generator::VocalSharpGenerator::new(output_options);
         let vspx_project = generator.generate_project(project)?;
         let text = xml::render(&vspx_project);
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

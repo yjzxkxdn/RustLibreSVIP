@@ -52,7 +52,7 @@ impl SvsPlugin for TsslnPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let root = value_tree::parse(&bytes)?;
         let voisona_project = model::project_from_node(&root)?;
         check_project_version(&voisona_project.version_of_app_file_saved)?;
@@ -62,7 +62,7 @@ impl SvsPlugin for TsslnPlugin {
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let root = generator::generate_project(project, options)?;
         let bytes = value_tree::build(&root)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

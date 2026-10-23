@@ -1,15 +1,11 @@
 //! Small helpers for the CCS plugin: UUIDs and XML escaping.
 
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::time::{SystemTime, UNIX_EPOCH};
 
 /// `str(uuid.uuid4())` — a random-looking v4 UUID in canonical form.
 pub fn uuid_str() -> String {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
-    let mut state = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|duration| duration.as_nanos() as u64)
-        .unwrap_or(0)
+    let mut state = (libresvip_core::platform::unix_nanos() as u64)
         ^ (COUNTER.fetch_add(1, Ordering::Relaxed).wrapping_mul(0x9E37_79B9_7F4A_7C15));
     let mut bytes = [0u8; 16];
     for slot in &mut bytes {

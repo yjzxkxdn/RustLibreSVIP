@@ -149,7 +149,7 @@ impl SvsPlugin for UfDataPlugin {
     }
 
     fn load(&self, path: &Path, options: &libresvip_core::options::Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = to_unicode(&bytes);
         let data: UfData = serde_json::from_str(&text)?;
         parse_project(&data, options.bool("import_pitch", true))
@@ -163,7 +163,7 @@ impl SvsPlugin for UfDataPlugin {
     ) -> Result<()> {
         let data = generate_project(project)?;
         let bytes = to_python_json(&data)?;
-        std::fs::write(path, &bytes).at_path(path)?;
+        libresvip_core::io::write(path, &bytes).at_path(path)?;
         Ok(())
     }
 }

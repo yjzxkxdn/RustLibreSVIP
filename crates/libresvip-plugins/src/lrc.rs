@@ -209,7 +209,7 @@ impl SvsPlugin for LrcPlugin {
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let options = OutputOptions::from_options(options);
         let rendered = generate_project(project, &options)?;
-        std::fs::write(path, rendered.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, rendered.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

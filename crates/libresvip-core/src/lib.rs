@@ -9,10 +9,15 @@
 //!   introspecting pydantic `model_fields`)
 //! * [`utils`] — text/binary/xml/yaml helpers plus gettext translations
 
+pub mod compression;
 pub mod core;
 pub mod error;
+pub mod io;
+#[cfg(target_arch = "wasm32")]
+pub mod memory_fs;
 pub mod model;
 pub mod options;
+pub mod platform;
 pub mod plugin;
 pub mod utils;
 

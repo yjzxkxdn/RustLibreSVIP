@@ -42,7 +42,7 @@ impl SvsPlugin for Y77Plugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let y77_project: model::Y77Project = serde_json::from_slice(&bytes)?;
         parser::Y77Parser::new(options).parse_project(&y77_project)
     }
@@ -59,7 +59,7 @@ impl SvsPlugin for Y77Plugin {
         };
         let y77_project = generator::Y77Generator::new(options).generate_project(&project)?;
         let text = model::escape_non_ascii(&serde_json::to_string(&y77_project)?);
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

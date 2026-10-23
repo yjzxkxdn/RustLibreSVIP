@@ -198,7 +198,7 @@ impl SvsPlugin for MidiPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let midi_file = midi_file::parse(&bytes)?;
         parser::parse_project(&midi_file, &InputOptions::from_options(options))
     }
@@ -211,7 +211,7 @@ impl SvsPlugin for MidiPlugin {
             generated.ticks_per_beat,
             &generated.tracks,
         )?;
-        std::fs::write(path, &bytes).at_path(path)?;
+        libresvip_core::io::write(path, &bytes).at_path(path)?;
         Ok(())
     }
 }

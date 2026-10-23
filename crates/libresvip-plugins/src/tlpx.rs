@@ -70,7 +70,7 @@ impl SvsPlugin for TuneLabXPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let value = pyjson::decode_cbor(&bytes)?;
         let tlp_project = model::TuneLabProject::from_json(&value)?;
         let input_options = parser::InputOptions {
@@ -93,7 +93,7 @@ impl SvsPlugin for TuneLabXPlugin {
         };
         let tlp_project = generator::TuneLabGenerator::generate_project(project, &output_options)?;
         let bytes = pyjson::encode_cbor(&tlp_project.to_json())?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

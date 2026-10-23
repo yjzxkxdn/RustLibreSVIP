@@ -45,7 +45,7 @@ impl SvsPlugin for S5pPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let content = std::str::from_utf8(&bytes)
             .map_err(|error| LibreSvipError::Validation(format!("invalid UTF-8: {error}")))?;
         let raw: serde_json::Value = serde_json::from_str(content)?;
@@ -70,7 +70,7 @@ impl SvsPlugin for S5pPlugin {
             .generate_project(project)?;
         let json = serde_json::to_string(&s5p_project)?;
         let data = escape_non_ascii(&json).into_bytes();
-        std::fs::write(path, data).at_path(path)?;
+        libresvip_core::io::write(path, data).at_path(path)?;
         Ok(())
     }
 }

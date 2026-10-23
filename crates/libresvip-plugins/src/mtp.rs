@@ -53,7 +53,7 @@ impl SvsPlugin for MutaPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let muta_project = model::parse_project(&bytes)?;
         parser::MutaParser {
             import_instrumental_track: options.bool("import_instrumental_track", true),
@@ -68,7 +68,7 @@ impl SvsPlugin for MutaPlugin {
         };
         let muta_project = generator.generate_project(project)?;
         let bytes = model::build_project(&muta_project)?;
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

@@ -49,7 +49,7 @@ impl SvsPlugin for DeepVocalPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let dv_project = model::parse_project(&bytes)?;
         parser::DeepVocalParser {
             import_instrumental_track: options.bool("import_instrumental_track", true),
@@ -61,7 +61,7 @@ impl SvsPlugin for DeepVocalPlugin {
     fn dump(&self, path: &Path, project: &Project, _options: &Options) -> Result<()> {
         let dv_project = generator::DeepVocalGenerator.generate_project(project)?;
         let bytes = model::build_project(&dv_project);
-        std::fs::write(path, bytes).at_path(path)?;
+        libresvip_core::io::write(path, bytes).at_path(path)?;
         Ok(())
     }
 }

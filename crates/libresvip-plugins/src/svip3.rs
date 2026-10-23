@@ -43,14 +43,14 @@ impl SvsPlugin for Svip3Plugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let svip3_project = model::Svip3Project::from_binary(&bytes)?;
         parser::Svip3Parser::new(options).parse_project(svip3_project)
     }
 
     fn dump(&self, path: &Path, project: &Project, _options: &Options) -> Result<()> {
         let svip3_project = generator::Svip3Generator::new().generate_project(project)?;
-        std::fs::write(path, svip3_project.to_binary()).at_path(path)?;
+        libresvip_core::io::write(path, svip3_project.to_binary()).at_path(path)?;
         Ok(())
     }
 }

@@ -47,7 +47,7 @@ impl SvsPlugin for CcsPlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = std::str::from_utf8(&bytes)
             .map_err(|error| LibreSvipError::Validation(format!("invalid UTF-8: {error}")))?;
         parser::parse_project(text, options)
@@ -55,7 +55,7 @@ impl SvsPlugin for CcsPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let text = generator::generate_project(project, options)?;
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }

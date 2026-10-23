@@ -91,7 +91,7 @@ impl SvsPlugin for AcePlugin {
     }
 
     fn load(&self, path: &Path, options: &Options) -> Result<Project> {
-        let bytes = std::fs::read(path).at_path(path)?;
+        let bytes = libresvip_core::io::read(path).at_path(path)?;
         let value: serde_json::Value = match serde_json::from_slice(&bytes) {
             Ok(value) => value,
             Err(error) if error.to_string().contains("trailing characters") => {
@@ -116,7 +116,7 @@ impl SvsPlugin for AcePlugin {
         } else {
             generator::dump_compact(&ace_project)?
         };
-        std::fs::write(path, text.as_bytes()).at_path(path)?;
+        libresvip_core::io::write(path, text.as_bytes()).at_path(path)?;
         Ok(())
     }
 }
