@@ -8,6 +8,10 @@
 /testdata/.work/
 /testdata/.state/
 
+# Python bytecode from the helper scripts
+__pycache__/
+*.pyc
+
 # Editor / OS noise
 .DS_Store
 Thumbs.db
