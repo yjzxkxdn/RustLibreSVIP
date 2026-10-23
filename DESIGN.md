@@ -11,6 +11,7 @@ The port keeps the Python architecture so behaviour can be diffed mechanically.
 | `libresvip-middlewares` | the six middlewares, same order as the Python loader |
 | `libresvip-cli` | typer-compatible command surface, rich-compatible output |
 | `libresvip-gui` | egui/eframe rebuild of the Qt Quick desktop GUI: immediate-mode layout mirroring `converter_page.qml`, custom Material widgets, the same task/conversion flow |
+| `libresvip-web` | `wasm32-unknown-unknown` entry point: no wasm-bindgen, no WASI, a C ABI over `alloc`/`convert`/`result_*` driven by `web/index.html` |
 
 ## Model fidelity
 

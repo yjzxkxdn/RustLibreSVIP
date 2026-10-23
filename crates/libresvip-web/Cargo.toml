@@ -1,0 +1,16 @@
+[package]
+name = "libresvip-web"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "WebAssembly build of the LibreSVIP conversion engine"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+libresvip-core = { workspace = true }
+libresvip-plugins = { workspace = true }
+libresvip-middlewares = { workspace = true }

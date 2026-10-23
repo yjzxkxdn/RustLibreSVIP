@@ -117,6 +117,39 @@ Not ported (documented differences):
 * the QML compact layout for narrow windows — the split view is always used;
 * colour options are edited as text, without a colour picker.
 
+## WebAssembly
+
+`crates/libresvip-web` builds the same engine for `wasm32-unknown-unknown`. The
+module has **no imports** — no WASI, no wasm-bindgen — so a plain
+`WebAssembly.instantiate(bytes, {})` is enough, and `web/index.html` drives it
+through the small C ABI documented in `crates/libresvip-web/src/lib.rs`.
+
+```powershell
+rustup target add wasm32-unknown-unknown
+cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
+node web/build-web.mjs
+```
+
+`web/build-web.mjs` copies the module to `web/libresvip_web.wasm` and writes
+`web/libresvip-single.html`, the same page with the gzip-compressed module
+inlined so it opens straight from disk (no local server, no bundler).
+
+| artifact | size |
+| --- | --- |
+| `libresvip_web.wasm` | 6.32 MiB |
+| gzip / brotli | 2.17 MiB / 1.60 MiB |
+| `libresvip-single.html` | 2.90 MiB |
+
+Serve the module with `Content-Type: application/wasm` plus a pre-compressed
+`.br` next to it (`Content-Encoding: br`) and a long `Cache-Control`: the
+browser downloads it once and runs every conversion locally, so the server only
+serves a static file. The wasm path is exercised in Node:
+`ustx → acep` on a 4 minute project takes ≈ 0.4 s (native: 0.15 s) and produces
+the same project as the CLI.
+
+The web entry point converts one file with the plugins' default options;
+`split`, `merge` and custom options are CLI/GUI-only for now.
+
 ## Verification
 
 Everything is verified against the live Python implementation (conda `study12`):
@@ -146,6 +179,8 @@ crates/libresvip-plugins     one module per format (src/<plugin-id>.rs)
 crates/libresvip-middlewares the six project middlewares
 crates/libresvip-cli         the `libresvip-cli` binary
 crates/libresvip-gui         the `libresvip-gui` desktop app (egui/eframe)
+crates/libresvip-web         the wasm32 entry point (`cdylib`, C ABI)
+web/                         browser demo page + `build-web.mjs`
 scripts/                     code generation, fixtures, parity harness
 testdata/                    fixtures and golden references
 ```

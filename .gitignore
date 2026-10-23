@@ -4,6 +4,10 @@
 *.pdb
 *.exe
 
+# Web demo artifacts (built by `node web/build-web.mjs`)
+/web/libresvip_web.wasm
+/web/libresvip-single.html
+
 # Test harness state (recreated by scripts)
 /testdata/.work/
 /testdata/.state/

@@ -1850,6 +1850,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "libresvip-web"
+version = "2.9.2"
+dependencies = [
+ "libresvip-core",
+ "libresvip-middlewares",
+ "libresvip-plugins",
+]
+
+[[package]]
 name = "linux-raw-sys"
 version = "0.4.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LibreSVIP 网页转换器（Rust / WebAssembly 演示）</title>
+<style>
+  :root {
+    --indigo: #3f51b5;
+    --indigo-dark: #303f9f;
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --border: #e0e0e0;
+    --text: #212121;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 14px/1.6 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+  header {
+    background: var(--indigo);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  header span { font-size: 12px; opacity: .8; }
+  main { max-width: 880px; margin: 24px auto; padding: 0 16px 48px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .field { flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 12px; color: var(--muted); }
+  select, input[type=file] {
+    font: inherit;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #fff;
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: var(--indigo);
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 22px;
+    cursor: pointer;
+  }
+  button:disabled { background: #b0b0b0; cursor: default; }
+  button:hover:not(:disabled) { background: var(--indigo-dark); }
+  #drop {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 26px;
+    text-align: center;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  #drop.over { border-color: var(--indigo); background: #f3f5ff; }
+  #drop strong { color: var(--text); }
+  #status { white-space: pre-wrap; font-family: Consolas, monospace; font-size: 12px; }
+  #status.error { color: #c62828; }
+  #status.ok { color: #2e7d32; }
+  .hint { font-size: 12px; color: var(--muted); }
+  a.download {
+    display: inline-block;
+    margin-top: 4px;
+    color: var(--indigo);
+    font-weight: 600;
+  }
+  footer { text-align: center; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>LibreSVIP 网页转换器</h1>
+  <span>Rust → WebAssembly 演示 · 40 种工程格式 · 全部在本机浏览器里完成</span>
+</header>
+
+<main>
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="file">输入文件</label>
+        <input id="file" type="file">
+      </div>
+      <div class="field">
+        <label for="input-format">输入格式</label>
+        <select id="input-format"></select>
+      </div>
+      <div class="field">
+        <label for="output-format">输出格式</label>
+        <select id="output-format"></select>
+      </div>
+    </div>
+    <p class="hint">也可以把文件拖进下面的区域。所有转换都在本地完成，文件不会上传。</p>
+    <div id="drop"><span id="drop-label">把工程文件拖到这里，或点击<strong>选择文件</strong></span><input id="drop-input" type="file" hidden></div>
+  </div>
+
+  <div class="card">
+    <button id="run" disabled>开始转换</button>
+    <p id="status" class="hint">正在加载 WebAssembly 模块…</p>
+  </div>
+
+  <footer id="build"></footer>
+</main>
+
+<script>
+"use strict";
+
+const state = { api: null, file: null, formats: [] };
+
+const $ = (selector) => document.querySelector(selector);
+
+function formatBytes(size) {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KiB`;
+  return `${(size / 1024 / 1024).toFixed(2)} MiB`;
+}
+
+function setStatus(text, kind) {
+  const node = $("#status");
+  node.textContent = text;
+  node.className = kind ? `hint ${kind}` : "hint";
+}
+
+function writeString(api, text) {
+  const bytes = new TextEncoder().encode(text);
+  const pointer = api.alloc(bytes.length);
+  new Uint8Array(api.memory.buffer, pointer, bytes.length).set(bytes);
+  return { pointer, length: bytes.length };
+}
+
+function readResult(api) {
+  const pointer = api.result_ptr();
+  const length = api.result_len();
+  return new Uint8Array(api.memory.buffer, pointer, length).slice();
+}
+
+function extensionFor(id) {
+  const format = state.formats.find((item) => item.id === id);
+  return format && format.suffixes.length ? format.suffixes[0] : id;
+}
+
+function detectFormat(name) {
+  const suffix = name.includes(".") ? name.split(".").pop().toLowerCase() : "";
+  const matches = state.formats.filter((item) => item.suffixes.includes(suffix));
+  return matches.length ? matches[0].id : null;
+}
+
+function fillSelect(select, selected) {
+  select.innerHTML = "";
+  for (const format of state.formats) {
+    const option = document.createElement("option");
+    option.value = format.id;
+    option.textContent = `${format.name}（.${format.suffixes.join(" .") || format.id}）`;
+    if (format.id === selected) option.selected = true;
+    select.append(option);
+  }
+}
+
+function selectFile(file) {
+  state.file = file;
+  $("#drop-label").innerHTML = `<strong>${file.name}</strong><br>${formatBytes(file.size)}`;
+  const detected = detectFormat(file.name);
+  if (detected) {
+    $("#input-format").value = detected;
+    setStatus(`已选择 ${file.name}（${formatBytes(file.size)}），输入格式识别为 ${detected}`);
+  } else {
+    setStatus(`已选择 ${file.name}（${formatBytes(file.size)}），请手动选择输入格式`);
+  }
+  $("#run").disabled = !state.api;
+}
+
+async function convert() {
+  const api = state.api;
+  if (!api || !state.file) return;
+  $("#run").disabled = true;
+  const inputFormat = $("#input-format").value;
+  const outputFormat = $("#output-format").value;
+  setStatus(`正在转换：${inputFormat} → ${outputFormat} …`);
+
+  try {
+    const input = new Uint8Array(await state.file.arrayBuffer());
+    const inputPointer = api.alloc(input.length);
+    new Uint8Array(api.memory.buffer, inputPointer, input.length).set(input);
+    const inName = writeString(api, inputFormat);
+    const outName = writeString(api, outputFormat);
+    // Keep the views alive: the module may grow its memory during the call.
+    const keep = { inputPointer, inName, outName, input };
+    void keep;
+
+    const started = performance.now();
+    const status = api.convert(
+      inputPointer, input.length,
+      inName.pointer, inName.length,
+      outName.pointer, outName.length,
+    );
+    const elapsed = performance.now() - started;
+    const payload = readResult(api);
+
+    for (const [pointer, length] of [
+      [inputPointer, input.length],
+      [inName.pointer, inName.length],
+      [outName.pointer, outName.length],
+    ]) {
+      if (length > 0) api.dealloc(pointer, length);
+    }
+
+    if (status !== 0) {
+      const message = new TextDecoder().decode(payload);
+      setStatus(`转换失败（${elapsed.toFixed(0)} ms）：\n${message}`, "error");
+      return;
+    }
+
+    const outputName = `${state.file.name.replace(/\.[^.]+$/, "")}.${extensionFor(outputFormat)}`;
+    const blob = new Blob([payload], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    setStatus(
+      `完成：${outputName}（${formatBytes(payload.length)}），用时 ${elapsed.toFixed(0)} ms`,
+      "ok",
+    );
+    const link = document.createElement("a");
+    link.className = "download";
+    link.href = url;
+    link.download = outputName;
+    link.textContent = `下载 ${outputName}`;
+    $("#status").append(link);
+  } catch (error) {
+    setStatus(`出错：${error && error.message ? error.message : error}`, "error");
+  } finally {
+    $("#run").disabled = false;
+  }
+}
+
+async function boot(wasmBytes) {
+  const started = performance.now();
+  const { instance } = await WebAssembly.instantiate(wasmBytes, {});
+  const api = instance.exports;
+  state.api = api;
+
+  api.formats_json();
+  state.formats = JSON.parse(new TextDecoder().decode(readResult(api)))
+    .sort((left, right) => left.name.localeCompare(right.name));
+
+  fillSelect($("#input-format"), "ustx");
+  fillSelect($("#output-format"), "acep");
+  $("#build").textContent =
+    `${state.formats.length} 个格式 · wasm ${formatBytes(wasmBytes.length)} · 实例化 ${(performance.now() - started).toFixed(0)} ms`;
+  setStatus("模块已加载，选择一个工程文件即可开始（文件不会离开这台电脑）。");
+  $("#run").disabled = !state.file;
+}
+
+function wire() {
+  $("#file").addEventListener("change", (event) => {
+    if (event.target.files.length) selectFile(event.target.files[0]);
+  });
+  $("#drop").addEventListener("click", () => $("#drop-input").click());
+  $("#drop-input").addEventListener("change", (event) => {
+    if (event.target.files.length) selectFile(event.target.files[0]);
+  });
+  $("#drop").addEventListener("dragover", (event) => {
+    event.preventDefault();
+    $("#drop").classList.add("over");
+  });
+  $("#drop").addEventListener("dragleave", () => $("#drop").classList.remove("over"));
+  $("#drop").addEventListener("drop", (event) => {
+    event.preventDefault();
+    $("#drop").classList.remove("over");
+    if (event.dataTransfer.files.length) selectFile(event.dataTransfer.files[0]);
+  });
+  $("#run").addEventListener("click", convert);
+}
+
+function base64ToBytes(text) {
+  const binary = atob(text);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+async function loadWasm() {
+  // Single-file build: the module is inlined, gzip-compressed + base64.
+  if (window.__LIBRESVIP_WASM_GZIP_BASE64__) {
+    if (typeof DecompressionStream !== "function") {
+      throw new Error("这个浏览器不支持 DecompressionStream，请改用随附的 index.html 版本");
+    }
+    const compressed = base64ToBytes(window.__LIBRESVIP_WASM_GZIP_BASE64__);
+    const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+  if (window.__LIBRESVIP_WASM_BASE64__) {
+    return base64ToBytes(window.__LIBRESVIP_WASM_BASE64__);
+  }
+  const response = await fetch("libresvip_web.wasm");
+  if (!response.ok) throw new Error(`libresvip_web.wasm: HTTP ${response.status}`);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+wire();
+loadWasm()
+  .then(boot)
+  .catch((error) => setStatus(`无法加载 WebAssembly 模块：${error.message}`, "error"));
+</script>
+</body>
+</html>

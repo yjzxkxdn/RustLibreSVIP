@@ -6,6 +6,7 @@ members = [
     "crates/libresvip-middlewares",
     "crates/libresvip-cli",
     "crates/libresvip-gui",
+    "crates/libresvip-web",
 ]
 
 [workspace.package]
@@ -37,3 +38,9 @@ lto = "fat"
 codegen-units = 1
 panic = "abort"
 strip = "symbols"
+
+# `cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown`
+# Size over speed: ~25% smaller module for ~7% slower conversion.
+[profile.wasm]
+inherits = "release"
+opt-level = "z"
