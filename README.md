@@ -77,6 +77,17 @@ instead — `run-gui.cmd` in the repository root does exactly that:
 & .\target\release\libresvip-gui.exe
 ```
 
+A checkout that lives in a low-integrity (sandboxed) directory — for example a
+workspace created by an agent harness — stamps that label, a sandbox SID and a
+"Low mandatory level" onto every file built there, and Windows then treats the
+exe as untrusted. `install-gui.ps1` copies the binary to
+`%LOCALAPPDATA%\Programs\RustLibreSVIP`, resets its integrity level and creates
+a Start Menu shortcut:
+
+```powershell
+.\install-gui.ps1 -Build
+```
+
 | feature | notes |
 | --- | --- |
 | format combos, auto-detection, swap | read/write plugins from the shared registry |
