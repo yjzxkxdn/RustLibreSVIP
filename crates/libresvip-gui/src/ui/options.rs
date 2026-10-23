@@ -4,7 +4,6 @@ use eframe::egui::{self, pos2, Align, Align2, FontId, Layout, Rect, Sense, Strok
 
 use crate::app::App;
 use crate::i18n::Translator;
-use crate::icons::{self, Icon};
 use crate::state::{FieldKind, FieldState};
 use crate::theme::Palette;
 use crate::ui::padded;
@@ -166,16 +165,25 @@ fn section_header(
     ui.painter()
         .galley(title_pos, title_galley.clone(), pal.text);
     if !subtitle.is_empty() {
-        ui.painter().text(
+        // Elide instead of overflowing the pane: the subtitle carries the
+        // current format name, which can be long.
+        let subtitle_rect = Rect::from_min_max(
             pos2(
                 title_pos.x + title_galley.size().x + 10.0,
-                rect.center().y,
+                rect.top() + 10.0,
             ),
-            Align2::LEFT_CENTER,
-            subtitle,
-            FontId::proportional(Palette::body() + 2.0),
-            pal.muted,
+            pos2(rect.right() - 4.0, rect.bottom() - 10.0),
         );
+        if subtitle_rect.width() > 24.0 {
+            widgets::elided(
+                ui,
+                subtitle_rect,
+                Align2::LEFT_CENTER,
+                subtitle,
+                Palette::body() + 2.0,
+                pal.muted,
+            );
+        }
     }
     if response.clicked() {
         *expanded = !*expanded;
@@ -276,10 +284,8 @@ fn field_row(
             Vec2::new(ui.available_width(), 12.0),
             Sense::hover(),
         );
-        let glyph = Rect::from_center_size(pos2(rect.left() + 12.0, rect.center().y), Vec2::splat(12.0));
-        icons::paint(ui.painter(), glyph, Icon::Tune, pal.muted.gamma_multiply(0.8));
         ui.painter().line_segment(
-            [pos2(rect.left() + 26.0, rect.center().y), rect.right_center()],
+            [rect.left_center(), rect.right_center()],
             Stroke::new(1.0, pal.border),
         );
     }

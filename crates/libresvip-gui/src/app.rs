@@ -68,7 +68,6 @@ pub struct App {
     pub split_ratio: f32,
     pub app_icon: Option<egui::TextureHandle>,
     pub system_dark: bool,
-    pub theme_check_at: f64,
     pub toast: Option<(String, f64)>,
     pub update_notice: Option<String>,
     pub input_info_open: bool,
@@ -83,7 +82,7 @@ impl App {
         let settings = config::settings();
         let lang = Lang::from_settings(settings.language);
         let translator = Translator::new(lang);
-        let system_dark = system_uses_dark_theme();
+        let system_dark = system_uses_dark_theme(&cc.egui_ctx);
         let dark = match settings.dark_mode {
             DarkMode::Dark => true,
             DarkMode::Light => false,
@@ -144,7 +143,6 @@ impl App {
             split_ratio: 0.5,
             app_icon: load_texture(&cc.egui_ctx),
             system_dark,
-            theme_check_at: 0.0,
             toast: None,
             update_notice: None,
             input_info_open: false,
@@ -692,7 +690,7 @@ impl App {
         let dark = match mode {
             DarkMode::Dark => true,
             DarkMode::Light => false,
-            DarkMode::System => system_uses_dark_theme(),
+            DarkMode::System => system_uses_dark_theme(ctx),
         };
         self.pal = if dark {
             Palette::dark()
@@ -754,13 +752,13 @@ impl App {
         self.persist_settings();
     }
 
-    /// Refreshes the palette when the window follows the system theme.
-    pub fn sync_system_theme(&mut self, ctx: &egui::Context, now: f64) {
-        if self.settings.dark_mode != DarkMode::System || now < self.theme_check_at {
+    /// Follows the OS colour scheme while the "System" theme is selected.
+    /// The value comes from winit (`ThemeChanged`), so no polling is needed.
+    pub fn sync_system_theme(&mut self, ctx: &egui::Context) {
+        if self.settings.dark_mode != DarkMode::System {
             return;
         }
-        self.theme_check_at = now + 5.0;
-        let dark = system_uses_dark_theme();
+        let dark = system_uses_dark_theme(ctx);
         if dark != self.system_dark {
             self.system_dark = dark;
             self.pal = if dark {
@@ -823,7 +821,7 @@ impl eframe::App for App {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let now = ctx.input(|input| input.time);
-        self.sync_system_theme(ctx, now);
+        self.sync_system_theme(ctx);
         self.poll_jobs(ctx);
         ui::draw(self, ctx);
         // Simplify the task list while a conversion is running.
@@ -894,43 +892,31 @@ fn load_texture(ctx: &egui::Context) -> Option<egui::TextureHandle> {
     ))
 }
 
-/// `Qt.styleHints.colorScheme`: reads the Windows "app mode" preference.
-pub fn system_uses_dark_theme() -> bool {
-    #[cfg(windows)]
-    {
-        let output = std::process::Command::new("reg")
-            .args([
-                "query",
-                r"HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
-                "/v",
-                "AppsUseLightTheme",
-            ])
-            .output();
-        if let Ok(output) = output {
-            let text = String::from_utf8_lossy(&output.stdout);
-            if let Some(position) = text.find("0x") {
-                let value = text[position + 2..]
-                    .chars()
-                    .take_while(|character| character.is_ascii_hexdigit())
-                    .collect::<String>();
-                if let Ok(value) = u32::from_str_radix(&value, 16) {
-                    return value == 0;
-                }
-            }
-        }
-        false
-    }
-    #[cfg(not(windows))]
-    {
-        false
-    }
+/// `Qt.styleHints.colorScheme`.
+///
+/// winit already tracks the Windows "app mode" preference and reports changes
+/// through `WindowEvent::ThemeChanged`, which egui exposes as
+/// `RawInput::system_theme`. Reading it here avoids spawning `reg.exe` (a
+/// console window used to flash briefly on every poll, and anti-virus tools
+/// dislike a GUI process shelling out to `reg`).
+pub fn system_uses_dark_theme(ctx: &egui::Context) -> bool {
+    ctx.input(|input| {
+        input
+            .raw
+            .system_theme
+            .map(|theme| theme == egui::Theme::Dark)
+            .unwrap_or(false)
+    })
 }
 
 /// `url_opener.open_path`
 pub fn open_path(path: &Path) {
     #[cfg(windows)]
     {
-        let _ = std::process::Command::new("explorer").arg(path).spawn();
+        let mut command = std::process::Command::new("explorer");
+        command.arg(path);
+        hide_console(&mut command);
+        let _ = command.spawn();
     }
     #[cfg(not(windows))]
     {
@@ -941,12 +927,24 @@ pub fn open_path(path: &Path) {
 pub fn open_url(url: &str) {
     #[cfg(windows)]
     {
-        let _ = std::process::Command::new("cmd")
-            .args(["/C", "start", "", url])
-            .spawn();
+        // `rundll32` is a GUI process: unlike `cmd /C start` it never flashes
+        // a console window.
+        let mut command = std::process::Command::new("rundll32.exe");
+        command.args(["url.dll,FileProtocolHandler", url]);
+        hide_console(&mut command);
+        let _ = command.spawn();
     }
     #[cfg(not(windows))]
     {
         let _ = std::process::Command::new("xdg-open").arg(url).spawn();
     }
+}
+
+/// Suppresses the console window a child process would otherwise create
+/// (`CREATE_NO_WINDOW`); the GUI has no console of its own in release builds.
+#[cfg(windows)]
+fn hide_console(command: &mut std::process::Command) {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+    command.creation_flags(CREATE_NO_WINDOW);
 }
