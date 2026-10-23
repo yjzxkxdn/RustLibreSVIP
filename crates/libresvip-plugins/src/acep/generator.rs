@@ -302,9 +302,15 @@ impl AceGenerator {
                     .filter(|value| !value.is_empty()),
                 _ => None,
             };
-            if let Some(pronunciation_in_note) = note.pronunciation.as_ref() {
-                if Some(pronunciation_in_note) != pronunciation.as_ref() {
-                    ace_note.syllable = pronunciation_in_note.clone();
+            // `write_syllable = false` leaves the phoneme layer empty and lets
+            // ACE Studio derive the phonemes from the lyric itself. The reference
+            // implementation always writes it (when it differs from the value it
+            // recomputes), which turns romanised lyrics into invalid phonemes.
+            if self.options.write_syllable {
+                if let Some(pronunciation_in_note) = note.pronunciation.as_ref() {
+                    if Some(pronunciation_in_note) != pronunciation.as_ref() {
+                        ace_note.syllable = pronunciation_in_note.clone();
+                    }
                 }
             }
             if let Some(edited_phones) = note.edited_phones.as_ref() {
@@ -624,5 +630,82 @@ fn binary_find_last(points: &[Point], predicate: impl Fn(&Point) -> bool) -> Opt
         Some(points[left])
     } else {
         None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use libresvip_core::model::base::{Note, Project, SingingTrack, TimeSignature, Track};
+
+    /// A romanised lyric (OpenUtau pinyin) whose pronunciation differs from what
+    /// the Chinese g2p extracts, which is exactly the case that produced the
+    /// invalid phonemes in ACE Studio.
+    fn romanised_project() -> Project {
+        Project {
+            version: String::new(),
+            song_tempo_list: vec![SongTempo::new(0, 120.0)],
+            time_signature_list: vec![TimeSignature::default()],
+            track_list: vec![Track::Singing(SingingTrack {
+                title: "Track 1".to_owned(),
+                note_list: vec![
+                    Note {
+                        start_pos: 0,
+                        length: 480,
+                        key_number: 60,
+                        lyric: "wo".to_owned(),
+                        pronunciation: Some("wo".to_owned()),
+                        ..Default::default()
+                    },
+                    Note {
+                        start_pos: 480,
+                        length: 480,
+                        key_number: 62,
+                        lyric: "cong".to_owned(),
+                        pronunciation: Some("cong".to_owned()),
+                        ..Default::default()
+                    },
+                ],
+                ..Default::default()
+            })],
+        }
+    }
+
+    fn syllables(options: OutputOptions) -> Vec<(String, String)> {
+        let generated = AceGenerator::new(options)
+            .generate_project(&romanised_project())
+            .expect("generate");
+        let vocal = generated
+            .tracks
+            .iter()
+            .find_map(AcepTrack::as_vocal)
+            .expect("vocal track");
+        vocal
+            .patterns
+            .iter()
+            .flat_map(|pattern| pattern.notes.iter())
+            .map(|note| (note.lyric.clone(), note.syllable.clone()))
+            .collect()
+    }
+
+    /// The reference behaviour still writes the syllable layer.
+    #[test]
+    fn syllable_is_written_by_default() {
+        let notes = syllables(OutputOptions::default());
+        assert_eq!(notes[0], ("wo".to_owned(), "wo".to_owned()));
+        assert_eq!(notes[1], ("cong".to_owned(), "cong".to_owned()));
+    }
+
+    /// `write_syllable = false` leaves it empty so ACE Studio phonemises the
+    /// lyric itself instead of showing `*[wo]`.
+    #[test]
+    fn syllable_can_be_left_out() {
+        let options = OutputOptions {
+            write_syllable: false,
+            ..OutputOptions::default()
+        };
+        let notes = syllables(options);
+        assert_eq!(notes[0], ("wo".to_owned(), String::new()));
+        assert_eq!(notes[1], ("cong".to_owned(), String::new()));
     }
 }

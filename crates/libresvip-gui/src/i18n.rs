@@ -249,6 +249,7 @@ fn zh_table(en: &str) -> Option<&'static str> {
             "所有人都应有选择的权利与自由。因此我们致力于给你第二次机会，让你的创作不再受平台与小圈子的束缚。"
         }
         "Rust port" => "Rust 移植版",
+        "Write the syllable (phoneme) layer" => "写入音节（音素）层",
         "This program is running in a restricted (sandboxed) process and cannot write files. Start it normally and trust it in your security software." => {
             "当前程序运行在受限（沙箱）进程中，无法写入文件。请正常启动本程序，并在安全软件中将其设为信任。"
         }

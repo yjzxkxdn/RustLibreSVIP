@@ -270,6 +270,7 @@ const SPLIT_THRESHOLD_DESCRIPTION: &str = "When the distance between notes excee
 const LYRIC_LANGUAGE_DESCRIPTION: &str =
     "ACE Studio supports eight languages of lyrics. This option is used to set the language of lyrics.";
 const CONSONANT_LENGTH_DESCRIPTION: &str = "Set default consonant length for notes if not specified";
+const WRITE_SYLLABLE_DESCRIPTION: &str = "Write the syllable (phoneme) that the generator derives from the lyric. Turn this off when the source project already stores romanised lyrics (for example an OpenUtau project with pinyin lyrics): ACE Studio then derives the phonemes itself instead of showing an invalid phoneme for every note. With Chinese characters in the lyrics the syllable is redundant, so the default keeps the reference behaviour.";
 
 fn normalization_field(
     key: &'static str,
@@ -365,6 +366,12 @@ pub fn output_option_fields() -> Vec<OptionFieldDef> {
             0.0,
         )
         .with_description(CONSONANT_LENGTH_DESCRIPTION),
+        OptionFieldDef::bool(
+            "write_syllable",
+            "Write the syllable (phoneme) layer",
+            true,
+        )
+        .with_description(WRITE_SYLLABLE_DESCRIPTION),
         OptionFieldDef::enumerated(
             "serialization",
             "Specify the serialization method of the generated .acep file",
@@ -460,6 +467,7 @@ pub struct OutputOptions {
     pub split_threshold: i64,
     pub lyric_language: String,
     pub default_consonant_length: f64,
+    pub write_syllable: bool,
     pub serialization: AcepSerialization,
 }
 
@@ -472,6 +480,7 @@ impl Default for OutputOptions {
             split_threshold: 1,
             lyric_language: "CHN".to_owned(),
             default_consonant_length: 0.0,
+            write_syllable: true,
             serialization: AcepSerialization::Json,
         }
     }
@@ -491,7 +500,32 @@ impl OutputOptions {
             lyric_language: options.str("lyric_language", &default.lyric_language),
             default_consonant_length: options
                 .float("default_consonant_length", default.default_consonant_length),
+            write_syllable: options.bool("write_syllable", default.write_syllable),
             serialization: AcepSerialization::from_value(&options.str("serialization", "json")),
         }
+    }
+}
+
+#[cfg(test)]
+mod write_syllable_tests {
+    use super::*;
+    use libresvip_core::options::OptionValue;
+
+    #[test]
+    fn write_syllable_option_is_read() {
+        let options = Options::from_pairs([
+            ("write_syllable".to_owned(), OptionValue::Bool(false)),
+        ]);
+        assert!(!OutputOptions::from_options(&options).write_syllable);
+        assert!(OutputOptions::from_options(&Options::new()).write_syllable);
+    }
+
+    #[test]
+    fn write_syllable_is_part_of_the_output_schema() {
+        let field = output_option_fields()
+            .into_iter()
+            .find(|field| field.key == "write_syllable")
+            .expect("write_syllable is offered");
+        assert_eq!(field.default, OptionValue::Bool(true));
     }
 }
