@@ -1,0 +1,30 @@
+#include <windows.h>
+
+1 ICON "icon.ico"
+1 RT_MANIFEST "app.manifest"
+
+1 VERSIONINFO
+  FILEVERSION 2,9,2,0
+  PRODUCTVERSION 2,9,2,0
+  FILEOS VOS_NT_WINDOWS32
+  FILETYPE VFT_APP
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "RustLibreSVIP"
+      VALUE "FileDescription", "LibreSVIP (Rust port)"
+      VALUE "FileVersion", "2.9.2"
+      VALUE "InternalName", "libresvip-gui"
+      VALUE "LegalCopyright", "MIT"
+      VALUE "OriginalFilename", "libresvip-gui.exe"
+      VALUE "ProductName", "LibreSVIP"
+      VALUE "ProductVersion", "2.9.2"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END

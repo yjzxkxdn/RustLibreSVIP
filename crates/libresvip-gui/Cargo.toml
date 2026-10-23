@@ -24,3 +24,6 @@ eframe = { version = "0.31", default-features = false, features = [
 rfd = "0.15"
 ab_glyph = "0.2"
 image = { version = "0.25", default-features = false, features = ["png"] }
+
+[build-dependencies]
+embed-resource = "3"
