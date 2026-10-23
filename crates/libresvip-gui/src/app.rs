@@ -433,8 +433,24 @@ impl App {
                 }
             }
             if let Err(error) = replace_file(&tmp, &target) {
-                self.tasks[index].error = write_error(&target, &error);
+                // Keep the converted result: the user can copy it manually when
+                // the destination is locked or blocked.
+                self.tasks[index].error = format!(
+                    "{}\n\n转换结果已保留在临时文件：\n{}",
+                    write_error(&target, &error),
+                    tmp.display()
+                );
                 result = false;
+            }
+        }
+        if result {
+            // Everything is in place; drop the temporary copy.
+            if let Some(tmp) = self.tasks[index].tmp.clone() {
+                if tmp.is_dir() {
+                    let _ = std::fs::remove_dir_all(&tmp);
+                } else {
+                    let _ = std::fs::remove_file(&tmp);
+                }
             }
         }
         result

@@ -273,17 +273,80 @@ pub fn dir_valid(value: &str) -> bool {
 
 /// `TaskManager.output_dir`.
 pub fn output_dir(save_folder: &Path, task: &Task) -> PathBuf {
-    if save_folder.is_absolute() {
+    let dir = if save_folder.is_absolute() {
         save_folder.to_path_buf()
     } else {
         task.path
             .parent()
             .map(|parent| parent.join(save_folder))
             .unwrap_or_else(|| save_folder.to_path_buf())
-    }
+    };
+    // Drop `.` components: `E:\.` and `E:\` name the same folder, but the
+    // canonical form avoids surprising filters (some security software treats
+    // paths containing `\.` as suspicious).
+    dir.components().collect()
 }
 
 /// `f"{stem}{ext}"` — the file name the task produces.
 pub fn output_file_name(stem: &str, ext: &str) -> String {
     format!("{stem}{ext}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn task(path: &str) -> Task {
+        Task::new(PathBuf::from(path), ".acep".to_owned())
+    }
+
+    #[test]
+    fn dot_save_folder_uses_the_project_directory() {
+        let task = task(r"D:\work\song.svp");
+        assert_eq!(output_dir(Path::new("."), &task), PathBuf::from(r"D:\work"));
+        assert_eq!(
+            output_dir(Path::new("."), &task).join(output_file_name("song", ".acep")),
+            PathBuf::from(r"D:\work\song.acep")
+        );
+    }
+
+    #[test]
+    fn dot_save_folder_at_a_drive_root_keeps_the_canonical_form() {
+        let task = task(r"E:\aaaa.ustx");
+        let dir = output_dir(Path::new("."), &task);
+        assert_eq!(dir, PathBuf::from(r"E:\"));
+        assert!(
+            !dir.display().to_string().contains(r"\."),
+            "the resolved folder must not contain a `.` component: {}",
+            dir.display()
+        );
+        assert_eq!(
+            dir.join(output_file_name("aaaa", ".acep")),
+            PathBuf::from(r"E:\aaaa.acep")
+        );
+    }
+
+    #[test]
+    fn relative_and_absolute_save_folders() {
+        let task = task(r"D:\work\song.svp");
+        assert_eq!(
+            output_dir(Path::new("out"), &task),
+            PathBuf::from(r"D:\work\out")
+        );
+        assert_eq!(
+            output_dir(Path::new(r"C:\out"), &task),
+            PathBuf::from(r"C:\out")
+        );
+    }
+
+    #[test]
+    fn field_state_keeps_typed_defaults() {
+        use libresvip_core::options::{OptionFieldDef, OptionValue};
+        let flag = FieldState::from_def(&OptionFieldDef::bool("flag", "Flag", true));
+        assert_eq!(flag.to_value(), OptionValue::Bool(true));
+        let count = FieldState::from_def(&OptionFieldDef::int("count", "Count", 3));
+        assert_eq!(count.to_value(), OptionValue::Int(3));
+        let text = FieldState::from_def(&OptionFieldDef::string("name", "Name", "x"));
+        assert_eq!(text.to_value(), OptionValue::Str("x".to_owned()));
+    }
 }
