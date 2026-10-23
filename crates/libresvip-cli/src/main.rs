@@ -4,6 +4,7 @@ mod commands;
 mod mcp;
 mod output;
 mod prompt;
+#[cfg(feature = "rpc")]
 mod rpc;
 mod translator;
 

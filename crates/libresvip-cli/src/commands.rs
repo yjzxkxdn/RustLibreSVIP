@@ -82,6 +82,7 @@ pub fn run() -> i32 {
             }
             _ => 0,
         },
+        #[cfg(feature = "rpc")]
         Some(("rpc", sub)) => match sub.subcommand() {
             Some(("server", server)) => {
                 let host = server
@@ -118,7 +119,8 @@ fn unimplemented_command(name: &str) -> i32 {
 // ---------------------------------------------------------------------------
 
 fn build_cli() -> Command {
-    Command::new(PROGRAM)
+    #[allow(unused_mut)]
+    let mut command = Command::new(PROGRAM)
         .subcommand_required(true)
         .arg_required_else_help(true)
         .arg(
@@ -213,8 +215,13 @@ fn build_cli() -> Command {
                                 .default_value(""),
                         ),
                 ),
-        )
-        .subcommand(
+        );
+
+    // `rpc server` needs tonic + tokio + prost (~2 MiB of code and a 1 MiB icon
+    // table); build with `--no-default-features` to leave it out entirely.
+    #[cfg(feature = "rpc")]
+    {
+        command = command.subcommand(
             Command::new("rpc")
                 .subcommand_required(true)
                 .arg_required_else_help(true)
@@ -235,7 +242,10 @@ fn build_cli() -> Command {
                                 .default_value("15150"),
                         ),
                 ),
-        )
+        );
+    }
+
+    command
 }
 
 // ---------------------------------------------------------------------------

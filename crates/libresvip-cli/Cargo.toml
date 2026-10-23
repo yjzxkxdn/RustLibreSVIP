@@ -11,6 +11,18 @@ description = "Command line interface for LibreSVIP (Rust port)"
 name = "libresvip-cli"
 path = "src/main.rs"
 
+[features]
+default = ["rpc"]
+# `rpc server` pulls in tonic/tokio/prost and a 1 MiB icon table; build with
+# `--no-default-features` for a lean binary.
+rpc = [
+    "dep:tonic",
+    "dep:prost",
+    "dep:tokio",
+    "dep:http-body-util",
+    "dep:bytes",
+]
+
 [dependencies]
 libresvip-core = { workspace = true }
 libresvip-plugins = { workspace = true }
@@ -18,8 +30,8 @@ libresvip-middlewares = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 clap = { version = "4", features = ["derive", "cargo"] }
-tonic = "0.12"
-prost = "0.13"
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-std"] }
-http-body-util = "0.1"
-bytes = "1"
+tonic = { version = "0.12", optional = true }
+prost = { version = "0.13", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-std"], optional = true }
+http-body-util = { version = "0.1", optional = true }
+bytes = { version = "1", optional = true }
