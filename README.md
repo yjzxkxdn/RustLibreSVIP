@@ -1,7 +1,7 @@
 # RustLibreSVIP
 
 Pure-Rust port of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP) **2.9.2** —
-the CLI only, no GUI. The Python implementation in `../LibreSVIP` is the source
+CLI and desktop GUI. The Python implementation in `../LibreSVIP` is the source
 of truth; every command, option schema and file format is ported to match it.
 
 ## Status
@@ -17,6 +17,7 @@ of truth; every command, option schema and file format is ported to match it.
 | `rpc server` differential harness | **45/45 cases** (`scripts/check_rpc.py`) |
 | `mcp serve` differential harness | **87/87 cases** (`scripts/check_mcp.py`) |
 | `rpc server` (gRPC) / `mcp serve` (MCP stdio) | done, differentially verified |
+| Desktop GUI (`libresvip-gui`, egui/eframe) | ported, see [Desktop GUI](#desktop-gui) |
 
 `plugin list` renders exactly the same table as Python (including rich's column
 shrinking and ellipsis rules), and `proj convert` error panels are byte-identical.
@@ -46,6 +47,50 @@ libresvip-cli proj merge a.svp b.svp --out-path merged.svp
 Interactive conversions ask for the same options, middleware questions and
 defaults as the Python CLI.
 
+## Desktop GUI
+
+`crates/libresvip-gui` rebuilds the Python project's Qt Quick interface with
+egui/eframe: the same layout (format card, task list, advanced settings, output
+settings), the same Material light/dark palette and the same conversion
+behaviour (temporary output per task, conflict policy, warning badges).
+
+```powershell
+cargo run -p libresvip-gui --release
+# or start the binary directly
+target\release\libresvip-gui.exe
+```
+
+Files can be passed on the command line or dropped onto the window:
+
+```powershell
+target\release\libresvip-gui.exe song.svp another.svp
+```
+
+| feature | notes |
+| --- | --- |
+| format combos, auto-detection, swap | read/write plugins from the shared registry |
+| task list: rename stem, change extension, remove | direct / merge / split modes |
+| option forms for input, output and the six middlewares | generated from the same `OptionFieldDef` schemas the CLI uses |
+| output folder, conflict policy, "open folder when done" | reads and writes the same `settings.yml` as the CLI and the Python GUI |
+| light / dark / system theme, zh_CN / en_US / ja_JP / de_DE | translations come from the upstream gettext catalogs |
+| drag & drop, Ctrl+O, Ctrl+Enter, Ctrl+R, Ctrl+Tab, F1 | |
+
+```powershell
+cargo test -p libresvip-gui
+```
+
+The tests drive the real pipeline: a direct conversion re-loads to the project
+recorded in `testdata/golden/acep/project.json`, and split/merge modes produce
+loadable projects.
+
+Not ported (documented differences):
+
+* the lyric-replacement-rule editor in the settings dialog — rules in
+  `settings.yml` are used, but cannot be edited in the GUI;
+* "Check for Updates" only shows a notice (no network access);
+* the QML compact layout for narrow windows — the split view is always used;
+* colour options are edited as text, without a colour picker.
+
 ## Verification
 
 Everything is verified against the live Python implementation (conda `study12`):
@@ -74,6 +119,7 @@ crates/libresvip-core        models, math, config, options, plugin traits, i18n
 crates/libresvip-plugins     one module per format (src/<plugin-id>.rs)
 crates/libresvip-middlewares the six project middlewares
 crates/libresvip-cli         the `libresvip-cli` binary
+crates/libresvip-gui         the `libresvip-gui` desktop app (egui/eframe)
 scripts/                     code generation, fixtures, parity harness
 testdata/                    fixtures and golden references
 ```

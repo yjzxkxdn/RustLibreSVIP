@@ -10,6 +10,7 @@ The port keeps the Python architecture so behaviour can be diffed mechanically.
 | `libresvip-plugins` | one module per format identifier, compiled in (no dynamic loading) |
 | `libresvip-middlewares` | the six middlewares, same order as the Python loader |
 | `libresvip-cli` | typer-compatible command surface, rich-compatible output |
+| `libresvip-gui` | egui/eframe rebuild of the Qt Quick desktop GUI: immediate-mode layout mirroring `converter_page.qml`, custom Material widgets, the same task/conversion flow |
 
 ## Model fidelity
 

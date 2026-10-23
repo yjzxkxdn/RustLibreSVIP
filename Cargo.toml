@@ -5,6 +5,7 @@ members = [
     "crates/libresvip-plugins",
     "crates/libresvip-middlewares",
     "crates/libresvip-cli",
+    "crates/libresvip-gui",
 ]
 
 [workspace.package]
