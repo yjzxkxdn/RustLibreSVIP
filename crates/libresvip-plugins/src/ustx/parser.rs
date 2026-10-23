@@ -303,14 +303,13 @@ impl<'a> UstxParser<'a> {
                             }
                         }
                     }
-                } else if !ustx_note.lyric.starts_with('+') {
-                    note.pronunciation = Some(
-                        ustx_note
-                            .lyric
-                            .strip_prefix('?')
-                            .unwrap_or(&ustx_note.lyric)
-                            .to_owned(),
-                    );
+                } else if let Some(hint) = ustx_note.lyric.strip_prefix('?') {
+                    // Only an explicit `?phonetic-hint` lyric carries a
+                    // pronunciation. A plain romanised lyric (`wo`, `la`, …) *is*
+                    // the pronunciation, and echoing it into the model made every
+                    // generator that prefers `Note.pronunciation` copy pinyin into
+                    // a phoneme field that engines cannot parse.
+                    note.pronunciation = Some(hint.to_owned());
                 }
             }
             if let Some(prev) = prev_ustx_note {

@@ -21,7 +21,6 @@ use std::path::Path;
 use std::sync::Mutex;
 
 use libresvip_core::options::{OptionFieldDef, Options};
-use libresvip_core::plugin::SvsPlugin;
 
 /// Holds the payload of the last call: the converted file, an error message or
 /// the format list, depending on which export filled it.

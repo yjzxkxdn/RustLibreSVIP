@@ -270,7 +270,7 @@ const SPLIT_THRESHOLD_DESCRIPTION: &str = "When the distance between notes excee
 const LYRIC_LANGUAGE_DESCRIPTION: &str =
     "ACE Studio supports eight languages of lyrics. This option is used to set the language of lyrics.";
 const CONSONANT_LENGTH_DESCRIPTION: &str = "Set default consonant length for notes if not specified";
-const WRITE_SYLLABLE_DESCRIPTION: &str = "Write the syllable (phoneme) that the generator derives from the lyric. Turn this off when the source project already stores romanised lyrics (for example an OpenUtau project with pinyin lyrics): ACE Studio then derives the phonemes itself instead of showing an invalid phoneme for every note. With Chinese characters in the lyrics the syllable is redundant, so the default keeps the reference behaviour.";
+const WRITE_SYLLABLE_DESCRIPTION: &str = "Write the syllable (phoneme) layer. Turn this off to leave the phoneme layer empty and let ACE Studio derive the phonemes from the lyrics - useful when the source stores romanised lyrics, or when cleaning up a project whose syllables are not valid phonemes.";
 
 fn normalization_field(
     key: &'static str,

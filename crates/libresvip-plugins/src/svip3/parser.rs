@@ -163,7 +163,7 @@ impl<'a> Svip3Parser<'a> {
             length: i64::from(svip3_note.width_pos),
             key_number: i64::from(svip3_note.key_index),
             lyric: svip3_note.lyric.clone(),
-            pronunciation: Some(parse_pronunciation(svip3_note)),
+            pronunciation: parse_pronunciation(svip3_note),
             head_tag: parse_head_tag(svip3_note),
             edited_phones: self.parse_edited_phones(svip3_note),
             vibrato: None,
@@ -229,11 +229,15 @@ pub fn get_visible_range(pattern: &Svip3SingingPattern) -> (i64, i64) {
 }
 
 /// `parse_pronunciation`.
-pub fn parse_pronunciation(svip3_note: &Svip3Note) -> String {
-    if svip3_note.pronouncing.is_empty() && !svip3_note.lyric.contains('-') {
-        return svip3_note.lyric.clone();
+///
+/// The reference falls back to the lyric when the file carries no pronouncing,
+/// which turns the lyric into a "pronunciation" and lets generators copy it into
+/// phoneme fields; keep it empty instead.
+pub fn parse_pronunciation(svip3_note: &Svip3Note) -> Option<String> {
+    if svip3_note.pronouncing.is_empty() {
+        return None;
     }
-    svip3_note.pronouncing.clone()
+    Some(svip3_note.pronouncing.clone())
 }
 
 /// `parse_head_tag`.

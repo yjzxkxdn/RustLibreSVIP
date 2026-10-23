@@ -119,7 +119,6 @@ impl VocalSharpParser {
                 length: note.duration,
                 key_number,
                 lyric: note.lyric.clone().unwrap_or_default(),
-                pronunciation: note.lyric.clone(),
                 ..Default::default()
             });
         }

@@ -9,7 +9,7 @@ use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Project, Track};
 use libresvip_core::model::reset_time_axis::zoom_project;
 use libresvip_core::options::{
-    EnumVariant, OptionFieldDef, OptionKind, OptionValue, Options,
+    EnumVariant, OptionFieldDef, Options,
 };
 use libresvip_core::plugin::{Middleware, PluginInfo};
 

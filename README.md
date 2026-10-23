@@ -231,6 +231,16 @@ re-convolved the timeline from second 0. See `acep/music_math.rs` and
   carry a plain error message instead of a Python traceback.
 * Audio metadata probing understands RIFF/WAVE only (Python uses
   MediaInfo/libsndfile), so non-WAV backing tracks lose their duration.
+* The parsers never store a pronunciation that merely repeats the lyric
+  (`ustx`, `mid`, `vspx`, `svip3`), while the reference does. Every generator that prefers
+  `Note.pronunciation` over the lyric (`.acep` syllable, `svp` phonemes, `aisp`
+  pinyin, …) then copied pinyin into a phoneme field that the engine cannot
+  parse: an OpenUtau project with pinyin lyrics (`wo`, `cong`, …) came out of
+  ACE Studio with `*[wo]` on every note. Pinyin now stays in the lyric field and
+  the engine phonemises it; `[hint]`/`?hint` lyrics, kana and Hanzi still produce
+  a pronunciation. The `.acep` output option `write_syllable` can drop the syllable layer
+  entirely, which also cleans up a project whose syllables are not valid
+  phonemes.
 * Where LibreSVIP 2.9.2 itself crashes (e.g. `xvsq` with an instrumental track,
   `vsqx` with parameter curves), the Rust port implements the evident intent and
   the parity harness reports `SKIP`.

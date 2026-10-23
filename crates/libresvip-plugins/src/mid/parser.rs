@@ -15,7 +15,6 @@ use libresvip_core::model::point::Point;
 use super::codec::decode_ignore;
 use super::midi_file::{ChannelEvent, EventKind, MetaEvent, MidiEvent, MidiFile, tempo2bpm};
 use super::pitch::{PitchSimulator, Portamento, RelativePitchCurve};
-use super::text::contains_latin;
 use super::{InputOptions, MultiChannelOption};
 
 /// `constants.VELOCITY_CONSTANT`.
@@ -316,9 +315,8 @@ impl MidiParser<'_> {
                                         .get(start_tick)
                                         .cloned()
                                         .unwrap_or_else(|| DEFAULT_PHONEME.to_owned());
-                                    if contains_latin(&lyric) {
-                                        new_note.pronunciation = Some(lyric.clone());
-                                    }
+                                    // The lyric is the pronunciation; storing it
+                                    // again would end up in phoneme fields.
                                     new_note.lyric = lyric;
                                     notes.push(new_note);
                                 }

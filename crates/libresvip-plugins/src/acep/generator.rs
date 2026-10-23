@@ -302,10 +302,12 @@ impl AceGenerator {
                     .filter(|value| !value.is_empty()),
                 _ => None,
             };
-            // `write_syllable = false` leaves the phoneme layer empty and lets
-            // ACE Studio derive the phonemes from the lyric itself. The reference
-            // implementation always writes it (when it differs from the value it
-            // recomputes), which turns romanised lyrics into invalid phonemes.
+            // `Note.pronunciation` is written as-is: it carries the source's
+            // explicit pronunciation, which is not always in the same notation as
+            // the lyric (a Synthesizer V phoneme `p` means pinyin `b`, and an
+            // `svp` import has already been converted to pinyin). Comparing the
+            // two strings would drop such a pronunciation whenever they happen to
+            // look alike, so only `write_syllable = false` suppresses the layer.
             if self.options.write_syllable {
                 if let Some(pronunciation_in_note) = note.pronunciation.as_ref() {
                     if Some(pronunciation_in_note) != pronunciation.as_ref() {
@@ -638,42 +640,41 @@ mod tests {
     use super::*;
     use libresvip_core::model::base::{Note, Project, SingingTrack, TimeSignature, Track};
 
-    /// A romanised lyric (OpenUtau pinyin) whose pronunciation differs from what
-    /// the Chinese g2p extracts, which is exactly the case that produced the
-    /// invalid phonemes in ACE Studio.
-    fn romanised_project() -> Project {
+    /// A romanised lyric (OpenUtau pinyin). The parser stores the lyric itself
+    /// as the pronunciation, which is exactly the case that produced the invalid
+    /// phonemes in ACE Studio.
+    fn project_with(notes: &[(&str, Option<&str>)]) -> Project {
         Project {
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, 120.0)],
             time_signature_list: vec![TimeSignature::default()],
             track_list: vec![Track::Singing(SingingTrack {
                 title: "Track 1".to_owned(),
-                note_list: vec![
-                    Note {
-                        start_pos: 0,
+                note_list: notes
+                    .iter()
+                    .enumerate()
+                    .map(|(index, (lyric, pronunciation))| Note {
+                        start_pos: index as i64 * 480,
                         length: 480,
                         key_number: 60,
-                        lyric: "wo".to_owned(),
-                        pronunciation: Some("wo".to_owned()),
+                        lyric: (*lyric).to_owned(),
+                        pronunciation: pronunciation.map(str::to_owned),
                         ..Default::default()
-                    },
-                    Note {
-                        start_pos: 480,
-                        length: 480,
-                        key_number: 62,
-                        lyric: "cong".to_owned(),
-                        pronunciation: Some("cong".to_owned()),
-                        ..Default::default()
-                    },
-                ],
+                    })
+                    .collect(),
                 ..Default::default()
             })],
         }
     }
 
-    fn syllables(options: OutputOptions) -> Vec<(String, String)> {
+    /// Pinyin lyrics: the parser stores the lyric itself as the pronunciation.
+    fn echoed() -> Project {
+        project_with(&[("wo", Some("wo")), ("cong", Some("cong"))])
+    }
+
+    fn syllables(project: &Project, options: OutputOptions) -> Vec<(String, String)> {
         let generated = AceGenerator::new(options)
-            .generate_project(&romanised_project())
+            .generate_project(project)
             .expect("generate");
         let vocal = generated
             .tracks
@@ -688,24 +689,41 @@ mod tests {
             .collect()
     }
 
-    /// The reference behaviour still writes the syllable layer.
+    /// A stored pronunciation is written as-is, even when it happens to look like
+    /// the lyric: the two are not necessarily in the same notation (a Synthesizer
+    /// V phoneme `p` is pinyin `b`).
     #[test]
-    fn syllable_is_written_by_default() {
-        let notes = syllables(OutputOptions::default());
+    fn explicit_pronunciation_is_written_even_when_it_looks_like_the_lyric() {
+        let notes = syllables(&echoed(), OutputOptions::default());
         assert_eq!(notes[0], ("wo".to_owned(), "wo".to_owned()));
         assert_eq!(notes[1], ("cong".to_owned(), "cong".to_owned()));
     }
 
-    /// `write_syllable = false` leaves it empty so ACE Studio phonemises the
-    /// lyric itself instead of showing `*[wo]`.
+    /// The Synthesizer V case: the note keeps the lyric `p`, while the stored
+    /// pronunciation is the pinyin `b` its phoneme stands for.
     #[test]
-    fn syllable_can_be_left_out() {
+    fn foreign_notation_reaches_the_phoneme_layer() {
+        let notes = syllables(&project_with(&[("p", Some("b"))]), OutputOptions::default());
+        assert_eq!(notes[0], ("p".to_owned(), "b".to_owned()));
+    }
+
+    /// A pronunciation that says something *else* (a phonetic hint, an edited
+    /// syllable) is still written.
+    #[test]
+    fn edited_pronunciation_is_still_written() {
+        let notes = syllables(&project_with(&[("wo", Some("uo")), ("cong", Some("uo"))]), OutputOptions::default());
+        assert_eq!(notes[0], ("wo".to_owned(), "uo".to_owned()));
+        assert_eq!(notes[1], ("cong".to_owned(), "uo".to_owned()));
+    }
+
+    /// `write_syllable = false` drops even the genuine pronunciations.
+    #[test]
+    fn write_syllable_can_be_turned_off() {
         let options = OutputOptions {
             write_syllable: false,
             ..OutputOptions::default()
         };
-        let notes = syllables(options);
+        let notes = syllables(&project_with(&[("wo", Some("uo")), ("cong", Some("uo"))]), options);
         assert_eq!(notes[0], ("wo".to_owned(), String::new()));
-        assert_eq!(notes[1], ("cong".to_owned(), String::new()));
     }
 }

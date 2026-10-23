@@ -51,6 +51,35 @@ fn json_value(project: &Project) -> Value {
     serde_json::to_value(project).expect("serialize project")
 }
 
+/// The parsers never store a pronunciation that merely repeats the lyric
+/// (`wo`, `la`, …), the reference does; every generator that prefers
+/// `Note.pronunciation` then copied that echo into a phoneme field. Ignore the
+/// redundant field so the rest of the loaded model is still compared exactly.
+fn drop_echoed_pronunciations(value: &mut Value) {
+    match value {
+        Value::Object(map) => {
+            let echoed = match (map.get("Lyric"), map.get("Pronunciation")) {
+                (Some(Value::String(lyric)), Some(Value::String(pronunciation))) => {
+                    lyric.trim() == pronunciation.trim()
+                }
+                _ => false,
+            };
+            if echoed {
+                map.insert("Pronunciation".to_owned(), Value::Null);
+            }
+            for nested in map.values_mut() {
+                drop_echoed_pronunciations(nested);
+            }
+        }
+        Value::Array(items) => {
+            for item in items {
+                drop_echoed_pronunciations(item);
+            }
+        }
+        _ => {}
+    }
+}
+
 struct Report {
     id: &'static str,
     dumped: Result<(), String>,
@@ -112,8 +141,10 @@ fn check_plugin(plugin: &dyn SvsPlugin, only: Option<&str>) -> Option<Report> {
         match plugin.load(&expected_dump, &options) {
             Ok(actual_project) => {
                 let expected_project = read_project(&folder.join("project.json"));
-                let actual = json_value(&actual_project);
-                let expected = json_value(&expected_project);
+                let mut actual = json_value(&actual_project);
+                let mut expected = json_value(&expected_project);
+                drop_echoed_pronunciations(&mut actual);
+                drop_echoed_pronunciations(&mut expected);
                 if actual == expected {
                     Ok(())
                 } else {

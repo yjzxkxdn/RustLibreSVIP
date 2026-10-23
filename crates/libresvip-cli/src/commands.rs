@@ -5,8 +5,8 @@ use std::path::{Path, PathBuf};
 use clap::{Arg, Command};
 use libresvip_core::core::config;
 use libresvip_core::model::base::Project;
-use libresvip_core::options::{OptionFieldDef, OptionValue, Options};
-use libresvip_core::plugin::{Middleware, SvsPlugin};
+use libresvip_core::options::{OptionFieldDef, Options};
+use libresvip_core::plugin::Middleware;
 use libresvip_middlewares::all_middlewares;
 use libresvip_plugins::{enabled_plugins, output_suffixes, plugin_by_suffix, supported_suffixes};
 

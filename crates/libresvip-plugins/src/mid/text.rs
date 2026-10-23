@@ -15,6 +15,11 @@
 //! This module lives under `mid` because the plugin registry in `lib.rs` is
 //! shared; `lrc` and `srt` import it as `crate::mid::text`.
 
+/// `LATIN_ALPHABET` — does the text contain an ASCII letter?
+pub fn contains_latin(text: &str) -> bool {
+    text.chars().any(|character| character.is_ascii_alphabetic())
+}
+
 /// `zhon.hanzi.punctuation` plus the ASCII punctuation listed in the pattern.
 fn is_symbol_char(character: char) -> bool {
     let code = character as u32;
@@ -64,9 +69,6 @@ pub fn remove_symbols(text: &str) -> String {
 }
 
 /// `LATIN_ALPHABET.search(text) is not None`.
-pub fn contains_latin(text: &str) -> bool {
-    text.chars().any(|character| character.is_ascii_alphabetic())
-}
 
 #[cfg(test)]
 mod tests {
