@@ -53,6 +53,9 @@ pub fn draw(app: &mut App, ctx: &egui::Context) {
     handle_drop(app, ctx);
     handle_resize(ctx);
     titlebar::show(app, ctx);
+    if app.restricted {
+        restricted_banner(app, ctx);
+    }
     egui::CentralPanel::default()
         .frame(egui::Frame::NONE.fill(app.pal.bg))
         .show(ctx, |ui| {
@@ -82,6 +85,26 @@ pub fn draw(app: &mut App, ctx: &egui::Context) {
             output::show(app, ui, right_bottom);
         });
     dialogs::show(app, ctx);
+}
+
+/// Permanent warning strip shown when the process cannot write files because it
+/// runs in a security sandbox (low integrity level).
+fn restricted_banner(app: &App, ctx: &egui::Context) {
+    let pal = app.pal;
+    egui::TopBottomPanel::top("restricted-banner")
+        .exact_height(30.0)
+        .frame(egui::Frame::NONE.fill(pal.warning))
+        .show(ctx, |ui| {
+            ui.centered_and_justified(|ui| {
+                ui.label(
+                    egui::RichText::new(app.t(
+                        "This program is running in a restricted (sandboxed) process and cannot write files. Start it normally and trust it in your security software.",
+                    ))
+                    .size(Palette::body())
+                    .color(egui::Color32::from_rgb(0x1F, 0x1F, 0x1F)),
+                );
+            });
+        });
 }
 
 /// Horizontal split with a draggable divider.

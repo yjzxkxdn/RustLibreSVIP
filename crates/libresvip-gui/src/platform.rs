@@ -13,6 +13,13 @@ pub fn process_context() -> String {
     format!("{who}，完整性级别 {}", integrity_level())
 }
 
+/// True when the process runs with a low/untrusted integrity level: such a
+/// process cannot write to the user's normal folders (no-write-up), which is
+/// what security sandboxes do to unknown executables.
+pub fn is_restricted() -> bool {
+    matches!(integrity_level().as_str(), "Low" | "Untrusted")
+}
+
 #[cfg(windows)]
 fn integrity_level() -> String {
     use std::ffi::c_void;

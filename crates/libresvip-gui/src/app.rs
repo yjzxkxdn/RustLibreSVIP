@@ -68,6 +68,9 @@ pub struct App {
     pub split_ratio: f32,
     pub app_icon: Option<egui::TextureHandle>,
     pub system_dark: bool,
+    /// Running with a low/integrity token (security sandbox): writes are
+    /// blocked, so the window shows a permanent warning strip.
+    pub restricted: bool,
     pub toast: Option<(String, f64)>,
     pub update_notice: Option<String>,
     pub input_info_open: bool,
@@ -143,6 +146,7 @@ impl App {
             split_ratio: 0.5,
             app_icon: load_texture(&cc.egui_ctx),
             system_dark,
+            restricted: crate::platform::is_restricted(),
             toast: None,
             update_notice: None,
             input_info_open: false,
