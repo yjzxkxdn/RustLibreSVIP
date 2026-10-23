@@ -66,6 +66,17 @@ Files can be passed on the command line or dropped onto the window:
 target\release\libresvip-gui.exe song.svp another.svp
 ```
 
+On Windows, an unsigned exe started from Explorer can trigger the shell's
+"Open File - Security Warning" or be launched in a security sandbox (low
+integrity level, which blocks every file write). Start it from a console
+instead — `run-gui.cmd` in the repository root does exactly that:
+
+```powershell
+.\run-gui.cmd
+# or
+& .\target\release\libresvip-gui.exe
+```
+
 | feature | notes |
 | --- | --- |
 | format combos, auto-detection, swap | read/write plugins from the shared registry |
