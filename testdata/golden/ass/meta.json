@@ -1,0 +1,9 @@
+{
+  "id": "ass",
+  "suffix": "ass",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": false,
+  "nondeterministic": false,
+  "notes": []
+}

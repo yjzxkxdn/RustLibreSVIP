@@ -1,0 +1,364 @@
+{
+  "ace": {
+    "id": "ace",
+    "suffix": "ace",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "acep": {
+    "id": "acep",
+    "suffix": "acep",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "aisp": {
+    "id": "aisp",
+    "suffix": "aisp",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ass": {
+    "id": "ass",
+    "suffix": "ass",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": false,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ccs": {
+    "id": "ccs",
+    "suffix": "ccs",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "ds": {
+    "id": "ds",
+    "suffix": "ds",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "dspx": {
+    "id": "dspx",
+    "suffix": "dspx",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "dv": {
+    "id": "dv",
+    "suffix": "dv",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "json": {
+    "id": "json",
+    "suffix": "json",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "lrc": {
+    "id": "lrc",
+    "suffix": "lrc",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": false,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "mid": {
+    "id": "mid",
+    "suffix": "mid",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "mtp": {
+    "id": "mtp",
+    "suffix": "mtp",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "musicxml": {
+    "id": "musicxml",
+    "suffix": "musicxml",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "nn": {
+    "id": "nn",
+    "suffix": "nn",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ppsf": {
+    "id": "ppsf",
+    "suffix": "ppsf",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "ps_project": {
+    "id": "ps_project",
+    "suffix": "ps_project",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "s5p": {
+    "id": "s5p",
+    "suffix": "s5p",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "srt": {
+    "id": "srt",
+    "suffix": "srt",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": false,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "svg": {
+    "id": "svg",
+    "suffix": "svg",
+    "fixture": "simple_singing.json",
+    "dumped": true,
+    "loaded": false,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "svip": {
+    "id": "svip",
+    "suffix": "svip",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "svip3": {
+    "id": "svip3",
+    "suffix": "svip3",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "svp": {
+    "id": "svp",
+    "suffix": "svp",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "tlp": {
+    "id": "tlp",
+    "suffix": "tlp",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "tlpx": {
+    "id": "tlpx",
+    "suffix": "tlpx",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "tsmsln": {
+    "id": "tsmsln",
+    "suffix": "tsmsln",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "tssln": {
+    "id": "tssln",
+    "suffix": "tssln",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ufdata": {
+    "id": "ufdata",
+    "suffix": "ufdata",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ust": {
+    "id": "ust",
+    "suffix": "ust",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "ustx": {
+    "id": "ustx",
+    "suffix": "ustx",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vfp": {
+    "id": "vfp",
+    "suffix": "vfp",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "vog": {
+    "id": "vog",
+    "suffix": "vog",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vpr": {
+    "id": "vpr",
+    "suffix": "vpr",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vshp": {
+    "id": "vshp",
+    "suffix": "vshp",
+    "fixture": "simple.json",
+    "dumped": false,
+    "loaded": false,
+    "nondeterministic": false,
+    "notes": [
+      "dump failed: NotImplementedError()"
+    ]
+  },
+  "vspx": {
+    "id": "vspx",
+    "suffix": "vspx",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vsq": {
+    "id": "vsq",
+    "suffix": "vsq",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vsqx": {
+    "id": "vsqx",
+    "suffix": "vsqx",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "vvproj": {
+    "id": "vvproj",
+    "suffix": "vvproj",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": true,
+    "notes": []
+  },
+  "vxf": {
+    "id": "vxf",
+    "suffix": "vxf",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "xvsq": {
+    "id": "xvsq",
+    "suffix": "xvsq",
+    "fixture": "simple_singing.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  },
+  "y77": {
+    "id": "y77",
+    "suffix": "y77",
+    "fixture": "simple.json",
+    "dumped": true,
+    "loaded": true,
+    "nondeterministic": false,
+    "notes": []
+  }
+}

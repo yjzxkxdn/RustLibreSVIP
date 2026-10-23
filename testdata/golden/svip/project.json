@@ -1,0 +1,131 @@
+{
+  "Version": "SVIP6.0.0",
+  "SongTempoList": [
+    {
+      "Position": 0,
+      "BPM": 120.0
+    }
+  ],
+  "TimeSignatureList": [
+    {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+    }
+  ],
+  "TrackList": [
+    {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "陈水若",
+      "ReverbPreset": "干声",
+      "NoteList": [
+        {
+          "StartPos": 0,
+          "Length": 480,
+          "KeyNumber": 60,
+          "HeadTag": null,
+          "Lyric": "啦",
+          "Pronunciation": null,
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 480,
+          "Length": 480,
+          "KeyNumber": 62,
+          "HeadTag": null,
+          "Lyric": "啦",
+          "Pronunciation": "li",
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 960,
+          "Length": 240,
+          "KeyNumber": 64,
+          "HeadTag": null,
+          "Lyric": "啦",
+          "Pronunciation": null,
+          "EditedPhones": null,
+          "Vibrato": null
+        }
+      ],
+      "EditedParams": {
+        "Pitch": {
+          "PointList": [
+            [
+              -192000,
+              -100
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              240,
+              10
+            ],
+            [
+              480,
+              0
+            ],
+            [
+              1073741823,
+              -100
+            ]
+          ],
+          "TotalPointsCount": 5
+        },
+        "Volume": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Breath": {
+          "PointList": [
+            [
+              -192000,
+              0
+            ],
+            [
+              1073741823,
+              0
+            ]
+          ],
+          "TotalPointsCount": 2
+        },
+        "Gender": {
+          "PointList": [
+            [
+              -192000,
+              0
+            ],
+            [
+              1073741823,
+              0
+            ]
+          ],
+          "TotalPointsCount": 2
+        },
+        "Strength": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        }
+      }
+    },
+    {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+    }
+  ]
+}

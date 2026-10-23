@@ -1,0 +1,11 @@
+{
+  "id": "vshp",
+  "suffix": "vshp",
+  "fixture": "simple.json",
+  "dumped": false,
+  "loaded": false,
+  "nondeterministic": false,
+  "notes": [
+    "dump failed: NotImplementedError()"
+  ]
+}

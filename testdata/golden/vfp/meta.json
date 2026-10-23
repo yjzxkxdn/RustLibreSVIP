@@ -1,0 +1,9 @@
+{
+  "id": "vfp",
+  "suffix": "vfp",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": true,
+  "notes": []
+}

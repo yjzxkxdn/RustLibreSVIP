@@ -1,0 +1,9 @@
+{
+  "id": "s5p",
+  "suffix": "s5p",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": false,
+  "notes": []
+}

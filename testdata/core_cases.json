@@ -1,0 +1,4371 @@
+{
+ "tempo": [
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 240,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 1920,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 3000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 100000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 2400,
+     "BPM": 90.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 240,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1680,
+     "BPM": 90.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 2400,
+     "BPM": 90.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 1920,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 90.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 2400,
+     "BPM": 90.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 3000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 90.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 2400,
+     "BPM": 90.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 100000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 90.0
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 2400,
+     "BPM": 90.0
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 1440,
+     "BPM": 140.0
+    },
+    {
+     "Position": 3360,
+     "BPM": 75.5
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 240,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 720,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2640,
+     "BPM": 75.5
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 1440,
+     "BPM": 140.0
+    },
+    {
+     "Position": 3360,
+     "BPM": 75.5
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 1920,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 140.0
+    },
+    {
+     "Position": 960,
+     "BPM": 75.5
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 1440,
+     "BPM": 140.0
+    },
+    {
+     "Position": 3360,
+     "BPM": 75.5
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 3000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 75.5
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 1440,
+     "BPM": 140.0
+    },
+    {
+     "Position": 3360,
+     "BPM": 75.5
+    }
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 100000,
+   "expected": [
+    {
+     "Position": 0,
+     "BPM": 75.5
+    }
+   ],
+   "shifted": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 1440,
+     "BPM": 140.0
+    },
+    {
+     "Position": 3360,
+     "BPM": 75.5
+    }
+   ]
+  }
+ ],
+ "beat": [
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 1,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 4,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 10,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 6,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "skip": 1,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 3,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 6,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "skip": 4,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 6,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "skip": 10,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 6,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 0,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 7,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 1,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 1,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 7,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 4,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 1,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 7,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "skip": 10,
+   "expected": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "shifted": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 7,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ]
+  }
+ ],
+ "bar": [
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 0,
+   "expected": 0
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 480,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1919,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1920,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 5000,
+   "expected": 3
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100000,
+   "expected": 53
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 0,
+   "expected": 0
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 480,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1919,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1920,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 5000,
+   "expected": 3
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    },
+    {
+     "BarIndex": 4,
+     "Numerator": 3,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100000,
+   "expected": 69
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 0,
+   "expected": 0
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 480,
+   "expected": 1
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1919,
+   "expected": 3
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 1920,
+   "expected": 3
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 5000,
+   "expected": 5
+  },
+  {
+   "signatures": [
+    {
+     "BarIndex": 0,
+     "Numerator": 3,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 2,
+     "Numerator": 6,
+     "Denominator": 8
+    },
+    {
+     "BarIndex": 5,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "ticks": 100000,
+   "expected": 55
+  }
+ ],
+ "sync": [
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0.0,
+    50.0,
+    240.0,
+    480.0,
+    960.0,
+    1440.0,
+    2500.0
+   ],
+   "secs_offsets": [
+    480.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0.0,
+    100.0,
+    480.0,
+    960.0,
+    1920.0,
+    2880.0,
+    5000.0
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0.0,
+    50.0,
+    240.0,
+    480.0,
+    960.0,
+    1440.0,
+    2500.0
+   ],
+   "secs_offsets": [
+    480.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ],
+   "actual_ticks": [
+    0.0,
+    100.0,
+    480.0,
+    960.0,
+    1920.0,
+    2880.0,
+    5000.0
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.208333333333333
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.3333333333333335,
+    6.277777777777778
+   ],
+   "actual_ticks": [
+    0.0,
+    50.0,
+    240.0,
+    480.0,
+    960.0,
+    1600.0,
+    3013.3333333333335
+   ],
+   "secs_offsets": [
+    480.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.3333333333333335,
+    6.277777777777778
+   ],
+   "actual_ticks": [
+    0.0,
+    100.0,
+    480.0,
+    960.0,
+    1920.0,
+    3200.0,
+    6026.666666666667
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.0,
+    3.333333333333333,
+    6.277777777777778
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1800.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    960.0,
+    1800.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ],
+   "actual_ticks": [
+    0.0,
+    50.0,
+    240.0,
+    480.0,
+    1040.0,
+    1680.0,
+    3093.3333333333335
+   ],
+   "secs_offsets": [
+    480.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 1920,
+     "BPM": 90.0
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ],
+   "actual_ticks": [
+    0.0,
+    100.0,
+    480.0,
+    960.0,
+    2080.0,
+    3360.0,
+    6186.666666666667
+   ],
+   "secs_offsets": [
+    960.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.10416666666666667,
+    0.5,
+    1.0,
+    2.1666666666666665,
+    3.5,
+    6.444444444444445
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    880.0000000000001,
+    1856.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 0,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    880.0000000000001,
+    1856.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.0571428571428574,
+    2.9142857142857137,
+    6.4242194891201505
+   ],
+   "actual_ticks": [
+    0.0,
+    60.0,
+    288.0,
+    576.0,
+    987.4285714285714,
+    1398.8571428571427,
+    3083.6253547776723
+   ],
+   "secs_offsets": [
+    528.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 0,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.0571428571428574,
+    2.9142857142857137,
+    6.4242194891201505
+   ],
+   "actual_ticks": [
+    0.0,
+    120.0,
+    576.0,
+    1152.0,
+    1974.857142857143,
+    2797.7142857142853,
+    6167.250709555345
+   ],
+   "secs_offsets": [
+    1056.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.2,
+    2.057142857142857,
+    2.914285714285714,
+    6.424219489120151
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    1040.0,
+    2048.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 480,
+   "absolute": false,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ],
+   "actual_ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs_offsets": [
+    1040.0,
+    2048.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 60.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714287,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875117
+   ],
+   "actual_ticks": [
+    0.0,
+    60.0,
+    288.0,
+    493.7142857142857,
+    905.1428571428571,
+    1492.3140964995268,
+    3177.0823084200565
+   ],
+   "secs_offsets": [
+    528.0,
+    960.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ]
+  },
+  {
+   "tempos": [
+    {
+     "Position": 0,
+     "BPM": 100.0
+    },
+    {
+     "Position": 960,
+     "BPM": 140.0
+    },
+    {
+     "Position": 2880,
+     "BPM": 75.5
+    }
+   ],
+   "skip": 480,
+   "absolute": true,
+   "default_tempo": 120.0,
+   "ticks": [
+    0,
+    100,
+    480,
+    960,
+    1920,
+    2880,
+    5000
+   ],
+   "secs": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714287,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875117
+   ],
+   "actual_ticks": [
+    0.0,
+    120.0,
+    576.0,
+    987.4285714285714,
+    1810.2857142857142,
+    2984.6281929990537,
+    6354.164616840113
+   ],
+   "secs_offsets": [
+    1056.0,
+    1920.0
+   ],
+   "batch": [
+    0.0,
+    0.125,
+    0.6,
+    1.0285714285714285,
+    1.8857142857142857,
+    3.108987701040681,
+    6.618921475875118
+   ]
+  }
+ ],
+ "curve": [
+  {
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "interval": 0,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      0
+     ],
+     [
+      240,
+      10
+     ],
+     [
+      480,
+      0
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "interval": 5,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      0
+     ],
+     [
+      240,
+      10
+     ],
+     [
+      480,
+      0
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "interval": 50,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     0
+    ],
+    [
+     240,
+     10
+    ],
+    [
+     480,
+     0
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      0
+     ],
+     [
+      240,
+      10
+     ],
+     [
+      480,
+      0
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "interval": 0,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      -100
+     ],
+     [
+      100,
+      0
+     ],
+     [
+      110,
+      5
+     ],
+     [
+      120,
+      -100
+     ],
+     [
+      500,
+      3
+     ],
+     [
+      640,
+      7
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "interval": 5,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      -100
+     ],
+     [
+      100,
+      0
+     ],
+     [
+      110,
+      5
+     ],
+     [
+      120,
+      -100
+     ],
+     [
+      500,
+      3
+     ],
+     [
+      640,
+      7
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "interval": 50,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     -100
+    ],
+    [
+     100,
+     0
+    ],
+    [
+     110,
+     5
+    ],
+    [
+     120,
+     -100
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     640,
+     7
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      -100
+     ],
+     [
+      100,
+      0
+     ],
+     [
+      110,
+      5
+     ],
+     [
+      120,
+      -100
+     ],
+     [
+      500,
+      3
+     ],
+     [
+      640,
+      7
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "interval": 0,
+   "interrupt": 0,
+   "reduced": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "segments": [
+    [
+     [
+      -192000,
+      -100
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      10,
+      1
+     ],
+     [
+      11,
+      2
+     ],
+     [
+      12,
+      3
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "interval": 5,
+   "interrupt": 0,
+   "reduced": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "segments": [
+    [
+     [
+      -192000,
+      -100
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      10,
+      1
+     ],
+     [
+      11,
+      2
+     ],
+     [
+      12,
+      3
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "interval": 50,
+   "interrupt": 0,
+   "reduced": [
+    [
+     -192000,
+     -100
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     1073741823,
+     -100
+    ]
+   ],
+   "segments": [
+    [
+     [
+      -192000,
+      -100
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      10,
+      1
+     ],
+     [
+      11,
+      2
+     ],
+     [
+      12,
+      3
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     5
+    ]
+   ],
+   "interval": 0,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     5
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      5
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     5
+    ]
+   ],
+   "interval": 5,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     5
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      5
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [
+    [
+     0,
+     5
+    ]
+   ],
+   "interval": 50,
+   "interrupt": 0,
+   "reduced": [
+    [
+     0,
+     5
+    ]
+   ],
+   "segments": [
+    [
+     [
+      0,
+      5
+     ]
+    ]
+   ]
+  },
+  {
+   "points": [],
+   "interval": 0,
+   "interrupt": 0,
+   "reduced": [],
+   "segments": []
+  },
+  {
+   "points": [],
+   "interval": 5,
+   "interrupt": 0,
+   "reduced": [],
+   "segments": []
+  },
+  {
+   "points": [],
+   "interval": 50,
+   "interrupt": 0,
+   "reduced": [],
+   "segments": []
+  }
+ ],
+ "transforms": [
+  {
+   "name": "simple",
+   "expected_zoom_2": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 240.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 960,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 960,
+        "Length": 960,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 1920,
+        "Length": 480,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          -1920,
+          0
+         ],
+         [
+          -1440,
+          10
+         ],
+         [
+          -960,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_zoom_half": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 60.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 240,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 240,
+        "Length": 240,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 480,
+        "Length": 120,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          960,
+          0
+         ],
+         [
+          1080,
+          10
+         ],
+         [
+          1200,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_limit_1": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 120.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 480,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 480,
+        "Length": 480,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 960,
+        "Length": 240,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          0,
+          0
+         ],
+         [
+          240,
+          10
+         ],
+         [
+          480,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_reset": {
+    "Version": "",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 100.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 400,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 400,
+        "Length": 400,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 800,
+        "Length": 200,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          320,
+          0
+         ],
+         [
+          520,
+          10
+         ],
+         [
+          720,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "dynamic",
+   "expected_zoom_2": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 240.0
+     },
+     {
+      "Position": 1920,
+      "BPM": 180.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 960,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 960,
+        "Length": 960,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 1920,
+        "Length": 480,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          -1920,
+          0
+         ],
+         [
+          -1440,
+          10
+         ],
+         [
+          -960,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_zoom_half": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 60.0
+     },
+     {
+      "Position": 480,
+      "BPM": 45.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 240,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 240,
+        "Length": 240,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 480,
+        "Length": 120,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          960,
+          0
+         ],
+         [
+          1080,
+          10
+         ],
+         [
+          1200,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_limit_1": {
+    "Version": "1.0.0",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 120.0
+     },
+     {
+      "Position": 960,
+      "BPM": 90.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 480,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 480,
+        "Length": 480,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 960,
+        "Length": 240,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          0,
+          0
+         ],
+         [
+          240,
+          10
+         ],
+         [
+          480,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   },
+   "expected_reset": {
+    "Version": "",
+    "SongTempoList": [
+     {
+      "Position": 0,
+      "BPM": 100.0
+     }
+    ],
+    "TimeSignatureList": [
+     {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+     }
+    ],
+    "TrackList": [
+     {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+       {
+        "StartPos": 0,
+        "Length": 400,
+        "KeyNumber": 60,
+        "HeadTag": null,
+        "Lyric": "la",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 400,
+        "Length": 400,
+        "KeyNumber": 62,
+        "HeadTag": null,
+        "Lyric": "li",
+        "Pronunciation": "li",
+        "EditedPhones": null,
+        "Vibrato": null
+       },
+       {
+        "StartPos": 800,
+        "Length": 267,
+        "KeyNumber": 64,
+        "HeadTag": null,
+        "Lyric": "lu",
+        "Pronunciation": null,
+        "EditedPhones": null,
+        "Vibrato": null
+       }
+      ],
+      "EditedParams": {
+       "Pitch": {
+        "PointList": [
+         [
+          320,
+          0
+         ],
+         [
+          520,
+          10
+         ],
+         [
+          720,
+          0
+         ]
+        ],
+        "TotalPointsCount": 3
+       },
+       "Volume": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Breath": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Gender": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       },
+       "Strength": {
+        "PointList": [],
+        "TotalPointsCount": 0
+       }
+      }
+     },
+     {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "audio.wav",
+      "Offset": 0
+     }
+    ]
+   }
+  }
+ ],
+ "projects": {
+  "simple": {
+   "Version": "1.0.0",
+   "SongTempoList": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    }
+   ],
+   "TimeSignatureList": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "TrackList": [
+    {
+     "Title": "Track 1",
+     "Mute": false,
+     "Solo": false,
+     "Volume": 1.0,
+     "Pan": 0.0,
+     "Type": "Singing",
+     "AISingerName": "Singer",
+     "ReverbPreset": "",
+     "NoteList": [
+      {
+       "StartPos": 0,
+       "Length": 480,
+       "KeyNumber": 60,
+       "HeadTag": null,
+       "Lyric": "la",
+       "Pronunciation": null,
+       "EditedPhones": null,
+       "Vibrato": null
+      },
+      {
+       "StartPos": 480,
+       "Length": 480,
+       "KeyNumber": 62,
+       "HeadTag": null,
+       "Lyric": "li",
+       "Pronunciation": "li",
+       "EditedPhones": null,
+       "Vibrato": null
+      },
+      {
+       "StartPos": 960,
+       "Length": 240,
+       "KeyNumber": 64,
+       "HeadTag": null,
+       "Lyric": "lu",
+       "Pronunciation": null,
+       "EditedPhones": null,
+       "Vibrato": null
+      }
+     ],
+     "EditedParams": {
+      "Pitch": {
+       "PointList": [
+        [
+         0,
+         0
+        ],
+        [
+         240,
+         10
+        ],
+        [
+         480,
+         0
+        ]
+       ],
+       "TotalPointsCount": 3
+      },
+      "Volume": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Breath": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Gender": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Strength": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      }
+     }
+    },
+    {
+     "Title": "Inst",
+     "Mute": false,
+     "Solo": false,
+     "Volume": 1.0,
+     "Pan": 0.0,
+     "Type": "Instrumental",
+     "AudioFilePath": "audio.wav",
+     "Offset": 0
+    }
+   ]
+  },
+  "dynamic": {
+   "Version": "1.0.0",
+   "SongTempoList": [
+    {
+     "Position": 0,
+     "BPM": 120.0
+    },
+    {
+     "Position": 960,
+     "BPM": 90.0
+    }
+   ],
+   "TimeSignatureList": [
+    {
+     "BarIndex": 0,
+     "Numerator": 4,
+     "Denominator": 4
+    }
+   ],
+   "TrackList": [
+    {
+     "Title": "Track 1",
+     "Mute": false,
+     "Solo": false,
+     "Volume": 1.0,
+     "Pan": 0.0,
+     "Type": "Singing",
+     "AISingerName": "Singer",
+     "ReverbPreset": "",
+     "NoteList": [
+      {
+       "StartPos": 0,
+       "Length": 480,
+       "KeyNumber": 60,
+       "HeadTag": null,
+       "Lyric": "la",
+       "Pronunciation": null,
+       "EditedPhones": null,
+       "Vibrato": null
+      },
+      {
+       "StartPos": 480,
+       "Length": 480,
+       "KeyNumber": 62,
+       "HeadTag": null,
+       "Lyric": "li",
+       "Pronunciation": "li",
+       "EditedPhones": null,
+       "Vibrato": null
+      },
+      {
+       "StartPos": 960,
+       "Length": 240,
+       "KeyNumber": 64,
+       "HeadTag": null,
+       "Lyric": "lu",
+       "Pronunciation": null,
+       "EditedPhones": null,
+       "Vibrato": null
+      }
+     ],
+     "EditedParams": {
+      "Pitch": {
+       "PointList": [
+        [
+         0,
+         0
+        ],
+        [
+         240,
+         10
+        ],
+        [
+         480,
+         0
+        ]
+       ],
+       "TotalPointsCount": 3
+      },
+      "Volume": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Breath": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Gender": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      },
+      "Strength": {
+       "PointList": [],
+       "TotalPointsCount": 0
+      }
+     }
+    },
+    {
+     "Title": "Inst",
+     "Mute": false,
+     "Solo": false,
+     "Volume": 1.0,
+     "Pan": 0.0,
+     "Type": "Instrumental",
+     "AudioFilePath": "audio.wav",
+     "Offset": 0
+    }
+   ]
+  }
+ }
+}

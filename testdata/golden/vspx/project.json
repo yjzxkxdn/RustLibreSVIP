@@ -1,0 +1,82 @@
+{
+  "Version": "",
+  "SongTempoList": [
+    {
+      "Position": 0,
+      "BPM": 120.0
+    }
+  ],
+  "TimeSignatureList": [
+    {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+    }
+  ],
+  "TrackList": [
+    {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "Singer",
+      "ReverbPreset": "",
+      "NoteList": [
+        {
+          "StartPos": 0,
+          "Length": 480,
+          "KeyNumber": 60,
+          "HeadTag": null,
+          "Lyric": "la",
+          "Pronunciation": "la",
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 480,
+          "Length": 480,
+          "KeyNumber": 62,
+          "HeadTag": null,
+          "Lyric": "li",
+          "Pronunciation": "li",
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 960,
+          "Length": 240,
+          "KeyNumber": 64,
+          "HeadTag": null,
+          "Lyric": "lu",
+          "Pronunciation": "lu",
+          "EditedPhones": null,
+          "Vibrato": null
+        }
+      ],
+      "EditedParams": {
+        "Pitch": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Volume": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Breath": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Gender": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Strength": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        }
+      }
+    }
+  ]
+}

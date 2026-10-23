@@ -1,0 +1,9 @@
+{
+  "id": "ps_project",
+  "suffix": "ps_project",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": true,
+  "notes": []
+}

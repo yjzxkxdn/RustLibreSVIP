@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120.0" height="1560"><style>.note {
+    fill: #cfc;
+    stroke: #060;
+    stroke-width: 1px;
+}
+.pitch {
+    fill: none;
+    stroke: #9a9;
+    stroke-width: 2px;
+}
+text {
+    font-size: 16px;
+    text-anchor: start;
+}
+.inner {
+    fill: #000;
+}
+.side {
+    fill: #000;
+    font-size: 12px;
+}
+.line {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1px;
+}</style><rect class="note" x="0.0" y="96.0" width="48.0" height="24.0" rx="4" ry="4"/><rect class="note" x="48.0" y="48.0" width="48.0" height="24.0" rx="4" ry="4"/><rect class="note" x="96.0" y="0.0" width="24.0" height="24.0" rx="4" ry="4"/><text font-size="16" class="side" x="4.0" y="140.0">la</text><text font-size="16" class="side" x="52.0" y="92.0">li</text><text font-size="16" class="inner pinyin" x="52.0" y="66.0">li</text><text font-size="16" class="side" x="100.0" y="44.0">lu</text></svg>

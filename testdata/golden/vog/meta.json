@@ -1,0 +1,11 @@
+{
+  "id": "vog",
+  "suffix": "vog",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": true,
+  "notes": [
+    "ZIP DOS timestamp comes from the wall clock (2 s granularity); Python dumps differ across runs."
+  ]
+}

@@ -1,0 +1,587 @@
+{
+  "Version": "1.0.0",
+  "SongTempoList": [
+    {
+      "Position": 0,
+      "BPM": 120.0
+    }
+  ],
+  "TimeSignatureList": [
+    {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+    }
+  ],
+  "TrackList": [
+    {
+      "Title": "Track 1",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "",
+      "ReverbPreset": "",
+      "NoteList": [
+        {
+          "StartPos": 0,
+          "Length": 480,
+          "KeyNumber": 60,
+          "HeadTag": null,
+          "Lyric": "la",
+          "Pronunciation": null,
+          "EditedPhones": null,
+          "Vibrato": {
+            "StartPercent": 0.0,
+            "EndPercent": 1.0,
+            "IsAntiPhase": false,
+            "Amplitude": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            },
+            "Frequency": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            }
+          }
+        },
+        {
+          "StartPos": 480,
+          "Length": 480,
+          "KeyNumber": 62,
+          "HeadTag": null,
+          "Lyric": "li",
+          "Pronunciation": null,
+          "EditedPhones": null,
+          "Vibrato": {
+            "StartPercent": 0.0,
+            "EndPercent": 1.0,
+            "IsAntiPhase": false,
+            "Amplitude": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            },
+            "Frequency": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            }
+          }
+        },
+        {
+          "StartPos": 960,
+          "Length": 240,
+          "KeyNumber": 64,
+          "HeadTag": null,
+          "Lyric": "lu",
+          "Pronunciation": null,
+          "EditedPhones": null,
+          "Vibrato": {
+            "StartPercent": 0.0,
+            "EndPercent": 1.0,
+            "IsAntiPhase": false,
+            "Amplitude": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            },
+            "Frequency": {
+              "PointList": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100000,
+                  0
+                ]
+              ],
+              "TotalPointsCount": 2
+            }
+          }
+        }
+      ],
+      "EditedParams": {
+        "Pitch": {
+          "PointList": [
+            [
+              -192000,
+              -100
+            ],
+            [
+              0,
+              -100
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              15,
+              1
+            ],
+            [
+              20,
+              1
+            ],
+            [
+              25,
+              1
+            ],
+            [
+              30,
+              1
+            ],
+            [
+              35,
+              1
+            ],
+            [
+              40,
+              2
+            ],
+            [
+              45,
+              2
+            ],
+            [
+              50,
+              2
+            ],
+            [
+              55,
+              2
+            ],
+            [
+              60,
+              2
+            ],
+            [
+              65,
+              3
+            ],
+            [
+              70,
+              3
+            ],
+            [
+              75,
+              3
+            ],
+            [
+              80,
+              3
+            ],
+            [
+              85,
+              4
+            ],
+            [
+              90,
+              4
+            ],
+            [
+              95,
+              4
+            ],
+            [
+              100,
+              4
+            ],
+            [
+              105,
+              4
+            ],
+            [
+              110,
+              5
+            ],
+            [
+              115,
+              5
+            ],
+            [
+              120,
+              5
+            ],
+            [
+              125,
+              5
+            ],
+            [
+              130,
+              5
+            ],
+            [
+              135,
+              6
+            ],
+            [
+              140,
+              6
+            ],
+            [
+              145,
+              6
+            ],
+            [
+              150,
+              6
+            ],
+            [
+              155,
+              6
+            ],
+            [
+              160,
+              7
+            ],
+            [
+              165,
+              7
+            ],
+            [
+              170,
+              7
+            ],
+            [
+              175,
+              7
+            ],
+            [
+              180,
+              8
+            ],
+            [
+              185,
+              8
+            ],
+            [
+              190,
+              8
+            ],
+            [
+              195,
+              8
+            ],
+            [
+              200,
+              8
+            ],
+            [
+              205,
+              9
+            ],
+            [
+              210,
+              9
+            ],
+            [
+              215,
+              9
+            ],
+            [
+              220,
+              9
+            ],
+            [
+              225,
+              9
+            ],
+            [
+              230,
+              10
+            ],
+            [
+              235,
+              10
+            ],
+            [
+              240,
+              10
+            ],
+            [
+              245,
+              10
+            ],
+            [
+              250,
+              10
+            ],
+            [
+              255,
+              9
+            ],
+            [
+              260,
+              9
+            ],
+            [
+              265,
+              9
+            ],
+            [
+              270,
+              9
+            ],
+            [
+              275,
+              9
+            ],
+            [
+              280,
+              8
+            ],
+            [
+              285,
+              8
+            ],
+            [
+              290,
+              8
+            ],
+            [
+              295,
+              8
+            ],
+            [
+              300,
+              8
+            ],
+            [
+              305,
+              7
+            ],
+            [
+              310,
+              7
+            ],
+            [
+              315,
+              7
+            ],
+            [
+              320,
+              7
+            ],
+            [
+              325,
+              6
+            ],
+            [
+              330,
+              6
+            ],
+            [
+              335,
+              6
+            ],
+            [
+              340,
+              6
+            ],
+            [
+              345,
+              6
+            ],
+            [
+              350,
+              5
+            ],
+            [
+              355,
+              5
+            ],
+            [
+              360,
+              5
+            ],
+            [
+              365,
+              5
+            ],
+            [
+              370,
+              5
+            ],
+            [
+              375,
+              4
+            ],
+            [
+              380,
+              4
+            ],
+            [
+              385,
+              4
+            ],
+            [
+              390,
+              4
+            ],
+            [
+              395,
+              4
+            ],
+            [
+              400,
+              3
+            ],
+            [
+              405,
+              3
+            ],
+            [
+              410,
+              3
+            ],
+            [
+              415,
+              3
+            ],
+            [
+              420,
+              2
+            ],
+            [
+              425,
+              2
+            ],
+            [
+              430,
+              2
+            ],
+            [
+              435,
+              2
+            ],
+            [
+              440,
+              2
+            ],
+            [
+              445,
+              1
+            ],
+            [
+              450,
+              1
+            ],
+            [
+              455,
+              1
+            ],
+            [
+              460,
+              1
+            ],
+            [
+              465,
+              1
+            ],
+            [
+              470,
+              0
+            ],
+            [
+              475,
+              0
+            ],
+            [
+              480,
+              0
+            ],
+            [
+              480,
+              -100
+            ],
+            [
+              1073741823,
+              -100
+            ]
+          ],
+          "TotalPointsCount": 101
+        },
+        "Volume": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Breath": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Gender": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Strength": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        }
+      }
+    },
+    {
+      "Title": "Inst",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Instrumental",
+      "AudioFilePath": "E:\\RUST_LIBRESVIP\\RustLibreSVIP\\testdata\\golden\\dspx\\audio.wav",
+      "Offset": 0
+    }
+  ]
+}

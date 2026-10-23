@@ -1,0 +1,9 @@
+{
+  "id": "svg",
+  "suffix": "svg",
+  "fixture": "simple_singing.json",
+  "dumped": true,
+  "loaded": false,
+  "nondeterministic": false,
+  "notes": []
+}

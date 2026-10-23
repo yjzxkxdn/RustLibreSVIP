@@ -1,0 +1,9 @@
+{
+  "id": "musicxml",
+  "suffix": "musicxml",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": false,
+  "notes": []
+}

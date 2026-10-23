@@ -1,0 +1,25 @@
+[
+  {
+    "text": "la li lu SP",
+    "ph_seq": "l a l i l u SP",
+    "note_seq": "C4 D4 E4 rest",
+    "note_dur": "0.5 0.5 0.25 0.5",
+    "note_dur_seq": "0.5 0.5 0.25 0.5",
+    "note_slur": "0 0 0 0",
+    "note_glide": null,
+    "is_slur_seq": "0 0 0 0 0 0 0",
+    "ph_dur": null,
+    "ph_num": "2 2 1 2",
+    "f0_timestep": 0.005,
+    "f0_seq": null,
+    "input_type": "phoneme",
+    "offset": 0.0,
+    "seed": null,
+    "spk_mix": null,
+    "spk_mix_timestep": null,
+    "gender": null,
+    "gender_timestep": 0.005,
+    "velocity": null,
+    "velocity_timestep": null
+  }
+]

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario Code="7251BC4B6168E7B2992FA620BD3E1E77">
+  <Generation>
+    <Author Version="3.2.21.2"/>
+    <TTS Version="3.1.0">
+      <Dictionary Version="1.0.0"/>
+      <SoundSources/>
+    </TTS>
+    <SVSS Version="3.0.5">
+      <Dictionary Version="1.0.0"/>
+      <SoundSources>
+        <SoundSource Version="1.0.0" Id="A" Name="さとうささら"/>
+      </SoundSources>
+    </SVSS>
+  </Generation>
+  <Sequence Id="">
+    <Scene Id="">
+      <Units>
+        <Unit Version="1.0" Id="" Group="bc5f30e7-d062-4b5e-88a5-75929d25a075" StartTime="00:00:00" Duration="00:00:01.250" Category="SingerSong" CastId="A" Language="Japanese">
+          <Song Version="1.02">
+            <Tempo>
+              <Sound Clock="0" Tempo="120.0"/>
+            </Tempo>
+            <Beat>
+              <Time Clock="0" Beats="4" BeatType="4"/>
+            </Beat>
+            <Score>
+              <Note Clock="0" PitchStep="0" PitchOctave="4" Duration="960" Lyric="la"/>
+              <Note Clock="960" PitchStep="2" PitchOctave="4" Duration="960" Lyric="li" Phonetic="li"/>
+              <Note Clock="1920" PitchStep="4" PitchOctave="4" Duration="480" Lyric="lu"/>
+            </Score>
+            <Parameter>
+              <LogF0 Length="201">
+                <Data Index="-400" Repeat="50">2.1011784386926213</Data>
+                <Data Repeat="50">2.106954665197287</Data>
+                <Data Index="-300">2.1011784386926213</Data>
+              </LogF0>
+            </Parameter>
+          </Song>
+        </Unit>
+      </Units>
+      <Groups>
+        <Group Version="1.0" Id="bc5f30e7-d062-4b5e-88a5-75929d25a075" Category="SingerSong" Name="Track 1" IsSolo="false" IsMuted="false" CastId="A" Language="Japanese"/>
+      </Groups>
+      <SoundSetting Rhythm="4/4" Tempo="120.0"/>
+    </Scene>
+  </Sequence>
+</Scenario>

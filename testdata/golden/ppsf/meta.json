@@ -1,0 +1,9 @@
+{
+  "id": "ppsf",
+  "suffix": "ppsf",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": true,
+  "notes": []
+}

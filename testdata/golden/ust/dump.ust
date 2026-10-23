@@ -1,0 +1,28 @@
+[#VERSION]
+UST Version=1.2
+Charset=SHIFT_JIS
+[#SETTING]
+Tempo=120.0
+Tracks=1
+Project=New Project
+Mode2=True
+[#0000]
+Length=480
+Lyric=la
+NoteNum=60
+PBType=5
+PBS=2000.0
+PBW=1,250.0,250.0
+PBY=0.0,-599.0,0.0
+PBM=,
+[#0001]
+Length=480
+Lyric=li
+NoteNum=62
+PBType=5
+[#0002]
+Length=240
+Lyric=lu
+NoteNum=64
+PBType=5
+[#TRACKEND]

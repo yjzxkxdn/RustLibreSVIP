@@ -1,0 +1,9 @@
+{
+  "id": "svip",
+  "suffix": "svip",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": false,
+  "notes": []
+}

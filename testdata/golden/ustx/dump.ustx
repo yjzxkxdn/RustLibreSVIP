@@ -1,0 +1,122 @@
+name: New Project
+comment: ''
+output_dir: Vocal
+cache_dir: UCache
+ustx_version: '0.6'
+bpm: 120.0
+beat_per_bar: 4
+beat_unit: 4
+resolution: 480
+time_signatures:
+- bar_position: 0
+  beat_per_bar: 4
+  beat_unit: 4
+tempos:
+- position: 0
+  bpm: 120.0
+tracks:
+- track_name: Track 1
+  track_expressions: []
+  singer: Singer
+  phonemizer: OpenUtau.Core.DefaultPhonemizer
+  renderer_settings:
+    renderer: CLASSIC
+  mute: false
+  solo: false
+  volume: 0.0
+- track_name: Inst
+  track_expressions: []
+  singer: ''
+  phonemizer: OpenUtau.Core.DefaultPhonemizer
+  renderer_settings:
+    renderer: CLASSIC
+  mute: false
+  solo: false
+  volume: 0.0
+voice_parts:
+- name: Track 1
+  position: 0
+  track_no: 0
+  comment: ''
+  notes:
+  - position: 0
+    duration: 480
+    tone: 60
+    lyric: la
+    pitch:
+      data:
+      - x: -40.0
+        y: 0.0
+        shape: io
+      - x: 0.0
+        y: 0.0
+        shape: io
+      snap_first: false
+    vibrato:
+      length: 0.0
+      period: 175.0
+      depth: 25.0
+      in: 10.0
+      out: 10.0
+      shift: 0.0
+      drift: 0.0
+      vol_link: 0.0
+    note_expressions: []
+    phoneme_expressions: []
+    phoneme_overrides: []
+  - position: 480
+    duration: 480
+    tone: 62
+    lyric: li
+    pitch:
+      data:
+      - x: -40.0
+        y: -20.0
+        shape: io
+      - x: 0.0
+        y: 0.0
+        shape: io
+      snap_first: true
+    vibrato:
+      length: 0.0
+      period: 175.0
+      depth: 25.0
+      in: 10.0
+      out: 10.0
+      shift: 0.0
+      drift: 0.0
+      vol_link: 0.0
+    note_expressions: []
+    phoneme_expressions: []
+    phoneme_overrides: []
+  - position: 960
+    duration: 240
+    tone: 64
+    lyric: lu
+    pitch:
+      data:
+      - x: -40.0
+        y: -20.0
+        shape: io
+      - x: 0.0
+        y: 0.0
+        shape: io
+      snap_first: true
+    vibrato:
+      length: 0.0
+      period: 175.0
+      depth: 25.0
+      in: 10.0
+      out: 10.0
+      shift: 0.0
+      drift: 0.0
+      vol_link: 0.0
+    note_expressions: []
+    phoneme_expressions: []
+    phoneme_overrides: []
+  curves: []
+  duration: 1200
+wave_parts: []
+exp_primary: 0
+exp_secondary: 1
+key: 0

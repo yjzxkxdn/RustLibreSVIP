@@ -1,0 +1,62 @@
+//! Port of `libresvip.plugins.svip3.singers` (the `singers.json` bijection).
+//!
+//! `bidict(json.loads(singers.json))` maps a singer id to a display name and
+//! exposes the inverse mapping (`singers_data.inverse.get(name)`).
+
+/// `singers_data` entries, in file order: `(singer id, singer name)`.
+pub static SINGERS_DATA: [(&str, &str); 36] = [
+    ("7d0c0cfc-00b3-4dca-b7b0-d20b634b531a", "小冰"),
+    ("c5ed53a0-9d84-4fa7-bef5-e99087b046f0", "陈水若"),
+    ("f532206c-47de-4103-9017-cbb91b3f9366", "何畅"),
+    ("540cdf30-d97b-488a-81c6-c56ad862b676", "若溪"),
+    ("9ccee3dd-9019-445f-a1cd-c51426162bd3", "陈子渝"),
+    ("e0ce6af3-368c-49e7-b701-0640d7408193", "卢卢"),
+    ("4884b6a0-ab3d-4428-9a83-981e9b54d92b", "小堂妹"),
+    ("4cf3650e-b017-4b04-be90-0b5625d889c8", "徐梦甜"),
+    ("51c83781-5fa9-4bb6-bb35-76e64cf7b433", "崔璨"),
+    ("f5481c5c-b1ad-450a-a280-19d3469747a1", "夏语冰"),
+    ("a42e0dc8-982e-4f30-982d-41fba57309ce", "言泽宇"),
+    ("e25b59e1-c164-497d-92f5-01c20f7283a0", "小鱼豆腐"),
+    ("08fbc6a7-7510-4e63-adb5-abc013560099", "水木林森"),
+    ("a3680b51-0460-4b92-8299-099dca936530", "怪枝"),
+    ("fdf0e0c3-2b45-4dd3-b3c7-70fdfa55457f", "麦麦"),
+    ("75805007-db40-4125-a22e-87742c6d3e65", "洛天依"),
+    ("ae8808bb-7858-4051-b3f6-67c450ccd177", "严颜"),
+    ("090591a5-d535-4f16-b38a-849f971c0fa0", "海莉"),
+    ("c49f3f96-02cf-439f-90b2-6c4f27cb83f7", "挚彬"),
+    ("b20efe26-9e15-4a59-b526-d1316361fca4", "宋汶娜"),
+    ("31aceb85-c488-40cb-8745-8aaf63d9d8d5", "海川"),
+    ("a4ad3d01-c6c3-415a-a3bc-3afa6dcf54f6", "姜莱"),
+    ("8643d5b2-e103-4b96-9358-81f7d4d89474", "洛希"),
+    ("15452046-bd99-45b9-9fa5-14aeabe64052", "艾尔法"),
+    ("bd36a6c3-47d0-448e-a54a-55ede1e62bd5", "陌笙"),
+    ("8fc502e1-28a6-490e-824f-987772ea48ff", "白屿川"),
+    ("74ec9910-ddd5-4f31-a1b2-e109fc555720", "林婧怡"),
+    ("78bd36f6-7fd5-48e6-99f6-7d1b87fbf341", "时萧然"),
+    ("02f20423-3b33-493a-b4ea-e188c87aefad", "荼鸢"),
+    ("5e89d107-29f3-48e6-83b8-129bcca0fedf", "福姬彩华"),
+    ("49b583ba-b524-44c7-ac4d-615532ac36bb", "叶画秋"),
+    ("86f7bf1f-8f42-43e6-a029-c17929c3ec5b", "殷子之瀛"),
+    ("2c606f70-b0e4-40aa-983f-1ee3fa4eb4e0", "旦增白玛"),
+    ("d0ec3d90-fb74-4706-9da3-19a47a25ea2a", "雨令"),
+    ("5501a4d7-3b01-4c22-a158-5dc21c0a1cfa", "文社长"),
+    ("8122251e-e90f-4ce8-b2c2-79837397c93c", "豪叶"),
+];
+
+/// `singers_data.get(singer_id, "")`.
+pub fn singer_name(singer_id: &str) -> &'static str {
+    SINGERS_DATA
+        .iter()
+        .find(|(id, _)| *id == singer_id)
+        .map(|(_, name)| *name)
+        .unwrap_or("")
+}
+
+/// `singers_data.inverse.get(name, DEFAULT_SINGER_ID)`.
+pub fn singer_id(name: &str) -> &'static str {
+    SINGERS_DATA
+        .iter()
+        .find(|(_, singer)| *singer == name)
+        .map(|(id, _)| *id)
+        .unwrap_or(super::constants::DEFAULT_SINGER_ID)
+}

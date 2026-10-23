@@ -1,0 +1,9 @@
+{
+  "id": "aisp",
+  "suffix": "aisp",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": true,
+  "nondeterministic": false,
+  "notes": []
+}

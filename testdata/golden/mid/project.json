@@ -1,0 +1,131 @@
+{
+  "Version": "",
+  "SongTempoList": [
+    {
+      "Position": 0,
+      "BPM": 120.0
+    }
+  ],
+  "TimeSignatureList": [
+    {
+      "BarIndex": 0,
+      "Numerator": 4,
+      "Denominator": 4
+    }
+  ],
+  "TrackList": [
+    {
+      "Title": "Track 2 (0)",
+      "Mute": false,
+      "Solo": false,
+      "Volume": 1.0,
+      "Pan": 0.0,
+      "Type": "Singing",
+      "AISingerName": "",
+      "ReverbPreset": "",
+      "NoteList": [
+        {
+          "StartPos": 0,
+          "Length": 480,
+          "KeyNumber": 60,
+          "HeadTag": null,
+          "Lyric": "la",
+          "Pronunciation": "la",
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 480,
+          "Length": 480,
+          "KeyNumber": 62,
+          "HeadTag": null,
+          "Lyric": "li",
+          "Pronunciation": "li",
+          "EditedPhones": null,
+          "Vibrato": null
+        },
+        {
+          "StartPos": 960,
+          "Length": 240,
+          "KeyNumber": 64,
+          "HeadTag": null,
+          "Lyric": "lu",
+          "Pronunciation": "lu",
+          "EditedPhones": null,
+          "Vibrato": null
+        }
+      ],
+      "EditedParams": {
+        "Pitch": {
+          "PointList": [
+            [
+              -192000,
+              -100
+            ],
+            [
+              1920,
+              -100
+            ],
+            [
+              1920,
+              6000
+            ],
+            [
+              1920,
+              -100
+            ],
+            [
+              2400,
+              -100
+            ],
+            [
+              2400,
+              6200
+            ],
+            [
+              2400,
+              -100
+            ],
+            [
+              2880,
+              -100
+            ],
+            [
+              2880,
+              6400
+            ],
+            [
+              2880,
+              -100
+            ],
+            [
+              2880,
+              -100
+            ],
+            [
+              1073741823,
+              -100
+            ]
+          ],
+          "TotalPointsCount": 12
+        },
+        "Volume": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Breath": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Gender": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        },
+        "Strength": {
+          "PointList": [],
+          "TotalPointsCount": 0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/libresvip-core",
+    "crates/libresvip-plugins",
+    "crates/libresvip-middlewares",
+    "crates/libresvip-cli",
+]
+
+[workspace.package]
+version = "2.9.2"
+edition = "2021"
+rust-version = "1.80"
+license = "MIT"
+repository = "https://github.com/SoulMelody/LibreSVIP"
+
+[workspace.dependencies]
+libresvip-core = { path = "crates/libresvip-core" }
+libresvip-plugins = { path = "crates/libresvip-plugins" }
+libresvip-middlewares = { path = "crates/libresvip-middlewares" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
+serde_yaml = "0.9"
+indexmap = { version = "2", features = ["serde"] }
+thiserror = "2"
+anyhow = "1"
+regex = "1"
+encoding_rs = "0.8"
+base64 = "0.22"
+quick-xml = "0.37"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

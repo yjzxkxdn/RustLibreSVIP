@@ -1,0 +1,9 @@
+{
+  "id": "srt",
+  "suffix": "srt",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": false,
+  "nondeterministic": false,
+  "notes": []
+}

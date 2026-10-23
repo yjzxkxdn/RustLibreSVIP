@@ -1,0 +1,180 @@
+{
+  "bgm_info": {
+    "tracks": [],
+    "bgm_volume": 1.0,
+    "mute": false,
+    "solo": false
+  },
+  "br_notes": [],
+  "debug_info": {
+    "device": "",
+    "os": "",
+    "platform": "android",
+    "recordType": "create",
+    "version": "3.2.5"
+  },
+  "notes": [],
+  "role_info": {
+    "name": "",
+    "role_id": 0
+  },
+  "setting": {
+    "bgm_volume": 1.0,
+    "sampler_loop": false,
+    "singer_volume": 1.0
+  },
+  "song_info": {
+    "author": "",
+    "beat_of_bar": 4,
+    "bpm": 120.0,
+    "duration": 1.25,
+    "first_beat_offset": 0.0,
+    "key": "C",
+    "lyric": "",
+    "name": "New Project",
+    "operateScale": [
+      84,
+      83,
+      81,
+      79,
+      77,
+      76,
+      74,
+      72,
+      71,
+      69,
+      67,
+      65,
+      64,
+      62,
+      60
+    ],
+    "scale": [
+      84,
+      83,
+      81,
+      79,
+      77,
+      76,
+      74,
+      72,
+      71,
+      69,
+      67,
+      65,
+      64,
+      62,
+      60
+    ],
+    "segment_of_beat": 4,
+    "song_id": 1792690664870,
+    "start": 0.0,
+    "unReadLyric": "",
+    "user_id": 0
+  },
+  "tracks": [
+    {
+      "AI_SVS_mode": true,
+      "br_notes": [],
+      "front": true,
+      "lyric": "lalilu",
+      "unReadLyric": "",
+      "mute": false,
+      "notes": [
+        {
+          "start_time": 0.0,
+          "end_time": 0.5,
+          "pitch": 72,
+          "word": "la",
+          "pinyin": "la",
+          "pitchBends": [],
+          "br": false,
+          "config": "",
+          "key": "C",
+          "scale": [
+            84,
+            83,
+            81,
+            79,
+            77,
+            76,
+            74,
+            72,
+            71,
+            69,
+            67,
+            65,
+            64,
+            62,
+            60
+          ]
+        },
+        {
+          "start_time": 0.5,
+          "end_time": 1.0,
+          "pitch": 74,
+          "word": "li",
+          "pinyin": "li",
+          "pitchBends": [],
+          "br": false,
+          "config": "",
+          "key": "C",
+          "scale": [
+            84,
+            83,
+            81,
+            79,
+            77,
+            76,
+            74,
+            72,
+            71,
+            69,
+            67,
+            65,
+            64,
+            62,
+            60
+          ]
+        },
+        {
+          "start_time": 1.0,
+          "end_time": 1.25,
+          "pitch": 76,
+          "word": "lu",
+          "pinyin": "lu",
+          "pitchBends": [],
+          "br": false,
+          "config": "",
+          "key": "C",
+          "scale": [
+            84,
+            83,
+            81,
+            79,
+            77,
+            76,
+            74,
+            72,
+            71,
+            69,
+            67,
+            65,
+            64,
+            62,
+            60
+          ]
+        }
+      ],
+      "pan": 0.0,
+      "role_info": {
+        "name": "Singer",
+        "role_id": 0
+      },
+      "singer_volume": 1.0,
+      "solo": false,
+      "sound_effect": 0
+    }
+  ],
+  "version": 2
+}

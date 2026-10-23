@@ -1,0 +1,15 @@
+# Rust build output
+/target/
+**/*.rs.bk
+*.pdb
+*.exe
+
+# Test harness state (recreated by scripts)
+/testdata/.work/
+/testdata/.state/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

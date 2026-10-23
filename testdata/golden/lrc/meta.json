@@ -1,0 +1,9 @@
+{
+  "id": "lrc",
+  "suffix": "lrc",
+  "fixture": "simple.json",
+  "dumped": true,
+  "loaded": false,
+  "nondeterministic": false,
+  "notes": []
+}
