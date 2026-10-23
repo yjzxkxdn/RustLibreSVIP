@@ -13,7 +13,7 @@ of truth; every command, option schema and file format is ported to match it.
 | CLI `proj convert/split/merge` (interactive prompts) | done |
 | Middlewares (6) | ported (Chinese pinyin/romaji conversions still pending) |
 | Format plugins (40) | **all 40 ported and golden-verified** |
-| CLI parity harness | **90/90 cases** (1 documented SKIP where Python 2.9.2 crashes) |
+| CLI parity harness | **90/90 cases** (1 documented SKIP where LibreSVIP 2.9.2 crashes) |
 | `rpc server` differential harness | **45/45 cases** (`scripts/check_rpc.py`) |
 | `mcp serve` differential harness | **87/87 cases** (`scripts/check_mcp.py`) |
 | `rpc server` (gRPC) / `mcp serve` (MCP stdio) | done, differentially verified |
@@ -107,7 +107,7 @@ cargo build --release
   carry a plain error message instead of a Python traceback.
 * Audio metadata probing understands RIFF/WAVE only (Python uses
   MediaInfo/libsndfile), so non-WAV backing tracks lose their duration.
-* Where Python 2.9.2 itself crashes (e.g. `xvsq` with an instrumental track,
+* Where LibreSVIP 2.9.2 itself crashes (e.g. `xvsq` with an instrumental track,
   `vsqx` with parameter curves), the Rust port implements the evident intent and
   the parity harness reports `SKIP`.
 * Formats that embed wall-clock values (ZIP DOS timestamps in `vpr`/`vog`/`vfp`,

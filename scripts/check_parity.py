@@ -231,7 +231,7 @@ def main() -> int:
         rs = run_rust(name, argv, stdin)
         py_state = find_settings(TESTDATA / ".state" / f"py-{name}")
         rs_state = find_settings(TESTDATA / ".state" / f"rs-{name}")
-        # Where Python 2.9.2 crashes on a file our port handles on purpose
+        # Where LibreSVIP 2.9.2 crashes on a file our port handles on purpose
         # (documented deviations), report SKIP instead of a failure.
         if py.returncode != 0 and rs.returncode == 0 and "Traceback (most recent call last)" in normalise(py.stderr):
             print(f"SKIP {name} (Python reference crashes; Rust implements the intended behaviour)")
