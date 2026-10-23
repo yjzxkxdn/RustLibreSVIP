@@ -532,7 +532,11 @@ impl App {
         }
         self.toast = probe_warning.map(|message| (message, 0.0));
 
-        let temp_root = temp_root();
+        let fallback_dir = self
+            .tasks
+            .first()
+            .map(|task| output_dir(&save_folder, task));
+        let temp_root = temp_root(fallback_dir.as_deref());
         let job_count = jobs.len();
         for (index, _) in &jobs {
             if let Some(task) = self.tasks.get_mut(*index) {
@@ -963,16 +967,38 @@ fn replace_file(tmp: &Path, target: &Path) -> std::io::Result<()> {
     Err(last_error.unwrap_or_else(|| std::io::Error::other("unknown write error")))
 }
 
-fn temp_root() -> PathBuf {
+fn temp_root(fallback_dir: Option<&Path>) -> PathBuf {
     use std::sync::atomic::{AtomicU64, Ordering};
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let counter = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let root = std::env::temp_dir().join(format!(
-        "libresvip-gui-{}-{counter}",
-        std::process::id()
-    ));
-    let _ = std::fs::create_dir_all(&root);
-    root
+    let name = format!("libresvip-gui-{}-{counter}", std::process::id());
+    // %TEMP% is the natural place, but restricted environments (sandboxes,
+    // redirected TEMP) can deny it; fall back to the user's local app data and
+    // finally to a hidden folder next to the output.
+    let mut candidates = vec![std::env::temp_dir().join(&name)];
+    if let Some(local) = std::env::var_os("LOCALAPPDATA") {
+        candidates.push(PathBuf::from(local).join("LibreSVIP").join("tmp").join(&name));
+    }
+    if let Some(profile) = std::env::var_os("USERPROFILE") {
+        candidates.push(
+            PathBuf::from(profile)
+                .join("AppData")
+                .join("Local")
+                .join("LibreSVIP")
+                .join("tmp")
+                .join(&name),
+        );
+    }
+    if let Some(dir) = fallback_dir {
+        candidates.push(dir.join(format!(".libresvip-tmp-{name}")));
+    }
+    for candidate in &candidates {
+        if std::fs::create_dir_all(candidate).is_ok() {
+            return candidate.clone();
+        }
+    }
+    // Nothing worked; hand back the first choice so the error names it.
+    candidates.remove(0)
 }
 
 fn load_texture(ctx: &egui::Context) -> Option<egui::TextureHandle> {

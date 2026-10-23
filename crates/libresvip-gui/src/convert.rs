@@ -65,9 +65,13 @@ pub fn run_job(cfg: &JobConfig, index: usize, paths: &[PathBuf], temp_root: &Pat
     let job_dir = temp_root.join(index.to_string());
     if let Err(error) = std::fs::create_dir_all(&job_dir) {
         return JobResult::failure(format!(
-            "无法创建临时目录 {}：{}",
+            "无法创建临时目录 {}：{}\n\n当前进程：{}\n\n\
+             %TEMP% 和 %LOCALAPPDATA% 都被拒绝写入时，通常表示这个进程运行在\
+             受限/沙箱环境中（安全软件的沙箱、低完整性级别），或者是以其他用户身份启动的。\n\
+             请从资源管理器或命令行正常启动本程序，并把 exe 加入安全软件白名单。",
             job_dir.display(),
-            error
+            error,
+            crate::platform::process_context()
         ));
     }
 

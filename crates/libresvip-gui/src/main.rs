@@ -9,6 +9,7 @@ mod app;
 mod convert;
 mod i18n;
 mod icons;
+mod platform;
 mod state;
 mod theme;
 mod ui;
