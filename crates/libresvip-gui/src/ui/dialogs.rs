@@ -411,24 +411,26 @@ fn detail(app: &mut App, ctx: &egui::Context) {
         .open(&mut open)
         .collapsible(false)
         .resizable(true)
-        .default_size(Vec2::new(620.0, 380.0))
+        .default_size(Vec2::new(680.0, 340.0))
         .anchor(Align2::CENTER_CENTER, Vec2::ZERO)
         .show(ctx, |ui| {
-            ui.set_min_width(560.0);
-            ui.label(RichText::new(heading.clone()).size(15.0).strong());
-            ui.add_space(6.0);
+            ui.set_min_width(600.0);
+            ui.add_space(4.0);
             ScrollArea::vertical()
-                .max_height(260.0)
-                .auto_shrink([false, false])
+                .max_height(220.0)
+                .auto_shrink([false, true])
                 .show(ui, |ui| {
                     ui.add(
-                        egui::TextEdit::multiline(&mut body.clone())
-                            .font(egui::TextStyle::Monospace)
-                            .desired_width(f32::INFINITY)
-                            .interactive(false),
+                        egui::Label::new(
+                            RichText::new(body.as_str())
+                                .monospace()
+                                .size(Palette::body() * 0.95),
+                        )
+                        .selectable(true)
+                        .wrap(),
                     );
                 });
-            ui.add_space(6.0);
+            ui.add_space(10.0);
             ui.horizontal(|ui| {
                 if widgets::outlined_button(
                     ui,

@@ -427,16 +427,13 @@ impl App {
         for (tmp, target) in targets {
             if let Some(parent) = target.parent() {
                 if let Err(error) = std::fs::create_dir_all(parent) {
-                    self.tasks[index].error = error.to_string();
+                    self.tasks[index].error = write_error(&target, &error);
                     result = false;
                     continue;
                 }
             }
-            if target.exists() {
-                let _ = std::fs::remove_file(&target);
-            }
-            if let Err(error) = std::fs::copy(&tmp, &target) {
-                self.tasks[index].error = error.to_string();
+            if let Err(error) = replace_file(&tmp, &target) {
+                self.tasks[index].error = write_error(&target, &error);
                 result = false;
             }
         }
@@ -485,6 +482,27 @@ impl App {
             max_track_count: self.settings.max_track_count,
         };
 
+        let save_folder = self.settings.save_folder.clone();
+        // Refuse to write into a folder we cannot use, and say which one:
+        // otherwise the plugin output is produced and the copy fails with a
+        // bare "access denied" at the very end.
+        let mut unusable = Vec::new();
+        for (index, task) in self.tasks.iter_mut().enumerate() {
+            let dir = output_dir(&save_folder, task);
+            if let Err(error) = probe_writable(&dir) {
+                task.success = Some(false);
+                task.error = format!(
+                    "输出文件夹不可写：{}（{}）。请在“输出设置”里选择其他文件夹。",
+                    dir.display(),
+                    error
+                );
+                unusable.push(index);
+            }
+        }
+        if !unusable.is_empty() && self.mode == ConversionMode::Merge {
+            return;
+        }
+
         let jobs: Vec<(usize, Vec<PathBuf>)> = match self.mode {
             ConversionMode::Merge => vec![(
                 0,
@@ -494,6 +512,7 @@ impl App {
                 .tasks
                 .iter()
                 .enumerate()
+                .filter(|(index, _)| !unusable.contains(index))
                 .map(|(index, task)| (index, vec![task.path.clone()]))
                 .collect(),
         };
@@ -866,6 +885,55 @@ fn numeric_stem(path: &Path) -> u64 {
     path.file_stem()
         .and_then(|stem| stem.to_string_lossy().parse::<u64>().ok())
         .unwrap_or(u64::MAX)
+}
+
+/// Formats a write failure together with the target path; a bare
+/// `os error 5` tells the user nothing about *what* could not be written.
+fn write_error(target: &Path, error: &std::io::Error) -> String {
+    let mut message = format!("无法写入 {}：{}", target.display(), error);
+    match error.kind() {
+        std::io::ErrorKind::PermissionDenied => message.push_str(
+            "\n\n目标位置没有写权限，或者该文件正被其他程序占用。\n\
+             请在“输出设置”里换一个文件夹，或关闭正在使用该文件的程序。",
+        ),
+        std::io::ErrorKind::NotFound => {
+            message.push_str("\n\n找不到目标文件夹，请检查“输出设置”里的路径。")
+        }
+        _ => {}
+    }
+    message
+}
+
+/// Creates `dir` if needed and verifies that a new file can be created there.
+fn probe_writable(dir: &Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dir)?;
+    let probe = dir.join(format!(".libresvip-write-probe-{}", std::process::id()));
+    std::fs::write(&probe, b"")?;
+    let _ = std::fs::remove_file(&probe);
+    Ok(())
+}
+
+/// Replaces `target` with `tmp`, retrying briefly: anti-virus scanners and
+/// other applications can hold the destination open for a fraction of a second
+/// right after it is created or written.
+fn replace_file(tmp: &Path, target: &Path) -> std::io::Result<()> {
+    let mut last_error: Option<std::io::Error> = None;
+    for attempt in 0..4 {
+        if attempt > 0 {
+            std::thread::sleep(std::time::Duration::from_millis(150 * attempt));
+        }
+        if target.exists() {
+            if let Err(error) = std::fs::remove_file(target) {
+                last_error = Some(error);
+                continue;
+            }
+        }
+        match std::fs::copy(tmp, target) {
+            Ok(_) => return Ok(()),
+            Err(error) => last_error = Some(error),
+        }
+    }
+    Err(last_error.unwrap_or_else(|| std::io::Error::other("unknown write error")))
 }
 
 fn temp_root() -> PathBuf {

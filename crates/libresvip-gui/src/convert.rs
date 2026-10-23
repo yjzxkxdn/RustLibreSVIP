@@ -64,7 +64,11 @@ pub fn run_job(cfg: &JobConfig, index: usize, paths: &[PathBuf], temp_root: &Pat
     };
     let job_dir = temp_root.join(index.to_string());
     if let Err(error) = std::fs::create_dir_all(&job_dir) {
-        return JobResult::failure(error.to_string());
+        return JobResult::failure(format!(
+            "无法创建临时目录 {}：{}",
+            job_dir.display(),
+            error
+        ));
     }
 
     let collector = CatchWarnings::start();
@@ -98,17 +102,17 @@ fn convert_one(
         ConversionMode::Merge => {
             let mut children = Vec::with_capacity(paths.len());
             for path in paths {
-                children.push(
-                    input_plugin
-                        .load(path, &cfg.input_options)
-                        .map_err(|error| error_text(&error))?,
-                );
+                children.push(input_plugin.load(path, &cfg.input_options).map_err(|error| {
+                    format!("无法读取 {}：{}", path.display(), error_text(&error))
+                })?);
             }
             Project::merge_projects(children).map_err(|error| error_text(&error))?
         }
         _ => input_plugin
             .load(&paths[0], &cfg.input_options)
-            .map_err(|error| error_text(&error))?,
+            .map_err(|error| {
+                format!("无法读取 {}：{}", paths[0].display(), error_text(&error))
+            })?,
     };
 
     let middlewares = all_middlewares();
@@ -136,7 +140,9 @@ fn convert_one(
                 let path = job_dir.join(child_index.to_string());
                 output_plugin
                     .dump(&path, child, &cfg.output_options)
-                    .map_err(|error| error_text(&error))?;
+                    .map_err(|error| {
+                        format!("生成文件失败（临时路径 {}）：{}", path.display(), error_text(&error))
+                    })?;
             }
             Ok(job_dir.to_path_buf())
         }
@@ -144,7 +150,9 @@ fn convert_one(
             let path = job_dir.join("0");
             output_plugin
                 .dump(&path, &project, &cfg.output_options)
-                .map_err(|error| error_text(&error))?;
+                .map_err(|error| {
+                    format!("生成文件失败（临时路径 {}）：{}", path.display(), error_text(&error))
+                })?;
             Ok(path)
         }
     }
