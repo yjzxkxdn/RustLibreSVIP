@@ -206,8 +206,10 @@ fn menus(app: &mut App, ui: &mut Ui) {
     let settings = app.t("Settings (&S)");
     ui.menu_button(settings, |ui| {
         ui.set_min_width(240.0);
+        // Use egui's own button here so the label lines up with the submenu
+        // entries below it (both place their text at `button_padding`).
         let label = app.t("Options (&O)");
-        if menu_row(ui, &pal, &label, None, true).clicked() {
+        if ui.button(label).clicked() {
             app.show_settings = true;
             ui.close_menu();
         }

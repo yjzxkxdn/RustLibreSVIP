@@ -185,6 +185,8 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Advanced Settings" => "高级选项",
         "Input Options" => "输入选项",
         "Output Options" => "输出选项",
+        "Import as" => "导入为",
+        "Export to" => "导出为",
         "Help" => "帮助",
         "Open Output Folder When Done" => "完成后打开输出文件夹",
         "Choose Output Folder" => "选择输出文件夹",
@@ -249,4 +251,50 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Rust port" => "Rust 移植版",
         _ => return None,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn english_is_passed_through() {
+        let translator = Translator::new(Lang::EnUs);
+        assert_eq!(translator.t("Select File Formats"), "Select File Formats");
+        assert_eq!(translator.t_dyn("Pitch Shift"), "Pitch Shift");
+    }
+
+    #[test]
+    fn chinese_catalog_covers_gui_and_plugin_strings() {
+        let translator = Translator::new(Lang::ZhCn);
+        // GUI strings: gettext catalog or the hand-written table.
+        assert_eq!(translator.t("Select File Formats"), "格式选择");
+        assert_eq!(translator.t("Output Folder"), "输出文件夹");
+        assert_eq!(translator.t("Import as"), "导入为");
+        assert_eq!(translator.t("Export to"), "导出为");
+        // Plugin and middleware strings live in the merged plugin catalogs.
+        assert_eq!(translator.t_dyn("Pitch Shift"), "音高变调");
+        assert_eq!(translator.t_dyn("ACE Studio project File"), "ACE Studio 工程文件");
+        assert_eq!(translator.t_dyn("OpenUtau project file"), "OpenUtau 工程文件");
+        assert_eq!(translator.t_dyn("Plus sign handling mode"), "加号处理模式");
+    }
+
+    #[test]
+    fn japanese_and_german_come_from_the_merged_catalogs() {
+        let japanese = Translator::new(Lang::JaJp);
+        assert_eq!(japanese.t_dyn("Pitch Shift"), "ピッチシフト");
+        assert_ne!(japanese.t_dyn("Project Zoom"), "Project Zoom");
+        let german = Translator::new(Lang::DeDe);
+        assert_eq!(
+            german.t_dyn("Plus sign handling mode"),
+            "Modus für die Behandlung des Pluszeichens"
+        );
+    }
+
+    #[test]
+    fn unknown_strings_fall_back_to_english() {
+        let translator = Translator::new(Lang::ZhCn);
+        assert_eq!(translator.t("some string that is not translated"), "some string that is not translated");
+        assert_eq!(translator.t_dyn(""), "");
+    }
 }

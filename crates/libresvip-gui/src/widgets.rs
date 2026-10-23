@@ -308,10 +308,9 @@ pub fn icon_button(
     let glyph = Rect::from_center_size(rect.center(), Vec2::splat(diameter * 0.5));
     icons::paint(ui.painter(), glyph, icon, color);
     if let Some(tooltip) = tooltip {
-        response.on_hover_text(tooltip)
-    } else {
-        response
+        tooltip_on_hover(ui, &response, tooltip);
     }
+    response
 }
 
 /// Small filled circle with an icon inside (task status indicators).
@@ -569,6 +568,29 @@ pub fn combo_item(ui: &mut Ui, pal: &Palette, selected: bool, label: &str) -> Re
     response.on_hover_cursor(egui::CursorIcon::PointingHand)
 }
 
+/// Shows `text` next to the pointer while `response` is hovered.
+///
+/// Qt shows tooltips as soon as the pointer enters the item; egui's
+/// `Response::on_hover_text` waits for `style.interaction.tooltip_delay` and
+/// needs a later frame (which a static window does not always schedule), which
+/// made the "?" help icons look dead. This shows the tooltip immediately and
+/// keeps the window repainting so it stays visible.
+pub fn tooltip_on_hover(ui: &Ui, response: &Response, text: &str) {
+    if text.is_empty() || !response.hovered() {
+        return;
+    }
+    egui::show_tooltip_at_pointer(
+        ui.ctx(),
+        ui.layer_id(),
+        response.id.with("tooltip"),
+        |ui| {
+            ui.set_max_width(400.0);
+            ui.label(egui::RichText::new(text).size(Palette::body()));
+        },
+    );
+    ui.ctx().request_repaint();
+}
+
 /// Selectable chip used for theme/language/conflict pickers.
 pub fn chip(ui: &mut Ui, pal: &Palette, label: &str, selected: bool) -> Response {
     let galley = ui.fonts(|fonts| {
@@ -631,7 +653,8 @@ pub fn help_icon(ui: &mut Ui, pal: &Palette, tooltip: &str) -> Response {
         return response;
     }
     let response = icon_button(ui, pal, Icon::Help, 26.0, None, true);
-    response.on_hover_text(tooltip)
+    tooltip_on_hover(ui, &response, tooltip);
+    response.on_hover_cursor(egui::CursorIcon::Help)
 }
 
 /// Paints a card background (surface fill + border) and returns the inner rect.

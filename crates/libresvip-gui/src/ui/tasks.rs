@@ -157,7 +157,8 @@ fn mode_tab(
     }
     let color = if selected { pal.primary } else { pal.muted };
     mode_icon(ui, Rect::from_center_size(rect.center(), Vec2::splat(20.0)), mode, color);
-    response.on_hover_text(tooltip).clicked()
+    widgets::tooltip_on_hover(ui, &response, tooltip);
+    response.on_hover_cursor(egui::CursorIcon::PointingHand).clicked()
 }
 
 fn mode_icon(ui: &mut Ui, rect: Rect, mode: ConversionMode, color: Color32) {
