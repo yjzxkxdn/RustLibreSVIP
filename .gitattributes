@@ -1,5 +1,9 @@
 * text=auto eol=lf
 
+# Windows batch files must keep CRLF line endings.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
 # Reference fixtures and generated assets must stay byte-exact (some are
 # Shift-JIS or contain binary payloads).
 testdata/** -text
