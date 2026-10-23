@@ -645,10 +645,14 @@ fn toast(app: &mut App, ctx: &egui::Context) {
                 .corner_radius(6)
                 .inner_margin(egui::Margin::symmetric(16, 10))
                 .show(ui, |ui| {
-                    ui.label(
-                        RichText::new(message)
-                            .color(pal.surface)
-                            .size(Palette::body()),
+                    ui.set_max_width(560.0);
+                    ui.add(
+                        egui::Label::new(
+                            RichText::new(message)
+                                .color(pal.surface)
+                                .size(Palette::body()),
+                        )
+                        .wrap(),
                     );
                 });
         });

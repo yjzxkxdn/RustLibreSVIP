@@ -499,24 +499,20 @@ impl App {
         };
 
         let save_folder = self.settings.save_folder.clone();
-        // Refuse to write into a folder we cannot use, and say which one:
-        // otherwise the plugin output is produced and the copy fails with a
-        // bare "access denied" at the very end.
-        let mut unusable = Vec::new();
-        for (index, task) in self.tasks.iter_mut().enumerate() {
+        // Probe the destination, but never block on it: the probe is a
+        // best-effort early warning, and a false alarm must not stop a
+        // conversion that would have worked (the real write reports its own,
+        // more precise error).
+        let mut probe_warning: Option<String> = None;
+        if let Some(task) = self.tasks.first() {
             let dir = output_dir(&save_folder, task);
-            if let Err(error) = probe_writable(&dir) {
-                task.success = Some(false);
-                task.error = format!(
-                    "输出文件夹不可写：{}（{}）。请在“输出设置”里选择其他文件夹。",
+            if let Err(message) = probe_writable(&dir) {
+                probe_warning = Some(format!(
+                    "输出文件夹可能不可写：{}（{}）",
                     dir.display(),
-                    error
-                );
-                unusable.push(index);
+                    message
+                ));
             }
-        }
-        if !unusable.is_empty() && self.mode == ConversionMode::Merge {
-            return;
         }
 
         let jobs: Vec<(usize, Vec<PathBuf>)> = match self.mode {
@@ -528,13 +524,13 @@ impl App {
                 .tasks
                 .iter()
                 .enumerate()
-                .filter(|(index, _)| !unusable.contains(index))
                 .map(|(index, task)| (index, vec![task.path.clone()]))
                 .collect(),
         };
         if jobs.is_empty() {
             return;
         }
+        self.toast = probe_warning.map(|message| (message, 0.0));
 
         let temp_root = temp_root();
         let job_count = jobs.len();
@@ -863,7 +859,11 @@ impl eframe::App for App {
         if self.busy {
             ctx.request_repaint_after(std::time::Duration::from_millis(100));
         }
-        if let Some((_, expires)) = &self.toast {
+        if let Some((_, expires)) = &mut self.toast {
+            if *expires <= 0.0 {
+                // A toast posted outside `update` starts its 8 second timer here.
+                *expires = now + 8.0;
+            }
             if now > *expires {
                 self.toast = None;
             } else {
@@ -921,12 +921,23 @@ fn write_error(target: &Path, error: &std::io::Error) -> String {
 }
 
 /// Creates `dir` if needed and verifies that a new file can be created there.
-fn probe_writable(dir: &Path) -> std::io::Result<()> {
-    std::fs::create_dir_all(dir)?;
-    let probe = dir.join(format!(".libresvip-write-probe-{}", std::process::id()));
-    std::fs::write(&probe, b"")?;
-    let _ = std::fs::remove_file(&probe);
-    Ok(())
+/// The error names the exact step and path, because a bare "access denied"
+/// does not say whether the folder or the file name is the problem.
+fn probe_writable(dir: &Path) -> Result<(), String> {
+    if let Err(error) = std::fs::create_dir_all(dir) {
+        return Err(format!("无法创建文件夹：{error}"));
+    }
+    let probe = dir.join(format!("libresvip-write-probe-{}.tmp", std::process::id()));
+    match std::fs::write(&probe, b"") {
+        Ok(()) => {
+            let _ = std::fs::remove_file(&probe);
+            Ok(())
+        }
+        Err(error) => Err(format!(
+            "写入测试文件 {} 失败：{error}",
+            probe.display()
+        )),
+    }
 }
 
 /// Replaces `target` with `tmp`, retrying briefly: anti-virus scanners and
