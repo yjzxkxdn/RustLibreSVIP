@@ -185,6 +185,7 @@ pub struct OutputOptions {
     pub vibrato: VibratoOption,
     pub down_sample: i64,
     pub language_override: LanguageOption,
+    pub write_phonemes: bool,
 }
 
 impl Default for OutputOptions {
@@ -194,6 +195,7 @@ impl Default for OutputOptions {
             vibrato: VibratoOption::None,
             down_sample: 20,
             language_override: LanguageOption::Mandarin,
+            write_phonemes: false,
         }
     }
 }
@@ -207,6 +209,7 @@ impl OutputOptions {
             language_override: LanguageOption::from_value(
                 &options.str("language_override", "mandarin"),
             ),
+            write_phonemes: options.bool("write_phonemes", false),
         }
     }
 }
@@ -432,5 +435,34 @@ pub fn output_schema() -> Vec<OptionFieldDef> {
             LANGUAGE_VARIANTS,
             "MANDARIN",
         ),
+        OptionFieldDef::bool("write_phonemes", "Write the phoneme layer", false)
+            .with_description(
+                "Synthesizer V derives the phonemes from the lyrics, which is what \
+                 this port and the reference do; turn this on to write the stored \
+                 pronunciation of every note into the phoneme layer instead \
+                 (converted to the project language's notation).",
+            ),
     ]
+}
+
+#[cfg(test)]
+mod write_phonemes_tests {
+    use super::*;
+    use libresvip_core::options::OptionValue;
+
+    #[test]
+    fn write_phonemes_option_is_read() {
+        let options = Options::from_pairs([("write_phonemes".to_owned(), OptionValue::Bool(true))]);
+        assert!(OutputOptions::from_options(&options).write_phonemes);
+        assert!(!OutputOptions::from_options(&Options::new()).write_phonemes);
+    }
+
+    #[test]
+    fn write_phonemes_is_part_of_the_output_schema() {
+        let field = output_schema()
+            .into_iter()
+            .find(|field| field.key == "write_phonemes")
+            .expect("write_phonemes is offered");
+        assert_eq!(field.default, OptionValue::Bool(false));
+    }
 }

@@ -129,6 +129,15 @@ pub fn sv_g2p(lyrics: &[String], languages: &[String]) -> Vec<String> {
 }
 
 /// `xsampa2pinyin`.
+/// `pinyin2xsampa` — the inverse of [`xsampa2pinyin`], `None` when the syllable
+/// has no entry in the dictionary.
+pub fn pinyin_to_xsampa(pinyin: &str, language: &str) -> Option<String> {
+    data()
+        .dictionary
+        .get(language)
+        .and_then(|mapping| mapping.get(pinyin))
+        .cloned()
+}
 pub fn xsampa2pinyin(xsampa: &str, language: &str) -> String {
     let collapsed = collapse_whitespace(xsampa);
     data()
@@ -292,4 +301,19 @@ fn flush_chinese(chinese: &mut String, result_items: &mut Vec<String>) {
         result_items.push(character.to_string());
     }
     chinese.clear();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pinyin_round_trips_through_the_dictionary() {
+        for (pinyin, phonemes) in [("wo", "w uo"), ("ba", "p a"), ("pa", "ph a")] {
+            assert_eq!(pinyin_to_xsampa(pinyin, "mandarin"), Some(phonemes.to_owned()));
+            assert_eq!(xsampa2pinyin(phonemes, "mandarin"), pinyin);
+        }
+        assert_eq!(pinyin_to_xsampa("not-a-syllable", "mandarin"), None);
+        assert_eq!(pinyin_to_xsampa("wo", "english"), None);
+    }
 }

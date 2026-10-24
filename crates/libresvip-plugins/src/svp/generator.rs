@@ -22,7 +22,7 @@ use crate::svp::options::{
     OutputOptions, VibratoOption, VERSION_ABOVE_2_0_0,
     VERSION_BETWEEN_1_10_0_AND_1_11_2,
 };
-use crate::svp::phoneme_utils::{default_phone_marks, number_of_phones, sv_g2p};
+use crate::svp::phoneme_utils::{default_phone_marks, number_of_phones, pinyin_to_xsampa, sv_g2p};
 
 pub struct SynthVGenerator {
     options: OutputOptions,
@@ -455,9 +455,30 @@ impl SynthVGenerator {
         sv_curve
     }
 
+    /// The phoneme text of a note, in the project language's notation.
+    ///
+    /// `None` when the option is off, when the note carries no pronunciation, or
+    /// when the syllable is not in the dictionary for this language (writing a
+    /// pinyin syllable as an X-SAMPA phoneme would be invalid).
+    fn phonemes_for(&self, note: &Note) -> Option<String> {
+        if !self.options.write_phonemes {
+            return None;
+        }
+        let pronunciation = note.pronunciation.as_deref().filter(|value| !value.is_empty())?;
+        match self.options.language_override.value() {
+            "mandarin" | "cantonese" => {
+                pinyin_to_xsampa(pronunciation, self.options.language_override.value())
+            }
+            // Japanese and Korean imports keep the source phonemes verbatim.
+            "japanese" | "korean" => Some(pronunciation.to_owned()),
+            _ => None,
+        }
+    }
+
     fn generate_note(&self, note: &Note) -> SVNote {
         let onset = ticks_to_position(note.start_pos);
         SVNote {
+            phonemes: self.phonemes_for(note).unwrap_or_default(),
             instant_mode: if self.options.version_compatibility
                 == VERSION_BETWEEN_1_10_0_AND_1_11_2
             {
@@ -910,5 +931,57 @@ impl SynthVGenerator {
             ratio = ratio_z;
         }
         next_sv_note.attributes.set_phone_duration(0, ratio);
+    }
+}
+
+#[cfg(test)]
+mod phoneme_layer_tests {
+    use super::*;
+    use libresvip_core::model::base::{Note, Project, SingingTrack, TimeSignature, Track};
+
+    fn project(lyric: &str, pronunciation: Option<&str>) -> Project {
+        Project {
+            version: String::new(),
+            song_tempo_list: vec![SongTempo::new(0, 120.0)],
+            time_signature_list: vec![TimeSignature::default()],
+            track_list: vec![Track::Singing(SingingTrack {
+                title: "Track 1".to_owned(),
+                note_list: vec![Note {
+                    start_pos: 0,
+                    length: 480,
+                    key_number: 60,
+                    lyric: lyric.to_owned(),
+                    pronunciation: pronunciation.map(str::to_owned),
+                    ..Default::default()
+                }],
+                ..Default::default()
+            })],
+        }
+    }
+
+    fn first_note_phonemes(project: &Project, write_phonemes: bool) -> String {
+        let options = OutputOptions {
+            write_phonemes,
+            ..OutputOptions::default()
+        };
+        let generated = SynthVGenerator::new(options)
+            .generate_project(project)
+            .expect("generate");
+        generated.tracks[0].main_group.notes[0].phonemes.clone()
+    }
+
+    #[test]
+    fn phoneme_layer_is_empty_by_default() {
+        let notes = first_note_phonemes(&project("wo", Some("wo")), false);
+        assert_eq!(notes, "");
+    }
+
+    #[test]
+    fn pinyin_is_converted_to_sv_notation() {
+        assert_eq!(first_note_phonemes(&project("wo", Some("wo")), true), "w uo");
+        assert_eq!(first_note_phonemes(&project("ba", Some("ba")), true), "p a");
+        assert_eq!(first_note_phonemes(&project("pa", Some("pa")), true), "ph a");
+        // No pronunciation, nothing to write.
+        assert_eq!(first_note_phonemes(&project("wo", None), true), "");
     }
 }
