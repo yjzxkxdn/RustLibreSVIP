@@ -68,15 +68,14 @@ impl ControllerCurve {
     }
 
     pub fn get_value_at(&self, pos: i64) -> i64 {
-        let mut current_value = self.default_value;
-        for event in &self.events {
-            if event.pos <= pos {
-                current_value = event.value;
-            } else {
-                break;
-            }
+        // `with_events` sorts by position, and the linear scan this replaces
+        // already stopped at the first event past `pos`, so the order is an
+        // invariant here. Binary search keeps `combine_pit_pbs` (one query per
+        // distinct PIT/PBS position) out of quadratic territory.
+        match self.events.partition_point(|event| event.pos <= pos) {
+            0 => self.default_value,
+            index => self.events[index - 1].value,
         }
-        current_value
     }
 }
 

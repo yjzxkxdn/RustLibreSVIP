@@ -3,6 +3,7 @@
 //! `libresvip.model.relative_pitch_curve`, `libresvip.model.portamento`,
 //! `libresvip.core.time_interval` and `libresvip.utils.music_math`.
 
+use std::collections::HashMap;
 use std::f64::consts::PI;
 
 use libresvip_core::core::constants::{
@@ -463,21 +464,21 @@ impl RelativePitchCurve {
             .map(|point| point.x + pitch_offset)
             .collect();
         let pitch_values = simulator.pitch_at_ticks_batch(&point_tick_positions);
-        // `dict(zip(positions, values))`: first insertion order, last value.
-        let mut pitch_value_map: Vec<(i64, Option<f64>)> = Vec::new();
+        // `dict(zip(positions, values))`: the last value for a position wins.
+        // This has to be a hash map: the interpolation loop below queries it
+        // once per `pitch_interval`, so a linear scan makes the conversion
+        // quadratic in the length of the song.
+        let mut pitch_value_map: HashMap<i64, Option<f64>> =
+            HashMap::with_capacity(point_tick_positions.len());
         for (position, value) in point_tick_positions.iter().zip(pitch_values.iter()) {
-            if let Some(entry) = pitch_value_map.iter_mut().find(|entry| entry.0 == *position) {
-                entry.1 = *value;
-            } else {
-                pitch_value_map.push((*position, *value));
-            }
+            pitch_value_map.insert(*position, *value);
         }
         let mut lookup = |position: i64, simulator: &mut PitchSimulator| -> Option<f64> {
-            if let Some(entry) = pitch_value_map.iter().find(|entry| entry.0 == position) {
-                return entry.1;
+            if let Some(value) = pitch_value_map.get(&position) {
+                return *value;
             }
             let value = simulator.pitch_at_ticks(position);
-            pitch_value_map.push((position, value));
+            pitch_value_map.insert(position, value);
             value
         };
 

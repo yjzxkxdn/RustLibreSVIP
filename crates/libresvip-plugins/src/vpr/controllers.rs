@@ -70,15 +70,13 @@ impl ControllerCurve {
     }
 
     pub fn get_value_at(&self, pos: i64) -> i64 {
-        let mut current_value = self.default_value;
-        for event in &self.events {
-            if event.pos <= pos {
-                current_value = event.value;
-            } else {
-                break;
-            }
+        // Events are sorted by position (`with_events`), and the linear scan
+        // this replaces already relied on that order by stopping at the first
+        // event past `pos`.
+        match self.events.partition_point(|event| event.pos <= pos) {
+            0 => self.default_value,
+            index => self.events[index - 1].value,
         }
-        current_value
     }
 }
 
