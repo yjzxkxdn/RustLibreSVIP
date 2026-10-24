@@ -16,7 +16,7 @@ use libresvip_core::core::config::DarkMode;
 use crate::i18n::Lang;
 use crate::widgets;
 
-pub const REPO_URL: &str = "https://github.com/SoulMelody/LibreSVIP";
+pub const REPO_URL: &str = "https://github.com/yjzxkxdn/RustLibreSVIP";
 pub const DOCS_URL: &str = "https://libresvip.soulmelody.net/";
 pub const AUTHOR_URL: &str = "https://space.bilibili.com/175862486";
 
@@ -75,7 +75,7 @@ pub fn show(app: &mut App, ctx: &egui::Context) {
                     widgets::vertical_separator(ui, &pal, 16.0);
                     ui.add_space(16.0);
 
-                    let title = format!("LibreSVIP - {}", app.t("SVS Projects Converter"));
+                    let title = format!("RustLibreSVIP - {}", app.t("SVS Projects Converter"));
                     let title_response = ui.label(
                         egui::RichText::new(title)
                             .size(Palette::body() * 1.2)

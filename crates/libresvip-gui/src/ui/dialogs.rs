@@ -49,11 +49,13 @@ fn about(app: &mut App, ctx: &egui::Context) {
                     );
                 }
                 ui.vertical(|ui| {
-                    ui.label(RichText::new("LibreSVIP").size(24.0).strong());
+                    ui.label(RichText::new("RustLibreSVIP").size(24.0).strong());
                     ui.label(
-                        RichText::new(app.t("Rust port"))
-                            .size(Palette::body())
-                            .color(pal.muted),
+                        RichText::new(app.t(
+                            "Rust port of LibreSVIP, with design elements from UtaFormatix3",
+                        ))
+                        .size(Palette::body())
+                        .color(pal.muted),
                     );
                     ui.label(
                         RichText::new(format!(
@@ -62,6 +64,13 @@ fn about(app: &mut App, ctx: &egui::Context) {
                             libresvip_core::VERSION
                         ))
                             .size(Palette::body()),
+                    );
+                    ui.label(
+                        RichText::new(app.t(
+                            "Based on LibreSVIP 2.9.2 (MIT) and UtaFormatix3 (Apache-2.0; design and algorithms only)",
+                        ))
+                            .size(Palette::body())
+                            .color(pal.muted),
                     );
                     ui.label(
                         RichText::new(app.t("Author: SoulMelody"))

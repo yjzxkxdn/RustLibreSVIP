@@ -122,6 +122,12 @@ impl Translator {
 fn zh_table(en: &str) -> Option<&'static str> {
     Some(match en {
         "LibreSVIP" => "LibreSVIP",
+        "Rust port of LibreSVIP, with design elements from UtaFormatix3" => {
+            "LibreSVIP 的 Rust 移植，并吸收了 UtaFormatix3 的设计"
+        }
+        "Based on LibreSVIP 2.9.2 (MIT) and UtaFormatix3 (Apache-2.0; design and algorithms only)" => {
+            "基于 LibreSVIP 2.9.2（MIT）与 UtaFormatix3（Apache-2.0，仅借鉴设计与算法）"
+        }
         "SVS Projects Converter" => "歌声合成工程转换器",
         "Convert (&C)" => "转换(&C)",
         "Formats (&F)" => "格式(&F)",

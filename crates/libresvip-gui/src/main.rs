@@ -31,7 +31,7 @@ fn main() -> eframe::Result<()> {
         .with_inner_size([1200.0, 800.0])
         .with_min_inner_size([700.0, 600.0])
         .with_decorations(false)
-        .with_title("LibreSVIP")
+        .with_title("RustLibreSVIP")
         .with_app_id("libresvip-gui");
     if let Some(icon) = window_icon() {
         viewport = viewport.with_icon(icon);

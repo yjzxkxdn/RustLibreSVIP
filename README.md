@@ -1,6 +1,6 @@
 # RustLibreSVIP
 
-**LibreSVIP 的 Rust 重写版**：歌声合成工程转换器，原生 CLI、桌面 GUI、WebAssembly 网页版共用同一套转换核心。
+**歌声合成工程转换器的 Rust 实现**：桌面 GUI、命令行和 WebAssembly 网页版共用一套转换核心。基于 **LibreSVIP 2.9.2** 的完整移植，并吸收了 **UtaFormatix3** 的若干设计与算法。
 
 [中文](#中文) · [English](#english)
 
@@ -10,9 +10,51 @@
 
 ### 这是什么
 
-基于 **LibreSVIP 2.9.2**（Python）的完整移植：43 种工程格式（`.ustx` `.svp` `.acep` `.ust` `.vsqx` `.mid` `.musicxml` `.ppsf` `.tlp` `.nn` …）的读写、11 个中间件（6 个移植自上游，5 个本移植新增）、命令行、桌面 GUI 和网页版。
+* **43 种工程格式**：LibreSVIP 2.9.2 的 40 个插件全部移植（`.ustx` `.svp` `.acep` `.ust` `.vsqx` `.mid` `.musicxml` `.ppsf` `.tlp` `.nn` …），另外补上上游隔离区里的 `gj`、`msq`、`vsp` 三个格式，并把 `ppsf` 的 legacy 二进制容器做完。
+* **11 个中间件**：LibreSVIP 的 6 个（音高变调、工程缩放、歌词发音转换、移除数字与标点、移除短静音、歌词替换）+ 本实现新增的 5 个（日文歌词、音素映射、颤音展开、音高量化、节奏量化）。
+* **一套核心三端共用**：`libresvip-cli`、`libresvip-gui`（egui）、`libresvip-web`（wasm32，零 import，无 wasm-bindgen、无 WASI）。
 
-转换结果逐字节对齐 Python 参考实现（golden 测试 40/40），并在此基础上修复了上游若干缺陷（见下方「与 Python 版的差异」），因此本项目使用独立版本号：**1.1.0**。
+### 两个来源
+
+| 来源 | 拿来了什么 | 没有拿什么 |
+| --- | --- | --- |
+| **LibreSVIP 2.9.2**（MIT，SoulMelody） | 40 个格式的读写、OpenSVIP `.json` 轴心模型、6 个中间件、CLI/GUI 交互与 RPC 协议 | — |
+| **UtaFormatix3**（Apache-2.0，SderColin） | 只借鉴设计与算法并自行实现：格式能力矩阵、结构化警告、音高语义层、颤音展开、日文歌词、音素映射、中间格式版本协商 | 没有引入它的格式集合；没有采用它的模板生成器方案（见 T9） |
+
+> UtaFormatix3 是 Apache-2.0，本仓库是 MIT。因此**没有复制它的代码**，只吸收上面列出的设计与算法思路。
+
+### UtaFormatix3 带来的能力（逐条）
+
+| 编号 | 能力 | 落在哪 |
+| --- | --- | --- |
+| T1 | 格式能力矩阵（只读元数据 + 由它生成的表格） | `core/capabilities.rs`、`plugins/capabilities.rs`、`plugin capabilities` |
+| T2 | 结构化警告（kind + detail），贯穿 CLI / GUI / wasm / MCP | `core/warning_types.rs` |
+| T3 | 扩展位与访问器（`Note.attrs`、`Params::get/set`） | `core/model/base.rs` |
+| T4 | 语义层骨架（音高数学从插件上收） | `core/semantics/` |
+| T5 | 音高语义：阶梯↔线性、绝对↔相对、音符边界补点、重叠检测 | `core/semantics/pitch/` |
+| T6 | 日文歌词：类型检测（70%）+ 假名↔罗马字 + CV↔VCV | `middlewares/japanese_lyrics.rs`、`core/semantics/lyrics.rs` |
+| T7 | 音素映射（用户表 + 默认恒等） | `middlewares/phoneme_mapping.rs` |
+| T8 | 中间格式版本校验（`.json` 主版本、`.ufdata` 的 `formatVersion`） | `json.rs`、`ufdata.rs` |
+| T9 | 模板生成器（vsqx / vpr / s5p / ccs） | **未做**：这四套输出已被 golden 字节级钉住，再引一条等价生成路径收益低、风险高 |
+
+### 从 LibreSVIP 2.9.2 修掉的东西（因此输出与 Python 不同）
+
+下面四条是上游的 bug。本实现按正常逻辑修了，并在 `testdata/golden/*/meta.json` 的 `deviations` 里逐条登记：
+
+1. **`aisp` 导入**：上游每处理一个 item 就把音高数组重新绑定到当前 item，再 `extend(自己)` —— 结果只剩最后一个 item，且每个点重复两次。现在按 item 顺序累积。
+2. **`vspx` 导入**：上游拿未偏移的 `param.time` 去减已经偏移过的 `prev_tick`，差值恒定多出一个 `first_bar_length`，真正的断点反而漏掉。现在两边在同一坐标系。
+3. **`key_number == 0`**：上游 `if value:` 把 0 当"没有基音"，C-1 音符没有音高。现在 0 是合法音高（`ust`、`vpr`、`vsqx`、`y77`、`aisp` 里的同类判断一并修）。
+4. **`replace_lyric` 中间件**：上游把 `replace_lyric(text, replacement)` 的参数传反，任何非空规则集都抛 `TypeError`。现在按规则顺序做正则替换。
+
+其余是性能与健壮性修复，**不改变输出字节**：时间轴重映射改前缀和、tempo 表共享、曲线所有权改写、Vocaloid 系列音高缓存的 `Vec`→`HashMap`（`vsqx`/`vsq`/`xvsq`/`vpr` 从 12 s 降到 0.4 s）、`<divisions>`/`ticks_per_beat`/拍号分母为 0 时明确报错、`svip3` 的 int32 溢出报错、设置文件原子写入。
+
+### 与 Python 版的其它差异（取舍，不是 bug）
+
+* **`.svp` 默认不写音素层**（`write_phonemes=false`）：Python 会给每个音符写 `normalize_phoneme`。打开该选项即按 SynthV 记法写入；`.acep` 的 `write_syllable` 默认 `true`，与 Python 一致。
+* **解析器不把歌词抄成"发音"**（`ustx` / `mid` / `vspx` / `svip3`），否则拼音歌词会被写进音素层。
+* 新增三个 CLI 表面：`proj convert --middleware <id>`、`--strict-warnings`、`plugin capabilities [--json]`；**交互提问仍与 Python 完全一致**（6 个中间件，顺序相同），新增的 5 个中间件不参与提问。
+* 新增的 3 个格式后缀（`gj` / `msq` / `vsp`）会出现在"支持的扩展名"报错列表里。
+* `--help` 排版、错误信息文案与 Python 不同；音频时长探测只支持 RIFF/WAVE（上游用 MediaInfo/libsndfile）；`utf-32` 文本编码不受支持。
 
 ### 速度
 
@@ -24,6 +66,18 @@
 | `ustx` → `svp` | 15.0 s | **0.06 s** | ~250× |
 | `json` → `mid`（1.6 MiB 合成基准） | 17.0 s | **0.10 s** | ~178× |
 
+Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台机器，修复前 = 1.0.0 分支的构建）：
+
+| 转换 | 1.1.0 前 | 1.1.0 |
+| --- | --- | --- |
+| `ustx` → `vsqx` | 14.89 s | **0.24 s** |
+| `ustx` → `vpr` | 9.39 s | **0.15 s** |
+| `ustx` → `vsq` | 12.58 s | **0.35 s** |
+| `ustx` → `xvsq` | 11.10 s | **0.35 s** |
+| `ustx` → `vvproj` | 6.93 s | **0.16 s** |
+| `ustx` → `y77` | 13.24 s | **0.14 s** |
+| `ustx` → `aisp`（84k 点音高曲线） | 105.3 s | **1.01 s** |
+
 原生单文件程序，无外部依赖：CLI 11.0 MB，GUI 12.5 MB。
 
 ### WebAssembly
@@ -32,7 +86,7 @@
 
 | 产物 | 大小 |
 | --- | --- |
-| `libresvip_web.wasm` | 6.01 MB（6,011,630 字节） |
+| `libresvip_web.wasm` | 6.01 MB（6,013,921 字节） |
 | gzip / brotli（部署时传输） | 2.28 MB / **1.81 MB** |
 | `libresvip-single.html`（wasm 内联，双击即用） | 3.07 MB |
 
@@ -73,46 +127,9 @@ powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
 
 * **不要把仓库放在“低完整性”目录里运行编译产物**（某些 sandbox / agent 工作区会给目录打上 Low 标签）。在那里编出来的 exe 会被 Windows 当作不可信程序：双击弹“安全警告”，进程以低权限启动，连 `%TEMP%` 都写不了。用 `install-gui.ps1` 复制到 `%LOCALAPPDATA%\Programs` 并重置完整性级别即可。
 * 程序未做代码签名，首次运行可能触发 SmartScreen，选“仍要运行”；从命令行启动不会弹。
-* wasm 构建需要 `wasm32-unknown-unknown` target；`[profile.wasm]` 使用 `opt-level="z"`（体积优先，转换约慢 7%）。部署形态按 **brotli -11 压缩后**的体积算：当前 1,894,900 字节（原始 6,011,630）；相对移植前的 1,791,914（原始 5,614,286）增加约 5.8%，来源是新增的 gj / msq / vsp / ppsf-legacy 四个格式与语义层。
+* wasm 构建需要 `wasm32-unknown-unknown` target；`[profile.wasm]` 使用 `opt-level="z"`（体积优先，转换约慢 7%）。部署形态按 **brotli -11 压缩后**的体积算：当前 1,895,549 字节（原始 6,013,921）；相对移植前的 1,791,914（原始 5,614,286）增加约 5.8%，来源是新增的 gj / msq / vsp / ppsf-legacy 四个格式与语义层。
 * 测试：`cargo test --workspace`（158 个测试 + 逐格式 golden 对比 + 43 格式能力表一致性检查）。
 * 网页版支持多文件批量转换和每个格式的选项面板（输入/输出选项由 `options_json` 动态渲染）；`split` / `merge` 目前在 CLI 和 GUI 中。
-
-### 与 Python 版的差异
-
-* **解析器不再把歌词抄成“发音”**（`ustx` / `mid` / `vspx` / `svip3`）。否则拼音歌词会被写进音素层，ACE Studio 认不出（`*[wo]`）。`.acep` 和 `.svp` 另有“写入音素层”开关，可整层留空或按目标引擎记法写入。
-* **新增 5 个上游没有的中间件**：日文歌词转假名（`japanese_lyrics`）、音素映射（`phoneme_mapping`）、颤音烘焙（`vibrato`）、音高量化（`pitch_quantization`）、节奏量化（`rhythm_quantization`）。它们默认关闭，也**不进入交互提问**——`proj convert` 仍然只问 Python 那 6 个中间件，提问顺序与 Python 逐字一致；新增的 5 个用 `proj convert --middleware <id>` 显式启用（可重复，按各中间件的默认选项运行），GUI 里则是默认未勾选的条目。
-* `.acep` 的 pitch 曲线做了两处等价优化（结果逐字节一致），4 分钟工程从 6.7 s 降到 0.15 s。
-* 其余差异（`--help` 排版、错误信息、音频探测只支持 WAV 等）记录在提交历史与 `PORTING.md`。
-
-### 已知差异（刻意保留的上游行为与明确的报错化）
-
-以下四处是 Python 上游的既定行为，golden 测试逐字节钉住，本移植**原样保留**；修改它们属于契约变更，需要同步改 golden 基准并在此声明：
-
-* `aisp` 解析器的“自复制”怪癖（`aisp/parser.rs` 有注释）；
-* `vspx` 断点坐标的混用记法（`vspx/parser.rs` 有注释）；
-* `key_number = 0` 被当作“无基音”（`ust/pitch.rs` 的真值判断，与 Python 相同）；
-* `replace_lyric` 中间件沿用了上游的参数顺序 bug，任何非空规则集都会像 Python 一样报错。
-
-以下行为从“静默产出垃圾文件”改成了**明确报错**（Python 在同样输入下也会崩溃，只是异常形态不同）：
-
-* MusicXML 缺 `<divisions>` 或其值为 0（Python 是 `assert` / `ZeroDivisionError`）；
-* MIDI 的 `ticks_per_beat == 0`（Python 是 `ZeroDivisionError`）；
-* `.svp` 导出时参数曲线出现 0 值采样点（Python 是 `ZeroDivisionError`）；
-* `svip3` 导出时 tick 超出 `int32` 范围（Python 是 `struct.error`）；
-* UST 文本编码名未知时（Python 是 `LookupError`）；另外 `utf-32` 在本移植中不受支持（`encoding_rs` 无此编码）。
-
-其他刻意选择：
-
-* 粤拼（jyutping）多音字取**字典序第一个**读法（Python 的 `set.pop` 依赖进程内哈希序，输出不确定）；
-* `.json` / `.ufdata` 读到比本构建支持更新的主版本时给出 `incompatible version` 警告而不是静默丢字段。
-
-### 上游隔离区格式的处置（gj / msq / vsp / nep / ppsf legacy）
-
-Python 仓库里有三批不在 `libresvip.plugins` 目录、因而程序本身**不加载**的转换代码：`experimental/`（vsp、msq、nep）、`deprecated/`（gj）以及 ppsf 的 legacy 二进制分支。本移植按“插件完整性”原则全部纳入：
-
-* `gj`（Gejigeji v2.0，`deprecated/`）与 `msq`（Mikoto Studio，`experimental/`）、`vsp`（Vocalina Studio 早期二进制格式，`experimental/`）移植为正式插件，对拍测试（`experimental_plugins.rs`）用 Python 原代码生成的 fixture 钉住：hub 模型结构一致，导出字节一致（`gj` 的 JSON 剥离 null 后一致）。`gj` 保留了上游“每读一次整体右移一小节”的往返漂移怪癖。
-* `ppsf` 的 legacy 二进制格式（`PPSF` chunk 容器，与新版 ZIP+JSON 并存）已完整移植：`use_legacy_format` 选项现在真正可用，导出与 Python 字节级一致。解析侧只深度解码 hub 模型用到的四个 chunk（`CLPS`/`EVTS`/`PLGS`/`TRKS`），其余 chunk 按声明长度跳过——即损坏的 `PROJ`/`EDTS` 等块在 Python（construct 全量校验）会报错，这里跳过，属于错误行为差异，正常文件不受影响。
-* `nep`（`experimental/nep/`）上游只有一份 2 KB 的 pydantic model 草稿，没有 parser / generator / converter，**无物可移**，未注册为插件。
 
 ### 格式能力表
 
@@ -167,19 +184,19 @@ Python 仓库里有三批不在 `libresvip.plugins` 目录、因而程序本身*
 音高/音量/气声/性别/强度 = 五条参数曲线（导入或导出至少一侧支持）；单轨 = 一个输出文件只容纳一条轨道。
 <!-- FORMAT-CAPABILITIES-END -->
 
-
 ### 许可
 
-MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者。
+MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者；UtaFormatix3 © SderColin 与贡献者（Apache-2.0，仅借鉴设计与算法，未复制代码）。
 
 ---
 
 ## English
 
-**RustLibreSVIP** is a Rust rewrite of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP), a converter for 43 singing-voice-synthesis project formats.
+**RustLibreSVIP** is a Rust rewrite of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP) plus selected design ideas from [UtaFormatix3](https://github.com/sdercolin/utaformatix3): 43 singing-voice-synthesis project formats, native CLI, desktop GUI and a zero-import WebAssembly build sharing one engine.
 
-* **Based on** LibreSVIP 2.9.2 — byte-identical output for the golden fixtures (40/40).
-* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s** (same 4-minute project).
+* **Based on** LibreSVIP 2.9.2 — byte-identical output for the golden fixtures (40/40), plus four intentional fixes of upstream bugs (recorded per format in `testdata/golden/*/meta.json`).
+* **Absorbed from UtaFormatix3** (design only, no code copied): the format-capability matrix, structured warnings, the pitch-semantics layer (RDP / resampling / interpolation / absolute↔relative), vibrato expansion, Japanese lyric detection with CV↔VCV, phoneme mapping and intermediate-format version negotiation. Its template-generator scheme (T9) was not adopted.
+* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 11.99 s → **0.42 s** (a 4-minute, 937-note project).
 * **WebAssembly ready**: the same core builds to a zero-import `.wasm` (6.01 MB, 1.81 MB brotli); conversions run in the browser and the server only serves static files.
 * **Targets**: native CLI, native GUI (egui) and the web build share one engine. Release artifacts: `libresvip-cli.exe`, `libresvip-gui.exe`, `libresvip-web.zip`.
 
@@ -193,6 +210,6 @@ cargo test --workspace
 
 Notes: do not run the binaries from a low-integrity (sandboxed) directory — Windows then treats them as untrusted and blocks file writes; `install-gui.ps1` copies the GUI to `%LOCALAPPDATA%\Programs` and resets the label. The wasm build needs the `wasm32-unknown-unknown` target.
 
-Differences from the Python build: the parsers never store the lyric as a pronunciation (`ustx` / `mid` / `vspx` / `svip3`), so romanised lyrics no longer end up in a phoneme layer; `.acep` and `.svp` expose "write the phoneme layer" switches; the `.acep` pitch-curve path is algorithmically equivalent but ~45× faster. Five extra middlewares (Japanese lyrics, phoneme mapping, vibrato baking, pitch and rhythm quantisation) are opt-in: the interactive prompts stay identical to Python's six, and `proj convert --middleware <id>` runs an extra one with its default options.
+Differences from the Python build: the parsers never store the lyric as a pronunciation (`ustx` / `mid` / `vspx` / `svip3`); `.svp` defaults to an empty phoneme layer while `.acep` keeps writing syllables; `aisp` / `vspx` pitch assembly, `key_number = 0` handling and the `replace_lyric` middleware follow the intended behaviour instead of the 2.9.2 bugs. Five extra middlewares (Japanese lyrics, phoneme mapping, vibrato baking, pitch and rhythm quantisation) are opt-in: the interactive prompts stay identical to Python's six, and `proj convert --middleware <id>` runs an extra one with its default options.
 
-MIT licensed — see [LICENSE](LICENSE). Upstream LibreSVIP © SoulMelody and contributors.
+MIT licensed — see [LICENSE](LICENSE). Upstream LibreSVIP © SoulMelody and contributors; UtaFormatix3 © SderColin and contributors (Apache-2.0, design and algorithms only).
