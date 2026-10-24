@@ -143,9 +143,12 @@ impl VocalSharpParser {
             match prev_tick {
                 None => pitch_points.push(Point::new(cur_tick, -100)),
                 Some(prev_tick) => {
-                    // Faithful to the Python quirk: the comparison mixes the raw
-                    // parameter time with the already shifted previous tick.
-                    if param_point.time - prev_tick > 1 {
+                    // Fixed deviation from LibreSVIP 2.9.2: the reference code
+                    // compares the raw parameter time with the previous tick
+                    // *after* shifting it by `first_bar_length`, which makes the
+                    // gap look `first_bar_length` ticks too large and inserts a
+                    // no-pitch break before nearly every point.
+                    if cur_tick - prev_tick > 1 {
                         pitch_points.push(Point::new(prev_tick, -100));
                         pitch_points.push(Point::new(cur_tick, -100));
                     }

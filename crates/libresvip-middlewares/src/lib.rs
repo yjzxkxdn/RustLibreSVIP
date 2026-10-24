@@ -509,12 +509,25 @@ impl Middleware for ReplaceLyricsMiddleware {
         if rules.is_empty() {
             return Ok(project);
         }
-        // Faithful port of the Python bug: `replace_lyric(replacement, lyric)`
-        // swaps the arguments and therefore raises TypeError for any non-empty
-        // rule set.
-        Err(LibreSvipError::msg(
-            "TypeError: replace() takes at least 2 arguments (1 given)",
-        ))
+        // Fixed deviation from LibreSVIP 2.9.2: the reference middleware passes
+        // the arguments to `replace_lyric` the wrong way round
+        // (`replace_lyric(replacement, lyric)`), so every non-empty rule set
+        // raises `TypeError: replace() takes at least 2 arguments (1 given)`.
+        // Applying the rules in order is what the code clearly intends.
+        let mut project = project;
+        for track in &mut project.track_list {
+            let Track::Singing(singing) = track else {
+                continue;
+            };
+            for note in &mut singing.note_list {
+                let mut lyric = note.lyric.clone();
+                for replacement in &rules {
+                    lyric = replacement.replace(&lyric)?;
+                }
+                note.lyric = lyric;
+            }
+        }
+        Ok(project)
     }
 }
 

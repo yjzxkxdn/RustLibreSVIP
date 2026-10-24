@@ -240,9 +240,10 @@ impl PitchSimulator {
     /// `_pitch_at_secs_with_ordered_lookup`.
     pub fn pitch_at_secs(&self, secs: f64) -> Option<f64> {
         match self.value_at(secs) {
-            // Python: `if value := self.interval_dict.get(secs):` — a zero key
-            // (or zero ramp value) is falsy and therefore treated as absent.
-            Some(value) if value != 0.0 => Some(value * 100.0),
+            // Fixed deviation from LibreSVIP 2.9.2: the reference relied on the
+            // Python truthiness of the looked-up value, so key 0 (C-1) counted
+            // as absent. It is a real note.
+            Some(value) => Some(value * 100.0),
             _ => None,
         }
     }

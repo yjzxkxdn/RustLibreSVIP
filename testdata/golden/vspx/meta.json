@@ -5,5 +5,8 @@
   "dumped": true,
   "loaded": true,
   "nondeterministic": false,
-  "notes": []
+  "notes": [],
+  "deviations": [
+    "no-pitch breaks are inserted only at real gaps: the reference compared an unshifted parameter time with a shifted previous tick, so it missed every gap shorter than first_bar_length"
+  ]
 }

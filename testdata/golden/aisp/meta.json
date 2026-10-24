@@ -5,5 +5,8 @@
   "dumped": true,
   "loaded": true,
   "nondeterministic": false,
-  "notes": []
+  "notes": [],
+  "deviations": [
+    "pitch points accumulate across items instead of keeping only the last item doubled (LibreSVIP 2.9.2 self-extend bug, fixed)"
+  ]
 }

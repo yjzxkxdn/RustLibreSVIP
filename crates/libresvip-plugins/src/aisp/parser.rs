@@ -83,11 +83,14 @@ impl AisParser {
                         let (item_notes, item_pitch_points) =
                             self.parse_notes(&item.notes, tick_prefix)?;
                         note_list.extend(item_notes);
-                        // Quirk of the reference implementation: the variable
-                        // is rebound per item, then extended with itself.
-                        let mut item_pitch_points = item_pitch_points;
-                        item_pitch_points.extend(item_pitch_points.clone());
-                        pitch_points = item_pitch_points;
+                        // Fixed deviation from LibreSVIP 2.9.2: the reference
+                        // code rebinds `pitch_points` to the current item's
+                        // points on every iteration (dropping everything before
+                        // it) and then does `pitch_points.extend(pitch_points)`,
+                        // so only the last item survives and every point is
+                        // duplicated. Accumulating the items is the evident
+                        // intent.
+                        pitch_points.extend(item_pitch_points);
                     }
                     pitch_points.push(Point::end_point());
                     let mut singing_track = SingingTrack {

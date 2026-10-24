@@ -341,9 +341,11 @@ impl PitchSimulator {
     }
 
     pub fn pitch_at_secs(&mut self, secs: f64) -> Option<f64> {
-        // `if value := self.interval_dict.get(secs)` — a zero value is falsy.
         match self.interval_dict.get(secs) {
-            Some(value) if value != 0.0 => Some(value * 100.0),
+            // Fixed deviation from LibreSVIP 2.9.2: the reference relied on the
+            // Python truthiness of the looked-up value, so key 0 (C-1) counted
+            // as absent. It is a real note.
+            Some(value) => Some(value * 100.0),
             _ => None,
         }
     }
