@@ -1,5 +1,7 @@
 //! Port of `libresvip.core.time_sync`.
 
+use std::sync::Arc;
+
 use crate::core::tick_counter::skip_tempo_list;
 use crate::model::base::SongTempo;
 
@@ -8,9 +10,16 @@ use crate::model::base::SongTempo;
 pub struct TimeSynchronizer {
     pub is_absolute_time_code: bool,
     pub default_tempo: f64,
-    pub tempo_list: Vec<SongTempo>,
+    /// Shared so the many `TimeSynchronizer` clones on the note/pitch paths
+    /// copy a reference count instead of the whole tempo table.
+    pub tempo_list: Arc<[SongTempo]>,
     positions: Vec<i64>,
     cum_secs: Vec<f64>,
+    /// Prefix sums of `get_actual_ticks_from_ticks`, one per tempo segment:
+    /// `cum_ticks[i]` is the remapped position of `positions[i]`. Built with
+    /// the same left-to-right accumulation the per-call loop used, so results
+    /// are bit-identical while the lookup becomes O(log n).
+    cum_ticks: Vec<f64>,
 }
 
 impl TimeSynchronizer {
@@ -26,11 +35,35 @@ impl TimeSynchronizer {
         } else {
             ori_tempo_list.to_vec()
         };
+        Self::new_owned(tempo_list, is_absolute_time_code, default_tempo)
+    }
+
+    /// Like [`TimeSynchronizer::new`] but takes ownership, so a caller that
+    /// already holds the tempo list (or an `Arc` to it) avoids the copy.
+    pub fn new_owned(
+        tempo_list: Vec<SongTempo>,
+        is_absolute_time_code: bool,
+        default_tempo: f64,
+    ) -> Self {
+        Self::new_shared(Arc::from(tempo_list), is_absolute_time_code, default_tempo)
+    }
+
+    /// Like [`TimeSynchronizer::new_owned`] for an already shared tempo list.
+    pub fn new_shared(
+        tempo_list: Arc<[SongTempo]>,
+        is_absolute_time_code: bool,
+        default_tempo: f64,
+    ) -> Self {
         let positions: Vec<i64> = tempo_list.iter().map(|tempo| tempo.position).collect();
         let mut cum_secs = vec![0.0f64; tempo_list.len()];
         for i in 1..tempo_list.len() {
             let dt = positions[i] - positions[i - 1];
             cum_secs[i] = cum_secs[i - 1] + dt as f64 / tempo_list[i - 1].bpm / 8.0;
+        }
+        let mut cum_ticks = vec![0.0f64; tempo_list.len()];
+        for i in 1..tempo_list.len() {
+            let dt = (positions[i] - positions[i - 1]) as f64;
+            cum_ticks[i] = cum_ticks[i - 1] + dt * (default_tempo / tempo_list[i - 1].bpm);
         }
         Self {
             is_absolute_time_code,
@@ -38,6 +71,7 @@ impl TimeSynchronizer {
             tempo_list,
             positions,
             cum_secs,
+            cum_ticks,
         }
     }
 
@@ -73,14 +107,9 @@ impl TimeSynchronizer {
         if !self.is_absolute_time_code {
             return ticks as f64;
         }
-        let mut res = 0.0f64;
         let idx = self.segment_index(ticks);
-        for i in 0..idx {
-            res += (self.positions[i + 1] - self.positions[i]) as f64
-                * (self.default_tempo / self.bpm_at(i));
-        }
-        res += (ticks - self.positions[idx]) as f64 * self.default_tempo / self.bpm_at(idx);
-        res
+        self.cum_ticks[idx]
+            + (ticks - self.positions[idx]) as f64 * self.default_tempo / self.bpm_at(idx)
     }
 
     pub fn get_duration_secs_from_ticks(&self, start_ticks: i64, end_ticks: i64) -> f64 {

@@ -6,6 +6,7 @@
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::sync::{Mutex, OnceLock};
 
 /// One parsed `.mo` catalog.
 #[derive(Clone, Debug, Default)]
@@ -134,23 +135,40 @@ pub fn locales_dir() -> PathBuf {
     crate::core::constants::res_dir().join("locales")
 }
 
-/// Loads the core catalog for a language.
-pub fn core_catalog(lang: &str) -> Translation {
-    let path = locales_dir()
-        .join(lang)
-        .join("LC_MESSAGES")
-        .join("core.mo");
-    Translation::from_file(&path).unwrap_or_default()
+/// Catalogs already parsed, keyed by `"<plugin_id>:<lang>"` (core uses the
+/// id `"core"`). `gettext_lazy` sits on per-note paths (svp export), so the
+/// `.mo` files must not be re-read and re-parsed on every call.
+fn cached_catalog(key: &str, load: impl FnOnce() -> Translation) -> Translation {
+    static CACHE: OnceLock<Mutex<HashMap<String, Translation>>> = OnceLock::new();
+    let cache = CACHE.get_or_init(|| Mutex::new(HashMap::new()));
+    let mut guard = cache.lock().unwrap_or_else(|poison| poison.into_inner());
+    guard
+        .entry(key.to_owned())
+        .or_insert_with(load)
+        .clone()
 }
 
-/// Loads one plugin's catalog (the Python side merges every `.mo` in the
-/// plugin's own `locales/<lang>/LC_MESSAGES` directory).
+/// Loads the core catalog for a language (cached).
+pub fn core_catalog(lang: &str) -> Translation {
+    cached_catalog(&format!("core:{lang}"), || {
+        let path = locales_dir()
+            .join(lang)
+            .join("LC_MESSAGES")
+            .join("core.mo");
+        Translation::from_file(&path).unwrap_or_default()
+    })
+}
+
+/// Loads one plugin's catalog (cached); the Python side merges every `.mo` in
+/// the plugin's own `locales/<lang>/LC_MESSAGES` directory.
 pub fn plugin_catalog(plugin_id: &str, lang: &str) -> Translation {
-    let path = locales_dir()
-        .join(lang)
-        .join("LC_MESSAGES")
-        .join(format!("{plugin_id}.mo"));
-    Translation::from_file(&path).unwrap_or_default()
+    cached_catalog(&format!("{plugin_id}:{lang}"), || {
+        let path = locales_dir()
+            .join(lang)
+            .join("LC_MESSAGES")
+            .join(format!("{plugin_id}.mo"));
+        Translation::from_file(&path).unwrap_or_default()
+    })
 }
 
 /// Builds the translation chain used by the CLI:

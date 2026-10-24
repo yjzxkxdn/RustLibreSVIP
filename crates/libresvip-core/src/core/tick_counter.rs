@@ -15,8 +15,8 @@ pub fn skip_tempo_list(tempo_list: &[SongTempo], skip_ticks: i64) -> Vec<SongTem
         let element = match (index, tempo_list.is_empty()) {
             // `tempo_list[-1]` in Python
             (-1, false) => tempo_list.last(),
+            // An empty list also lands here via the `index as usize` cast.
             (index, _) => tempo_list.get(index as usize),
-            _ => None,
         };
         let tempo = match element {
             Some(element) => {
@@ -45,7 +45,6 @@ pub fn skip_beat_list(beat_list: &[TimeSignature], skip_bars: i64) -> Vec<TimeSi
         let element = match (index, beat_list.is_empty()) {
             (-1, false) => beat_list.last(),
             (index, _) => beat_list.get(index as usize),
-            _ => None,
         };
         let beat = match element {
             Some(element) => {

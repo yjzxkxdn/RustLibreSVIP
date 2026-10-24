@@ -9,6 +9,7 @@
 //!   introspecting pydantic `model_fields`)
 //! * [`utils`] — text/binary/xml/yaml helpers plus gettext translations
 
+pub mod capabilities;
 pub mod compression;
 pub mod core;
 pub mod error;
@@ -19,6 +20,7 @@ pub mod model;
 pub mod options;
 pub mod platform;
 pub mod plugin;
+pub mod semantics;
 pub mod utils;
 
 pub use error::{LibreSvipError, Result};

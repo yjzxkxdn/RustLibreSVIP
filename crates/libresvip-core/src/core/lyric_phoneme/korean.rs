@@ -20,8 +20,48 @@ use std::sync::OnceLock;
 
 use crate::error::{LibreSvipError, Result};
 
+/// The ported romanisation schemes (`yr`/`ph`/`ipa` remain unported).
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum KoreanScheme {
+    Rr,
+    Rrr,
+    Mr,
+}
+
+impl KoreanScheme {
+    /// Column index inside `ko_roman.tsv`.
+    const fn column(self) -> usize {
+        match self {
+            KoreanScheme::Rr => 0,
+            KoreanScheme::Rrr => 1,
+            KoreanScheme::Mr => 2,
+        }
+    }
+
+    pub fn parse(value: &str) -> Option<Self> {
+        match value {
+            "rr" => Some(KoreanScheme::Rr),
+            "rrr" => Some(KoreanScheme::Rrr),
+            "mr" => Some(KoreanScheme::Mr),
+            _ => None,
+        }
+    }
+}
+
+fn ko_roman_tsv() -> Result<&'static str> {
+    static TABLE: OnceLock<Result<String>> = OnceLock::new();
+    TABLE
+        .get_or_init(|| {
+            crate::compression::zlib_decompress(KO_ROMAN_TSV_ZLIB)
+                .and_then(|bytes| String::from_utf8(bytes).map_err(|_| LibreSvipError::msg("ko table is not UTF-8")))
+        })
+        .as_deref()
+        .map_err(|error| LibreSvipError::msg(format!("ko_pron table asset failed to decompress: {error}")))
+}
+
 /// `assets/phoneme/ko_rr.tsv` — `V\t<jamo>\t<rr>` and `B\t<final>-<initial>\t<rr>`.
-const KO_RR_TSV: &str = include_str!("../../../../../assets/phoneme/ko_rr.tsv");
+const KO_ROMAN_TSV_ZLIB: &[u8] =
+    include_bytes!("../../../../../assets/phoneme/ko_roman.tsv.zlib");
 
 /// `ko_pron.ko_pron.final_syllable_conversion`.
 const FINAL_SYLLABLE_CONVERSION: [(&str, &str); 2] = [("", "Ø"), ("X", "")];
@@ -111,8 +151,6 @@ fn table_lookup(
 
 /// `ko_pron.ko_pron.system_lookup`
 const SYSTEM_LOOKUP: [&str; 6] = ["ph", "rr", "rrr", "mr", "yr", "ipa"];
-/// `ko_pron.ko_pron.system_lookup.index("rr")`
-const RR: usize = 1;
 
 #[derive(Debug, Clone)]
 struct Jamo {
@@ -142,8 +180,8 @@ impl Jamo {
 }
 
 struct KoreanData {
-    vowels: HashMap<String, String>,
-    boundaries: HashMap<String, String>,
+    vowels: HashMap<String, [String; 3]>,
+    boundaries: HashMap<String, [String; 3]>,
 }
 
 static KOREAN_DATA: OnceLock<Result<KoreanData>> = OnceLock::new();
@@ -160,21 +198,29 @@ fn korean_data() -> Result<&'static KoreanData> {
 fn load_korean_data() -> Result<KoreanData> {
     let mut vowels = HashMap::new();
     let mut boundaries = HashMap::new();
-    for line in KO_RR_TSV.lines() {
+    for line in ko_roman_tsv()?.lines() {
         if line.starts_with('#') {
             continue;
         }
         let mut fields = line.split('\t');
-        let (Some(kind), Some(key), value) = (fields.next(), fields.next(), fields.next()) else {
+        let (Some(kind), Some(key)) = (fields.next(), fields.next()) else {
             continue;
         };
-        let Some(value) = value else { continue };
+        let values: Vec<&str> = fields.collect();
+        if values.len() != 3 {
+            continue;
+        }
+        let row = [
+            values[0].to_string(),
+            values[1].to_string(),
+            values[2].to_string(),
+        ];
         match kind {
             "V" => {
-                vowels.insert(key.to_string(), value.to_string());
+                vowels.insert(key.to_string(), row);
             }
             "B" => {
-                boundaries.insert(key.to_string(), value.to_string());
+                boundaries.insert(key.to_string(), row);
             }
             _ => {}
         }
@@ -307,9 +353,9 @@ pub fn romanise(word: &str, system_index: &str) -> Result<String> {
             "unknown romanisation system: {system_index}"
         )));
     }
-    if SYSTEM_LOOKUP.iter().position(|system| *system == system_index) != Some(RR) {
+    let Some(scheme) = KoreanScheme::parse(system_index) else {
         return Err(LibreSvipError::NotImplemented);
-    }
+    };
     let dictionary = korean_data()?;
     let text = strip_quoted_characters(word);
     let characters: Vec<char> = text.chars().collect();
@@ -318,7 +364,7 @@ pub fn romanise(word: &str, system_index: &str) -> Result<String> {
         // `re.finditer` never matches, so the input is returned untouched.
         return Ok(text);
     }
-    let romanisation = romanise_characters(&characters, dictionary)?;
+    let romanisation = romanise_characters(&characters, dictionary, scheme)?;
     if !text.chars().any(is_regex_metacharacter) {
         // Without metacharacters the pattern is the literal text, so the first
         // match is the whole string and it is substituted exactly once.
@@ -347,7 +393,11 @@ pub fn romanise(word: &str, system_index: &str) -> Result<String> {
 }
 
 /// The body of `romanise` for one string: no regex, no text substitution.
-fn romanise_characters(characters: &[char], dictionary: &KoreanData) -> Result<String> {
+fn romanise_characters(
+    characters: &[char],
+    dictionary: &KoreanData,
+    scheme: KoreanScheme,
+) -> Result<String> {
     let syllables: Vec<Jamo> = characters.iter().map(|&c| decompose_jamo(c)).collect();
     let syllable_count = syllables.len() as isize;
     let mut romanisation = String::new();
@@ -372,42 +422,56 @@ fn romanise_characters(characters: &[char], dictionary: &KoreanData) -> Result<S
         let vowel = dictionary
             .vowels
             .get(&syllable.vowel)
-            .cloned()
+            .map(|columns| columns[scheme.column()].clone())
             .ok_or_else(|| LibreSvipError::msg(format!("No vowel data for {}.", syllable.vowel)))?;
 
         // `system_index not in {2, 4}`: the rr-specific final adjustments.
-        if index >= 0 && this_character == '밟' {
+        // rrr (and unported yr) skip these final adjustments.
+        if !matches!(scheme, KoreanScheme::Rrr) && index >= 0 && this_character == '밟' {
             syllable.final_jamo = "ᆸ".to_string();
         }
         // `final_next_syllable = syllable['final'] + respelling[index + 1:index + 2]`
         let next_character = characters.get((index + 1).max(0) as usize).copied();
+        let adjust_finals = !matches!(scheme, KoreanScheme::Rrr);
         if let (Some(final_char), Some(next_character)) =
             (syllable.final_jamo.chars().next(), next_character)
         {
-            if (final_char == 'ᇀ' || final_char == 'ᆴ')
+            if adjust_finals && (final_char == 'ᇀ' || final_char == 'ᆴ')
                 && (next_character == '이' || next_character == '히')
             {
                 syllable.final_jamo = "ᆾ".to_string();
-            } else if final_char == 'ᆮ' && next_character == '이' {
+            } else if adjust_finals && final_char == 'ᆮ' && next_character == '이' {
                 syllable.final_jamo = "ᆽ".to_string();
-            } else if final_char == 'ᆮ' && next_character == '히' {
+            } else if adjust_finals && final_char == 'ᆮ' && next_character == '히' {
                 syllable.final_jamo = "ᆾ".to_string();
             }
         }
 
         let boundary_key = format!("{}-{}", syllable.final_jamo, next_syllable.initial);
-        let junction = dictionary.boundaries.get(&boundary_key).ok_or_else(|| {
-            LibreSvipError::msg(format!("No boundary data for {boundary_key}."))
-        })?;
+        let junction = dictionary
+            .boundaries
+            .get(&boundary_key)
+            .ok_or_else(|| {
+                LibreSvipError::msg(format!("No boundary data for {boundary_key}."))
+            })?[scheme.column()]
+            .clone();
         romanisation.push_str(&vowel);
-        romanisation.push_str(junction);
+        romanisation.push_str(&junction);
     }
     // `system_index in {1, 2}`: the `(.)…(.)` pass runs twice because a single
     // pass cannot consume two boundaries that share a character. The `…` comes
     // from the `Ø-ᄋ` boundary (a syllable without a final followed by a silent
     // initial); `ambiguous_intersyllabic_rr` pairs keep a hyphen between them.
-    for _ in 0..2 {
-        romanisation = collapse_elision(&romanisation);
+    match scheme {
+        KoreanScheme::Rr | KoreanScheme::Rrr => {
+            for _ in 0..2 {
+                romanisation = collapse_elision(&romanisation);
+            }
+        }
+        // mr has no `…` markers; its only tail fixup is "swi" -> "shwi".
+        KoreanScheme::Mr => {
+            romanisation = romanisation.replace("swi", "shwi");
+        }
     }
     Ok(romanisation)
 }

@@ -7,7 +7,7 @@
 
 use std::path::{Path, PathBuf};
 
-use crate::core::warning_types::show_warning;
+use crate::core::warning_types::{show_warning_kind, WarningKind};
 use crate::utils::translation::gettext_lazy;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -96,7 +96,7 @@ fn parse_wav(bytes: &[u8]) -> Option<SoundFileInfo> {
 pub fn audio_track_info(file_path: impl AsRef<Path>, only_wav: bool) -> Option<SoundFileInfo> {
     let path = file_path.as_ref();
     let warning = || {
-        show_warning(format!(
+        show_warning_kind(WarningKind::FieldDropped, format!(
             "{}{}",
             gettext_lazy("Invalid audio file: "),
             path.display()

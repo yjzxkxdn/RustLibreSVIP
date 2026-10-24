@@ -11,5 +11,11 @@ pub use std::fs::{create_dir_all, read, read_to_string, remove_dir_all, remove_f
 
 #[cfg(target_arch = "wasm32")]
 pub use crate::memory_fs::{
-    create_dir_all, read, read_to_string, remove_dir_all, remove_file, write,
+    create_dir_all, read, read_shared, read_to_string, remove_dir_all, remove_file, write,
 };
+
+#[cfg(not(target_arch = "wasm32"))]
+/// Native twin of the wasm `read_shared`; shares nothing but keeps one API.
+pub fn read_shared(path: impl AsRef<std::path::Path>) -> std::io::Result<std::sync::Arc<[u8]>> {
+    Ok(std::sync::Arc::from(std::fs::read(path)?))
+}

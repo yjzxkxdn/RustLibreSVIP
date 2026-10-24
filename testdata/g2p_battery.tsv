@@ -1,0 +1,49 @@
+jyutping	你好世界	[["nei5"], ["hou2", "hou3"], ["sai3"], ["gaai3"]]
+jyutping	廣東話	[["gwong2"], ["dung1"], ["waa2", "waa6"]]
+jyutping	我愛你	[["ngo5"], ["oi3"], ["nei5"]]
+jyutping	你好	[["nei5"], ["hou2", "hou3"]]
+jyutping	開飯	[["hoi1"], ["faan6"]]
+jyutping	學校	[["hok6"], ["gaau3", "haau6"]]
+jyutping	音樂	[["jam1"], ["lok6", "ngok6"]]
+jyutping	你	[["nei5"]]
+jyutping	開	[["hoi1"]]
+jyutping	hello	[null, null, null, null, null]
+jyutping	你good	[["nei5"], null, null, null, null]
+jyutping	𨋢	[null]
+jyutping	乜嘢	[null, null]
+korean:rr	안녕하세요	annyeonghaseyo
+korean:rrr	안녕하세요	annyeonghaseyo
+korean:mr	안녕하세요	annyŏnghaseyo
+korean:rr	감사합니다	gamsahamnida
+korean:rrr	감사합니다	gamsahabnida
+korean:mr	감사합니다	kamsahamnida
+korean:rr	사랑	sarang
+korean:rrr	사랑	salang
+korean:mr	사랑	sarang
+korean:rr	한글	han-geul
+korean:rrr	한글	hangeul
+korean:mr	한글	han'gŭl
+korean:rr	웃음	useum
+korean:rrr	웃음	us-eum
+korean:mr	웃음	usŭm
+korean:rr	가나다	ganada
+korean:rrr	가나다	ganada
+korean:mr	가나다	kanada
+korean:rr	친구	chin-gu
+korean:rrr	친구	chingu
+korean:mr	친구	ch'in'gu
+korean:rr	음악	eumak
+korean:rrr	음악	eum-ag
+korean:mr	음악	ŭmak
+korean:rr	가|나	ga na|ga na
+korean:rrr	가|나	ga na|ga na
+korean:mr	가|나	ka na|ka na
+korean:rr	(웃음)	( useum )
+korean:rrr	(웃음)	( us-eum )
+korean:mr	(웃음)	( usŭm )
+korean:rr	학교	hakgyo
+korean:rrr	학교	haggyo
+korean:mr	학교	hakkyo
+korean:rr	서울	seoul
+korean:rrr	서울	seoul
+korean:mr	서울	sŏul

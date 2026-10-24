@@ -12,10 +12,10 @@
 use std::collections::BTreeMap;
 use std::io;
 use std::path::{Component, Path, PathBuf};
-use std::sync::{Mutex, MutexGuard, OnceLock};
+use std::sync::{Arc, Mutex, MutexGuard, OnceLock};
 
-fn files() -> MutexGuard<'static, BTreeMap<PathBuf, Vec<u8>>> {
-    static FILES: OnceLock<Mutex<BTreeMap<PathBuf, Vec<u8>>>> = OnceLock::new();
+fn files() -> MutexGuard<'static, BTreeMap<PathBuf, Arc<[u8]>>> {
+    static FILES: OnceLock<Mutex<BTreeMap<PathBuf, Arc<[u8]>>>> = OnceLock::new();
     FILES
         .get_or_init(|| Mutex::new(BTreeMap::new()))
         .lock()
@@ -47,6 +47,11 @@ fn missing(path: &Path) -> io::Error {
 }
 
 pub fn read(path: impl AsRef<Path>) -> io::Result<Vec<u8>> {
+    Ok(read_shared(path)?.to_vec())
+}
+
+/// Like [`read`] but shares the stored bytes instead of copying them.
+pub fn read_shared(path: impl AsRef<Path>) -> io::Result<Arc<[u8]>> {
     let path = normalize(path.as_ref());
     files().get(&path).cloned().ok_or_else(|| missing(&path))
 }
@@ -64,8 +69,12 @@ pub fn read_to_string(path: impl AsRef<Path>) -> io::Result<String> {
 
 pub fn write(path: impl AsRef<Path>, contents: impl AsRef<[u8]>) -> io::Result<()> {
     let path = normalize(path.as_ref());
-    files().insert(path, contents.as_ref().to_vec());
+    files().insert(path, Arc::from(contents.as_ref().to_vec()));
     Ok(())
+}
+
+pub fn exists(path: impl AsRef<Path>) -> bool {
+    files().contains_key(&normalize(path.as_ref()))
 }
 
 pub fn create_dir_all(_path: impl AsRef<Path>) -> io::Result<()> {

@@ -1157,7 +1157,13 @@ pub fn save_settings() -> Result<()> {
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).at_path(parent)?;
     }
-    std::fs::write(&path, settings_to_yaml(&snapshot)).at_path(&path)?;
+    // Write to a sibling temp file and rename over the target so a crash
+    // never leaves a half-written settings file behind.
+    let mut temp_os = path.clone().into_os_string();
+    temp_os.push(".tmp");
+    let temp_path = PathBuf::from(temp_os);
+    std::fs::write(&temp_path, settings_to_yaml(&snapshot)).at_path(&temp_path)?;
+    std::fs::rename(&temp_path, &path).at_path(&path)?;
     Ok(())
 }
 

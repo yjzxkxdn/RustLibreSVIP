@@ -78,7 +78,10 @@ fn remap_params(
 }
 
 /// `reset_time_axis`: flatten a dynamic-tempo project onto a constant tempo.
-pub fn reset_time_axis(project: &Project, tempo: f64) -> Result<Project> {
+///
+/// Takes ownership and rewrites in place: every track, note and curve would
+/// otherwise be cloned field-for-field just to have two positions changed.
+pub fn reset_time_axis(mut project: Project, tempo: f64) -> Result<Project> {
     let synchronizer = TimeSynchronizer::new(&project.song_tempo_list, 0, true, tempo);
     let new_time_signature = TimeSignature::new(0, 4, 4);
     let ori_first = project
@@ -89,40 +92,32 @@ pub fn reset_time_axis(project: &Project, tempo: f64) -> Result<Project> {
     let new_first = py_round(new_time_signature.bar_length());
     let func = |ticks: i64| synchronizer.get_actual_ticks_from_ticks(ticks);
 
-    let mut new_track_list = Vec::with_capacity(project.track_list.len());
-    for track in &project.track_list {
+    for track in &mut project.track_list {
         match track {
             Track::Instrumental(instrumental) => {
-                let mut updated = instrumental.clone();
-                updated.offset = py_round(synchronizer.get_actual_ticks_from_ticks(instrumental.offset));
-                new_track_list.push(Track::Instrumental(updated));
+                instrumental.offset =
+                    py_round(synchronizer.get_actual_ticks_from_ticks(instrumental.offset));
             }
             Track::Singing(singing) => {
-                let mut updated = singing.clone();
-                updated.note_list = singing
-                    .note_list
-                    .iter()
-                    .map(|note| {
-                        let note_end = py_round(synchronizer.get_actual_ticks_from_ticks(note.end_pos()));
-                        let note_start = py_round(synchronizer.get_actual_ticks_from_ticks(note.start_pos));
-                        let mut new_note = note.clone();
-                        new_note.start_pos = note_start;
-                        new_note.length = note_end - note_start;
-                        new_note
-                    })
-                    .collect();
-                updated.edited_params = remap_params(&singing.edited_params, &func, ori_first, new_first);
-                new_track_list.push(Track::Singing(updated));
+                for note in &mut singing.note_list {
+                    let note_end =
+                        py_round(synchronizer.get_actual_ticks_from_ticks(note.end_pos()));
+                    let note_start =
+                        py_round(synchronizer.get_actual_ticks_from_ticks(note.start_pos));
+                    note.start_pos = note_start;
+                    note.length = note_end - note_start;
+                }
+                let original_params = std::mem::take(&mut singing.edited_params);
+                singing.edited_params =
+                    remap_params(&original_params, &func, ori_first, new_first);
             }
         }
     }
 
-    Ok(Project {
-        version: String::new(),
-        song_tempo_list: vec![SongTempo::new(0, tempo)],
-        time_signature_list: vec![new_time_signature],
-        track_list: new_track_list,
-    })
+    project.version = String::new();
+    project.song_tempo_list = vec![SongTempo::new(0, tempo)];
+    project.time_signature_list = vec![new_time_signature];
+    Ok(project)
 }
 
 /// `zoom_project`: scale tempos, notes and curves by `factor`.
@@ -265,6 +260,6 @@ pub fn limit_bars(project: &Project, max_bars: i64) -> Result<Project> {
 }
 
 /// Convenience wrapper used by plugins: reset to the default tempo.
-pub fn reset_time_axis_default(project: &Project) -> Result<Project> {
+pub fn reset_time_axis_default(project: Project) -> Result<Project> {
     reset_time_axis(project, DEFAULT_BPM)
 }

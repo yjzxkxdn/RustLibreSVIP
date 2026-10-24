@@ -324,6 +324,50 @@ pub struct Params {
     pub strength: ParamCurve,
 }
 
+impl Params {
+    /// Canonical curve keys, in field order. This is the seam the planned
+    /// OpenSVIP 2 `params: map<string, Curve>` model plugs into: code that
+    /// reads and writes curves through these accessors keeps working when the
+    /// fixed five fields become a map.
+    pub const CURVE_KEYS: [&'static str; 5] = ["pitch", "volume", "breath", "gender", "strength"];
+
+    /// Curve for `key` (`"pitch"`, `"volume"`, …; case-insensitive).
+    pub fn get(&self, key: &str) -> Option<&ParamCurve> {
+        match key.to_ascii_lowercase().as_str() {
+            "pitch" => Some(&self.pitch),
+            "volume" => Some(&self.volume),
+            "breath" => Some(&self.breath),
+            "gender" => Some(&self.gender),
+            "strength" => Some(&self.strength),
+            _ => None,
+        }
+    }
+
+    /// Mutable curve for `key`; see [`Params::get`].
+    pub fn get_mut(&mut self, key: &str) -> Option<&mut ParamCurve> {
+        match key.to_ascii_lowercase().as_str() {
+            "pitch" => Some(&mut self.pitch),
+            "volume" => Some(&mut self.volume),
+            "breath" => Some(&mut self.breath),
+            "gender" => Some(&mut self.gender),
+            "strength" => Some(&mut self.strength),
+            _ => None,
+        }
+    }
+
+    /// Replaces the curve for `key`; returns `false` (and changes nothing)
+    /// for unknown keys.
+    pub fn set(&mut self, key: &str, curve: ParamCurve) -> bool {
+        match self.get_mut(key) {
+            Some(slot) => {
+                *slot = curve;
+                true
+            }
+            None => false,
+        }
+    }
+}
+
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct VibratoParam {
@@ -408,6 +452,12 @@ pub struct Note {
     pub edited_phones: Option<Phones>,
     #[serde(rename = "Vibrato", alias = "vibrato")]
     pub vibrato: Option<VibratoParam>,
+    /// Extension slot for per-note attributes the v1 hub model has no field
+    /// for. Never serialized: it must not leak into OpenSVIP `.json` output.
+    /// Semantically identical to the planned `attrs` of the OpenSVIP 2 model,
+    /// so entries written today can be upgraded without remapping.
+    #[serde(skip)]
+    pub attrs: std::collections::BTreeMap<String, String>,
 }
 
 impl Default for Note {
@@ -421,6 +471,7 @@ impl Default for Note {
             pronunciation: None,
             edited_phones: None,
             vibrato: None,
+            attrs: std::collections::BTreeMap::new(),
         }
     }
 }
@@ -852,11 +903,16 @@ pub struct Project {
     pub time_signature_list: Vec<TimeSignature>,
     #[serde(rename = "TrackList", alias = "track_list")]
     pub track_list: Vec<Track>,
+    /// Structured warnings collected while the project was being built.
+    /// Transport only — never serialized, so OpenSVIP `.json` output is
+    /// unchanged. Middlewares may append to it as the project flows on.
+    #[serde(skip)]
+    pub warnings: Vec<crate::core::warning_types::ConversionWarning>,
 }
 
 impl Project {
     /// Port of `Project.merge_projects`.
-    pub fn merge_projects(projects: Vec<Project>) -> Result<Project> {
+    pub fn merge_projects(mut projects: Vec<Project>) -> Result<Project> {
         if projects.len() <= 1 {
             return Err(LibreSvipError::NoProjectsToMerge);
         }
@@ -868,12 +924,27 @@ impl Project {
         if !compatible {
             return Err(LibreSvipError::IncompatibleProjects);
         }
-        let mut merged = sample_project.clone();
-        merged.track_list = projects
-            .into_iter()
-            .flat_map(|project| project.track_list)
-            .collect();
-        Ok(merged)
+        // Take the first project apart instead of cloning it wholesale only
+        // to throw its track list away again.
+        let Project {
+            version,
+            song_tempo_list,
+            time_signature_list,
+            warnings,
+            mut track_list,
+        } = projects.swap_remove(0);
+        track_list.extend(
+            projects
+                .into_iter()
+                .flat_map(|project| project.track_list),
+        );
+        Ok(Project {
+            version,
+            song_tempo_list,
+            time_signature_list,
+            track_list,
+            warnings,
+        })
     }
 
     /// Port of `Project.split_tracks`.
@@ -890,9 +961,16 @@ impl Project {
         let chunk_size = max_track_count.max(1);
         let mut result = Vec::new();
         for chunk in singing_tracks.chunks(chunk_size) {
-            let mut project = self.clone();
-            project.track_list = chunk.to_vec();
-            result.push(project);
+            // Only the per-child data is cloned; the shared header lists are
+            // small and cloning the source project's full track list for every
+            // chunk (only to overwrite it) is what this avoids.
+            result.push(Project {
+                version: self.version.clone(),
+                song_tempo_list: self.song_tempo_list.clone(),
+                time_signature_list: self.time_signature_list.clone(),
+                track_list: chunk.to_vec(),
+                warnings: self.warnings.clone(),
+            });
         }
         Ok(result)
     }
@@ -952,4 +1030,50 @@ where
     I: IntoIterator<Item = (i64, i64)>,
 {
     pairs.into_iter().map(Point::from).collect()
+}
+
+#[cfg(test)]
+mod extension_slot_tests {
+    use super::*;
+
+    /// `Note.attrs` and `Project.warnings` are transport-only: they must never
+    /// appear in serialized output, so OpenSVIP `.json` stays byte-identical.
+    #[test]
+    fn extension_fields_are_never_serialized() {
+        let mut note = Note::new(0, 480, 60, "a");
+        note.attrs.insert("engine.tag".to_owned(), "x".to_owned());
+        let json = serde_json::to_string(&note).expect("serialize note");
+        assert!(!json.contains("attrs"), "attrs leaked into {json}");
+        let round_trip: Note = serde_json::from_str(&json).expect("deserialize note");
+        assert!(round_trip.attrs.is_empty());
+
+        let mut project = Project::default();
+        project
+            .warnings
+            .push(crate::core::warning_types::ConversionWarning::new(
+                crate::core::warning_types::WarningKind::TempoDropped,
+                "test",
+            ));
+        let json = serde_json::to_string(&project).expect("serialize project");
+        assert!(!json.contains("warnings"), "warnings leaked into {json}");
+    }
+
+    /// The params accessors address the same storage as the fixed fields and
+    /// reject unknown keys — the seam the OpenSVIP 2 `params` map plugs into.
+    #[test]
+    fn params_accessors_round_trip_every_curve() {
+        let mut params = Params::default();
+        for (index, key) in Params::CURVE_KEYS.iter().enumerate() {
+            let curve = ParamCurve::new(vec![Point::new(index as i64, 100)]);
+            assert!(params.set(key, curve.clone()), "set {key}");
+            assert_eq!(params.get(key), Some(&curve), "get {key}");
+            assert!(params.get_mut(key).is_some());
+        }
+        // Case-insensitive like the JSON aliases.
+        assert!(params.get("PITCH").is_some());
+        assert!(params.get_mut("Strength").is_some());
+        // Unknown keys are rejected, not silently stored.
+        assert!(params.get("nope").is_none());
+        assert!(!params.set("nope", ParamCurve::default()));
+    }
 }

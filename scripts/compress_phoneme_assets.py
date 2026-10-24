@@ -17,6 +17,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 ASSETS = [
     "assets/phoneme/pinyin_normal.tsv",
     "assets/phoneme/phrases.tsv",
+    "assets/phoneme/jyutping.tsv",
+    "assets/phoneme/ko_roman.tsv",
     "crates/libresvip-plugins/src/svp/phoneme_dictionary.json",
 ]
 

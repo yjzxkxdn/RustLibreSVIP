@@ -198,7 +198,7 @@ fn project_transforms() {
             "limit 1",
         );
         compare(
-            reset_time_axis(&project, 100.0).unwrap(),
+            reset_time_axis(project.clone(), 100.0).unwrap(),
             &case["expected_reset"],
             "reset",
         );
