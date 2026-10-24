@@ -4,6 +4,11 @@
 //! with its own option schema. Order matches the Python loader (alphabetical by
 //! package name).
 
+pub mod japanese_lyrics;
+pub mod phoneme_mapping;
+pub mod quantization;
+pub mod vibrato;
+
 use libresvip_core::core::config;
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Project, Track};
@@ -103,21 +108,26 @@ impl Middleware for PitchShiftMiddleware {
                 for note in &mut singing.note_list {
                     note.key_number += key;
                 }
-                let points = singing
-                    .edited_params
-                    .pitch
-                    .points
-                    .iter()
-                    .map(|point| {
-                        if point.y == -100 {
-                            *point
-                        } else {
-                            libresvip_core::model::point::Point::new(point.x, point.y + shift)
-                        }
-                    })
-                    .collect();
-                singing.edited_params.pitch =
-                    libresvip_core::model::base::ParamCurve::new(points);
+                // Curve access goes through the Params accessors: when the
+                // hub model moves to `params: map<string, Curve>` (OpenSVIP 2),
+                // only the accessor implementation changes, not this code.
+                if let Some(curve) = singing.edited_params.get("pitch") {
+                    let points = curve
+                        .points
+                        .iter()
+                        .map(|point| {
+                            if point.y == -100 {
+                                *point
+                            } else {
+                                libresvip_core::model::point::Point::new(point.x, point.y + shift)
+                            }
+                        })
+                        .collect();
+                    singing.edited_params.set(
+                        "pitch",
+                        libresvip_core::model::base::ParamCurve::new(points),
+                    );
+                }
             }
         }
         Ok(project)
@@ -519,8 +529,25 @@ pub static REMOVE_LYRIC_SYMBOLS: RemoveLyricSymbolsMiddleware = RemoveLyricSymbo
 pub static REMOVE_SHORT_SILENCES: RemoveShortSilencesMiddleware = RemoveShortSilencesMiddleware;
 pub static REPLACE_LYRIC: ReplaceLyricsMiddleware = ReplaceLyricsMiddleware;
 
-/// All middlewares, in loader order.
-pub fn all_middlewares() -> Vec<&'static dyn Middleware> {
+// Rust-port additions (not present in Python LibreSVIP): registered after the
+// ported middlewares, before user selection order matters (all are opt-in).
+pub static JAPANESE_LYRICS: japanese_lyrics::JapaneseLyricsMiddleware =
+    japanese_lyrics::JapaneseLyricsMiddleware;
+pub static PHONEME_MAPPING: phoneme_mapping::PhonemeMappingMiddleware =
+    phoneme_mapping::PhonemeMappingMiddleware;
+pub static VIBRATO: vibrato::VibratoMiddleware = vibrato::VibratoMiddleware;
+pub static PITCH_QUANTIZATION: quantization::PitchQuantizationMiddleware =
+    quantization::PitchQuantizationMiddleware;
+pub static RHYTHM_QUANTIZATION: quantization::RhythmQuantizationMiddleware =
+    quantization::RhythmQuantizationMiddleware;
+
+/// The middlewares ported from Python LibreSVIP, in loader order.
+///
+/// The interactive CLI prompts exactly these, so `proj convert`, `proj merge`
+/// and `proj batch` ask the same questions in the same order as the reference
+/// implementation. Adding a middleware here changes the prompts and therefore
+/// the CLI contract.
+pub fn ported_middlewares() -> Vec<&'static dyn Middleware> {
     vec![
         &PITCH_SHIFT as &'static dyn Middleware,
         &PROJECT_ZOOM as &'static dyn Middleware,
@@ -529,6 +556,35 @@ pub fn all_middlewares() -> Vec<&'static dyn Middleware> {
         &REMOVE_SHORT_SILENCES as &'static dyn Middleware,
         &REPLACE_LYRIC as &'static dyn Middleware,
     ]
+}
+
+/// The Rust-port additions (not present in Python LibreSVIP).
+///
+/// They are opt-in: the CLI selects them with `--middleware <id>` instead of
+/// asking five extra questions on every conversion, and the GUI lists them as
+/// unchecked entries.
+pub fn additional_middlewares() -> Vec<&'static dyn Middleware> {
+    vec![
+        &JAPANESE_LYRICS as &'static dyn Middleware,
+        &PHONEME_MAPPING as &'static dyn Middleware,
+        &VIBRATO as &'static dyn Middleware,
+        &PITCH_QUANTIZATION as &'static dyn Middleware,
+        &RHYTHM_QUANTIZATION as &'static dyn Middleware,
+    ]
+}
+
+/// All middlewares: the ported ones, then the additions.
+pub fn all_middlewares() -> Vec<&'static dyn Middleware> {
+    let mut middlewares = ported_middlewares();
+    middlewares.extend(additional_middlewares());
+    middlewares
+}
+
+/// Looks a middleware up by its identifier (`--middleware <id>`).
+pub fn middleware_by_id(id: &str) -> Option<&'static dyn Middleware> {
+    all_middlewares()
+        .into_iter()
+        .find(|middleware| middleware.info().id == id)
 }
 
 /// Middleware identifiers, used for translations.
