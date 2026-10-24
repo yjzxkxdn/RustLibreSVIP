@@ -83,7 +83,7 @@ fn list(app: &mut App, ui: &mut Ui, rect: Rect, pal: &Palette) {
         header(app, ui, pal);
         let (divider, _) = ui.allocate_exact_size(Vec2::new(ui.available_width(), 1.0), Sense::hover());
         ui.painter()
-            .line_segment([divider.left_center(), divider.right_center()], Stroke::new(1.0, pal.border));
+            .line_segment([divider.left_center(), divider.right_center()], Stroke::new(1.0_f32, pal.border));
 
         let footer_height = 46.0;
         let list_height = (ui.available_height() - footer_height).max(40.0);
@@ -150,7 +150,7 @@ fn mode_tab(
             .rect_filled(rect, 0.0, pal.primary.gamma_multiply(0.16));
         ui.painter().line_segment(
             [rect.left_bottom(), rect.right_bottom()],
-            Stroke::new(2.0, pal.primary),
+            Stroke::new(2.0_f32, pal.primary),
         );
     } else if response.hovered() {
         ui.painter().rect_filled(rect, 0.0, pal.hover);
@@ -162,7 +162,7 @@ fn mode_tab(
 }
 
 fn mode_icon(ui: &mut Ui, rect: Rect, mode: ConversionMode, color: Color32) {
-    let stroke = Stroke::new(1.6, color);
+    let stroke = Stroke::new(1.6_f32, color);
     let painter = ui.painter();
     let center = rect.center();
     let h = rect.width() * 0.5;
@@ -234,7 +234,7 @@ fn task_row(app: &mut App, ui: &mut Ui, index: usize, pal: &Palette) -> bool {
     let (row, _) = ui.allocate_exact_size(Vec2::new(width, height), Sense::hover());
     ui.painter().line_segment(
         [row.left_bottom(), row.right_bottom()],
-        Stroke::new(1.0, pal.border),
+        Stroke::new(1.0_f32, pal.border),
     );
     let task = &app.tasks[index];
     let name = task.name.clone();

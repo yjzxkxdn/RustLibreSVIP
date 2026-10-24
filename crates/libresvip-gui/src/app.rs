@@ -593,7 +593,26 @@ impl App {
                     }
                     None => {
                         task.success = Some(true);
-                        task.warning = result.warnings;
+                        // Prefer the structured channel so each line carries a
+                        // kind label ("tempo dropped: …"); fall back to the
+                        // plain strings when no kinds were recorded.
+                        task.warning = if result.typed_warnings.is_empty() {
+                            result.warnings
+                        } else {
+                            use libresvip_core::core::warning_types::WarningKind;
+                            result
+                                .typed_warnings
+                                .iter()
+                                .map(|warning| {
+                                    if warning.kind == WarningKind::Other {
+                                        warning.detail.clone()
+                                    } else {
+                                        warning.to_string()
+                                    }
+                                })
+                                .collect::<Vec<_>>()
+                                .join("\n")
+                        };
                         task.tmp = result.tmp;
                     }
                 }

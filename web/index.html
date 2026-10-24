@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LibreSVIP 网页转换器（Rust / WebAssembly 演示）</title>
-<link rel="icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAMfklEQVR4nO2ba5BVVXbHf3ufc+6j+/a7m25eLa8ewFIERkEajBpEKxkyqVHLUCRhipAxiRUmUzPhQ2JV1EpVrBoqWmWExHEGRMvJOGQMgjEjxNRMEGVkwAkTiMqrkW5aoOnH7dv3ec5e+XDvudB0o/fRPGbMv+pUnzrn7n3W/q+111577dVKRITPMfS1FuBa43NPgF1OY2MMxpixkqUkKKXQWqOUKq19KT5ARBARtL5+DMjzPCzLKrpd0RZgjMkzfvDgQXbt2sWRI0dIJpMla6EUaK1pbm6mvb2dZcuWEQwGSyNBioDneSIi0t3dLStWrBCttQDX/Jo9e7a89tprIiLium4xQ5KCp4Cv+ZMnT3LPPfdw9OhRlFJYloVS6qpq34eIYIzB8zwANmzYwCOPPFKcJRSj/XQ6LQsXLhRAAoGAKKWuuRVorcWyLLEsSwB5++23i7KEgizAdV1s2+all15i1apVOI5DJpPJv58wYQLV1dUUaExlQymF67ocP348vwpZloXneSxevJjdu3cX7qQL1b6IyNKlS0UpJbZti9ZatNbyzDPPSCwWE8/zxBhzVS7P8ySTycj+/ftl5syZeUtUSolSSg4dOjRM7k/DZxJgjBERkXg8LhMnThRAHMcRQO6///5C+Lsi8Ae3c+fO/FSwbVsAefnll0VEJJPJfGY/BS+DiUSCeDw+7Nm8efPwPA9jDI7jXLUp4MMYQ1tbG7Zt47pu3vENDAwU3EfBBIzm5f2P+gO/miuB5Oa453kjvluMHGWFcldqwMXYUbkylLUXGEsYBAE0iqsZUVw3BOhRhu0hiIClrhwpZRNgyAo6WkcGULnr4vvhv8lq/iexc/R5GW4O1fAnpw8wL1TL0+PnjGwwxiiLgKzJQlA7o77Xl7kf/pvsCDf1neSMm2RtwwzW1E3hdCbJ870nSIrh92snU28FEMaej7KcYERZbEmfZfWpfZjcSmByLqzbTXLjR7t4Y/ATYsZlyfGf8h+xs3gIaTF4ktX8eS/Nvw9+wpxQDeOdMJv7OtgW7abfZAhozfpzHxH13Hzs64lgkPzfclEWAQGl2efG2BrtGiFKSFn8ZqSJFjvEoHHZEztDzLhYKAJKY+W899M9R/l690G+Vj+Fnw6d4y8aZ/DtlpvY0neSgNI8NX4OldrKaV6wlEKjcCwLjSqbhLKnQKXS1FmXmQK5QYpApR3i54l+fjDQyZDxeHzcbL4YruVr9VOY6ISp0DaO0myPdtNih5jkhJkRiACwrONtXr+hnUlOmE19J9nU10Gjdnhy0lxqtZ23vlJQdkrHkDXLSxE1Gf7h7AccSkUJaY2I8KNoFwvCdXRlEiw/uYdB45IRw5Bx8w6y1nL4+54jLIuM47ZwHee9NA1WgApt8c8Dp3i4az8rayfTYAX4ctfP6HaTBFTpwxiznJYncuFC0CiCdpCQyrq5uLh8q7GNbza28dzEeXySjvPLZJTXot1sOH+cXi9NSgzfamxj19QlfLvnI/4nGeXjdJx+ab2deivA93pPMiNQxaxAFXdFmjiajLItepoqXbohj0kcYClFILf1tC7y076jy0JRbwUAqNI2WlucdhP8ecN0bq+oZ+P543ylegIpMdwSqmHD+Ln8Qec++r0Md0eaqLUcUuLhIvxgoBMtwl81zmRaOkpSSk/MjgkBA16GbdHTaBQpDC1WkKmBSlwRDNlpAvB8XweLKxrYOtCFEeHmYDVBpVlc0cA/9h7nVDrBjmg3nZkEUePy100zEaDRCqCAm0I1fDjQydPj5/BhMso/xU7xpWAEtwxHWF5aHKFW21jAI6d/gZHs3L+rsonNk75Iox0gqDQCTA1UUqcd7jmxm2PpIf6u5SZmBqtwRdAKvtEwg6hxmRGo5Oun/5u54VoeqpmU/5YAfzNuFoeSA0z58MekjMuXGm+g3grgXisLGDQu64ITePgX9xFynJyggoUmLJoPp99LxLJxLM3Pp99NvQ7wcTqOaLjBqUAAG4UYuDVcl+932w2LQMDzslPIUgoUjLdD+Ne0OzmcihIQxYxQFafiHWjLwhbBtu2i0/VlL4NhNGE7AHpkEtKf88iF+9ZgBZC1Hk12YEoxLMoTss8sa3jcZ4ygteLGYDVIto+k55JMJoHs9hyybYtCUbYPEMCV3F5AcoMRiO1Lk+7xCE+1qZjtIALxX2ZQFRCe4aAlO3h3wJDscAlNsUl3eVjVmuAki/gHGSSdZUXZEGi2sOs1IiAqO+c1ipbmZrZs2ZLPWnueR3t7e/Z9AZZQNgH++p2TCbfXcPjL5+jbk8RC42GYsLqKtk31nPhGH9F9aRZ2T8SqyBLQsa6f7u/GuO3IBH4x/wxNKyto21TPoXvPkTiVQaOye45KRduGesZ9tRI+8hcoZXFVVFatWrRpVtkIIGLM4QDxAwdktQ5zfk2D+nvG0D02i9Zs1nNw8QPyDDBP/sppELEP/W0nQYJJCzw/jNPxWBaHpNpISVE4lZkio+40wcw+0MOc/xxGabHN8bR8mLihNPmsiIrium7+A/DlBIRjzwz2rJuv1z35/iNj7aSY/Ws0dnZMJTrapvjNIKGxz9ntDAET3pEgMuLQ8XDmiH8lAYLxFZF6AmrtD1LQHyQwaTFKGbQn99wxmtNbZt89RTTxGLxbJ9FBAijxkBygIExv1hJa1rquncEGX/km5+NqmLM88NoUMKq1LR+DsVnP9xAvHg/I8SBIIWtfeGMGkZJo1Vpej/SZL//UoPBxef4eNNURp+O4xdp5FccuFi7WutWbt2LU888QSRSKRgucfOAnxnIMKM5+tZeGIiN25qovbOEEf+tpczm7JaGffVCzIZj54fxun7twQNyyvQYYVcolkUiAte1GBVa6Y/VscXvt+QXzUgq33btnEch8cee4xnn32W5ubmorLTY5YSEy9rBUf+uJeBd1LcdnQCodU2Tb9XwfmaOIlD2flZfWeIyMQAJ9b1k+7ymP6dyvyAlQ3+vsbEhbplIWa+0jDiW0YMWmkOHz7M+vXr6e/vZ9u2b3nnd00I8NHwu2E6X4qyv62bqtsDRHenEBcaHgiDgFWpaHggzNFn+qibHKLmrmC2oVZkUgYvlhU+02fInDOIl7UEZeWmmbowwM7OTl544QUAHMfBdV36+/uLknfMCPB9QMMDFcz91xZOPzdI7GCG8M0O0zfWU31HMG8lLX8aIRX1qLg7jA5m7Vk7MOGPqqi5I0vI+DLEJ7p5Ac92o7XcRxs28ayLFKpFABr1qzBsqx8XPCZ+KyjI/9orLe3V+rq6oYdjT3++OMjj6DM5Tr6zFOqguGf/L711lv5U+Lm5mZ59dVXylkcCMY+La5yMQEXokIgH7hkWb8QN1z8XFxAZ7Ut7sj3l8LX8Jw5c9ixYwetra1F14lckXOBi4UeNYubc3gjHtuj318OPgHz58+ntbWVdDpNIBAoStbrp8qpDKRSKYwxJRVJ/VoQ4JfKlYJfCwLKweeegOvmcPTT4Fek+tVoruuO2dF8eRmhq1AR4i9rF8/xYDCYf1cuCiZgtMHatn1Fa4V9z97V1cWLL77I3r17SaVSzJo1i9WrV1NTU1P2NwomIBgM5pn3cezYMbTWw4oVS8FoXtwPZbdv386aNWvo6enJv3vzzTfZuHEj9913X/63JaOQcNGvyapvbx9WJhcOh+X1118vLo4t8HvGGDlw4EC+8stxnHxBpP/Mv1asWCEixZfJihQYCvvaeOihh3jnnXfyzxKJBMuXL2fRokXU1tYWTb5vPbfccgtPPvkkIpJ3bkopHn30UVzXHVGY6b93HId0Ol2eQyyEJb9AcXBwUKZNmybACC2Ucy1cuDCved/azp49K1VVVfnix9Ha+TI8+OCD9dYClFIYY4hEIrzyyissXbqUaDSKbWeblxqF+eWtozmznp4eYrHYMKu4nGxTp04FSlyVimHL187777svCxYsGDMLWLRo0agWEIlEPtUC/ALpHTt2iEhhlaElWYAPf87OnTuXd999l+3bt/PGG29w7Lix8kKi2P48z+PWW28d8Y2mpiba29vZuXPnqD5A52oOqqqqWLBgAUBJm6GiLOBSS7hScF1XjDHy3nvv5cvxL10FfO2vX78+36YUlESASNYxuq4rmUwmb7qlXqNlcHySt27dKrW1taNOgXXr1g37bSko6Z+mrhb85bejo4PNmzezd+9e0uk0s2fPZuXKlaxZsqTw3N9lcF0TAJ/+32DlDh5+BQiAC7tBf7D+zrAkp3cJfiUIuJL43CdE/p+Aay3Atcb/AfWvR47vCbqJAAAAAElFTkSuQmCC">
 
 
 <style>
@@ -45,7 +45,7 @@
   .row { display: flex; gap: 16px; flex-wrap: wrap; }
   .field { flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; }
   label { font-size: 12px; color: var(--muted); }
-  select, input[type=file] {
+  select, input[type=file], input[type=text], input[type=number] {
     font: inherit;
     padding: 8px 10px;
     border: 1px solid var(--border);
@@ -64,6 +64,13 @@
   }
   button:disabled { background: #b0b0b0; cursor: default; }
   button:hover:not(:disabled) { background: var(--indigo-dark); }
+  button.ghost {
+    background: transparent;
+    color: var(--indigo);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    font-size: 12px;
+  }
   #drop {
     border: 2px dashed var(--border);
     border-radius: 6px;
@@ -74,17 +81,28 @@
   }
   #drop.over { border-color: var(--indigo); background: #f3f5ff; }
   #drop strong { color: var(--text); }
+  #file-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  #file-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  #file-list li .name { flex: 1; overflow-wrap: anywhere; }
+  #file-list li .format { color: var(--muted); font-size: 12px; }
+  #options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 8px; }
+  #options-grid .option { display: flex; flex-direction: column; gap: 4px; }
+  #options-grid .option .title { font-size: 12px; color: var(--muted); }
+  #options-grid .option .title code { color: var(--text); }
   #status { white-space: pre-wrap; font-family: Consolas, monospace; font-size: 12px; }
   #status.error { color: #c62828; }
   #status.ok { color: #2e7d32; }
   .hint { font-size: 12px; color: var(--muted); }
-  a.download {
-    display: inline-block;
-    margin-top: 4px;
-    color: var(--indigo);
-    font-weight: 600;
-  }
+  a.download { display: block; margin-top: 4px; color: var(--indigo); font-weight: 600; }
   footer { text-align: center; font-size: 12px; color: var(--muted); }
+  details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -97,8 +115,8 @@
   <div class="card">
     <div class="row">
       <div class="field">
-        <label for="file">输入文件</label>
-        <input id="file" type="file">
+        <label for="file">输入文件（可多选）</label>
+        <input id="file" type="file" multiple>
       </div>
       <div class="field">
         <label for="input-format">输入格式</label>
@@ -109,8 +127,16 @@
         <select id="output-format"></select>
       </div>
     </div>
-    <p class="hint">也可以把文件拖进下面的区域。所有转换都在本地完成，文件不会上传。</p>
-    <div id="drop"><span id="drop-label">把工程文件拖到这里，或点击<strong>选择文件</strong></span><input id="drop-input" type="file" hidden></div>
+    <p class="hint">也可以把文件拖进下面的区域（支持一次多个）。所有转换都在本地完成，文件不会上传。</p>
+    <div id="drop"><span id="drop-label">把工程文件拖到这里，或点击<strong>选择文件</strong></span><input id="drop-input" type="file" hidden multiple></div>
+    <ul id="file-list"></ul>
+  </div>
+
+  <div class="card">
+    <details id="options-panel">
+      <summary>转换选项（默认隐藏，展开后按所选格式显示）</summary>
+      <div id="options-grid"></div>
+    </details>
   </div>
 
   <div class="card">
@@ -124,7 +150,7 @@
 <script>
 "use strict";
 
-const state = { api: null, file: null, formats: [] };
+const state = { api: null, files: [], formats: [], schemas: null };
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -175,73 +201,229 @@ function fillSelect(select, selected) {
   }
 }
 
-function selectFile(file) {
-  state.file = file;
-  $("#drop-label").innerHTML = `<strong>${file.name}</strong><br>${formatBytes(file.size)}`;
-  const detected = detectFormat(file.name);
-  if (detected) {
-    $("#input-format").value = detected;
-    setStatus(`已选择 ${file.name}（${formatBytes(file.size)}），输入格式识别为 ${detected}`);
-  } else {
-    setStatus(`已选择 ${file.name}（${formatBytes(file.size)}），请手动选择输入格式`);
+function renderFileList() {
+  const list = $("#file-list");
+  list.innerHTML = "";
+  state.files.forEach((file, index) => {
+    const item = document.createElement("li");
+    const detected = detectFormat(file.name);
+    const name = document.createElement("span");
+    name.className = "name";
+    name.textContent = `${file.name} · ${formatBytes(file.size)}`;
+    const format = document.createElement("span");
+    format.className = "format";
+    format.textContent = detected ? `.${detected}` : "未识别后缀";
+    const remove = document.createElement("button");
+    remove.className = "ghost";
+    remove.textContent = "移除";
+    remove.addEventListener("click", () => {
+      state.files.splice(index, 1);
+      renderFileList();
+      $("#run").disabled = !state.api || state.files.length === 0;
+    });
+    item.append(name, format, remove);
+    list.append(item);
+  });
+  $("#run").disabled = !state.api || state.files.length === 0;
+}
+
+function addFiles(fileList) {
+  for (const file of fileList) state.files.push(file);
+  if (state.files.length) {
+    const detected = detectFormat(state.files[state.files.length - 1].name);
+    if (detected) $("#input-format").value = detected;
   }
-  $("#run").disabled = !state.api;
+  $("#drop-label").innerHTML = state.files.length
+    ? `<strong>${state.files.length} 个文件</strong>（继续拖放可追加）`
+    : "把工程文件拖到这里，或点击<strong>选择文件</strong>";
+  renderFileList();
+  refreshOptions();
+}
+
+async function refreshOptions() {
+  const api = state.api;
+  if (!api) return;
+  const inputFormat = $("#input-format").value;
+  const outputFormat = $("#output-format").value;
+  const inName = writeString(api, inputFormat);
+  const outName = writeString(api, outputFormat);
+  const status = api.options_json(inName.pointer, inName.length, outName.pointer, outName.length);
+  if (inName.length) api.dealloc(inName.pointer, inName.length);
+  if (outName.length) api.dealloc(outName.pointer, outName.length);
+  if (status !== 0) {
+    state.schemas = null;
+    return;
+  }
+  state.schemas = JSON.parse(new TextDecoder().decode(readResult(api)));
+  renderOptions();
+}
+
+function optionControl(field) {
+  if (field.kind === "bool") {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = field.default === "True" || field.default === "true" || field.default === "1";
+    input.dataset.key = field.key;
+    input.dataset.kind = "bool";
+    return input;
+  }
+  if (field.kind === "enum" && field.choices.length) {
+    const select = document.createElement("select");
+    select.dataset.key = field.key;
+    select.dataset.kind = "str";
+    for (const choice of field.choices) {
+      const option = document.createElement("option");
+      option.value = choice.value;
+      option.textContent = choice.title || choice.value;
+      if (field.default === choice.value) option.selected = true;
+      select.append(option);
+    }
+    return select;
+  }
+  const input = document.createElement("input");
+  input.dataset.key = field.key;
+  if (field.kind === "int") {
+    input.type = "number";
+    input.step = "1";
+    input.dataset.kind = "int";
+  } else if (field.kind === "float") {
+    input.type = "number";
+    input.step = "any";
+    input.dataset.kind = "float";
+  } else {
+    input.type = "text";
+    input.dataset.kind = "str";
+  }
+  input.value = field.default === "None" ? "" : field.default;
+  return input;
+}
+
+function renderOptions() {
+  const grid = $("#options-grid");
+  grid.innerHTML = "";
+  if (!state.schemas) return;
+  for (const [heading, fields] of [["输入选项", state.schemas.input], ["输出选项", state.schemas.output]]) {
+    if (!fields.length) continue;
+    const group = document.createElement("div");
+    group.className = "option";
+    const title = document.createElement("div");
+    title.className = "title";
+    title.innerHTML = `<strong>${heading}</strong>`;
+    group.append(title);
+    grid.append(group);
+    for (const field of fields) {
+      const wrap = document.createElement("div");
+      wrap.className = "option";
+      const label = document.createElement("label");
+      const name = document.createElement("code");
+      name.textContent = field.title || field.key;
+      label.append(name);
+      if (field.description) label.title = field.description;
+      const control = optionControl(field);
+      control.dataset.side = heading === "输入选项" ? "input" : "output";
+      wrap.append(label, control);
+      grid.append(wrap);
+    }
+  }
+}
+
+function collectOptions() {
+  const result = { input: {}, output: {} };
+  for (const control of document.querySelectorAll("#options-grid [data-key]")) {
+    const side = control.dataset.side;
+    let value;
+    if (control.dataset.kind === "bool") {
+      value = control.checked;
+    } else if (control.dataset.kind === "int") {
+      if (control.value === "") continue;
+      value = Number.parseInt(control.value, 10);
+    } else if (control.dataset.kind === "float") {
+      if (control.value === "") continue;
+      value = Number.parseFloat(control.value);
+    } else {
+      if (control.value === "") continue;
+      value = control.value;
+    }
+    result[side][control.dataset.key] = value;
+  }
+  return result;
 }
 
 async function convert() {
   const api = state.api;
-  if (!api || !state.file) return;
+  if (!api || !state.files.length) return;
   $("#run").disabled = true;
   const inputFormat = $("#input-format").value;
   const outputFormat = $("#output-format").value;
-  setStatus(`正在转换：${inputFormat} → ${outputFormat} …`);
+  const options = collectOptions();
 
   try {
-    const input = new Uint8Array(await state.file.arrayBuffer());
-    const inputPointer = api.alloc(input.length);
-    new Uint8Array(api.memory.buffer, inputPointer, input.length).set(input);
     const inName = writeString(api, inputFormat);
     const outName = writeString(api, outputFormat);
-    // Keep the views alive: the module may grow its memory during the call.
-    const keep = { inputPointer, inName, outName, input };
-    void keep;
-
-    const started = performance.now();
-    const status = api.convert(
-      inputPointer, input.length,
-      inName.pointer, inName.length,
-      outName.pointer, outName.length,
-    );
-    const elapsed = performance.now() - started;
-    const payload = readResult(api);
-
+    const inOptions = writeString(api, JSON.stringify(options.input));
+    const outOptions = writeString(api, JSON.stringify(options.output));
+    const results = [];
+    for (let index = 0; index < state.files.length; index += 1) {
+      const file = state.files[index];
+      setStatus(`转换中 ${index + 1}/${state.files.length}：${file.name}（${inputFormat} → ${outputFormat}）…`);
+      const input = new Uint8Array(await file.arrayBuffer());
+      const inputPointer = api.alloc(input.length);
+      new Uint8Array(api.memory.buffer, inputPointer, input.length).set(input);
+      const started = performance.now();
+      const status = api.convert_with_options(
+        inputPointer, input.length,
+        inName.pointer, inName.length,
+        outName.pointer, outName.length,
+        inOptions.pointer, inOptions.length,
+        outOptions.pointer, outOptions.length,
+      );
+      const elapsed = performance.now() - started;
+      const payload = readResult(api);
+      const warnings = api.warnings_json
+        ? new TextDecoder().decode(readResult(api))
+        : "[]";
+      if (input.length) api.dealloc(inputPointer, input.length);
+      if (status !== 0) {
+        results.push({ file: file.name, error: new TextDecoder().decode(payload) });
+      } else {
+        results.push({ file: file.name, payload, elapsed, warnings });
+      }
+    }
     for (const [pointer, length] of [
-      [inputPointer, input.length],
       [inName.pointer, inName.length],
       [outName.pointer, outName.length],
+      [inOptions.pointer, inOptions.length],
+      [outOptions.pointer, outOptions.length],
     ]) {
       if (length > 0) api.dealloc(pointer, length);
     }
 
-    if (status !== 0) {
-      const message = new TextDecoder().decode(payload);
-      setStatus(`转换失败（${elapsed.toFixed(0)} ms）：\n${message}`, "error");
-      return;
+    $("#status").className = "hint";
+    $("#status").textContent = "";
+    const failures = results.filter((item) => item.error);
+    for (const item of results) {
+      if (item.error) continue;
+      const outputName = `${item.file.replace(/\.[^.]+$/, "")}.${extensionFor(outputFormat)}`;
+      const blob = new Blob([item.payload], { type: "application/octet-stream" });
+      const link = document.createElement("a");
+      link.className = "download";
+      link.href = URL.createObjectURL(blob);
+      link.download = outputName;
+      const warningCount = JSON.parse(item.warnings).length;
+      link.textContent =
+        `下载 ${outputName}（${formatBytes(item.payload.length)}，${item.elapsed.toFixed(0)} ms` +
+        (warningCount ? `，${warningCount} 条警告` : "") + "）";
+      $("#status").append(link);
     }
-
-    const outputName = `${state.file.name.replace(/\.[^.]+$/, "")}.${extensionFor(outputFormat)}`;
-    const blob = new Blob([payload], { type: "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
-    setStatus(
-      `完成：${outputName}（${formatBytes(payload.length)}），用时 ${elapsed.toFixed(0)} ms`,
-      "ok",
-    );
-    const link = document.createElement("a");
-    link.className = "download";
-    link.href = url;
-    link.download = outputName;
-    link.textContent = `下载 ${outputName}`;
-    $("#status").append(link);
+    if (failures.length) {
+      const summary = document.createElement("div");
+      summary.style.color = "#c62828";
+      summary.textContent = failures.map((item) => `${item.file}: ${item.error}`).join("\n");
+      $("#status").append(summary);
+      setStatus(`完成：${results.length - failures.length} 成功 / ${failures.length} 失败`, failures.length ? "error" : "ok");
+    } else {
+      setStatus(`完成：${results.length} 个文件全部转换成功`, "ok");
+    }
   } catch (error) {
     setStatus(`出错：${error && error.message ? error.message : error}`, "error");
   } finally {
@@ -263,17 +445,18 @@ async function boot(wasmBytes) {
   fillSelect($("#output-format"), "acep");
   $("#build").textContent =
     `${state.formats.length} 个格式 · wasm ${formatBytes(wasmBytes.length)} · 实例化 ${(performance.now() - started).toFixed(0)} ms`;
-  setStatus("模块已加载，选择一个工程文件即可开始（文件不会离开这台电脑）。");
-  $("#run").disabled = !state.file;
+  setStatus("模块已加载，选择工程文件即可开始（支持一次多个；文件不会离开这台电脑）。");
+  $("#run").disabled = state.files.length === 0;
+  refreshOptions();
 }
 
 function wire() {
   $("#file").addEventListener("change", (event) => {
-    if (event.target.files.length) selectFile(event.target.files[0]);
+    if (event.target.files.length) addFiles(event.target.files);
   });
   $("#drop").addEventListener("click", () => $("#drop-input").click());
   $("#drop-input").addEventListener("change", (event) => {
-    if (event.target.files.length) selectFile(event.target.files[0]);
+    if (event.target.files.length) addFiles(event.target.files);
   });
   $("#drop").addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -283,9 +466,11 @@ function wire() {
   $("#drop").addEventListener("drop", (event) => {
     event.preventDefault();
     $("#drop").classList.remove("over");
-    if (event.dataTransfer.files.length) selectFile(event.dataTransfer.files[0]);
+    if (event.dataTransfer.files.length) addFiles(event.dataTransfer.files);
   });
   $("#run").addEventListener("click", convert);
+  $("#input-format").addEventListener("change", refreshOptions);
+  $("#output-format").addEventListener("change", refreshOptions);
 }
 
 function base64ToBytes(text) {

@@ -310,7 +310,7 @@ impl Server {
                 "prompts": {},
                 "logging": {},
             },
-            "serverInfo": {"name": "libresvip", "version": "1.0.0"},
+            "serverInfo": {"name": "libresvip", "version": env!("CARGO_PKG_VERSION")},
             "instructions": tools::INSTRUCTIONS,
         }))
     }

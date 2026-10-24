@@ -116,7 +116,7 @@ pub fn switch(ui: &mut Ui, pal: &Palette, value: &mut bool) -> Response {
         ui.painter().rect_stroke(
             track,
             CornerRadius::same(radius as u8),
-            Stroke::new(1.0, pal.muted.gamma_multiply(0.6)),
+            Stroke::new(1.0_f32, pal.muted.gamma_multiply(0.6)),
             StrokeKind::Inside,
         );
     }
@@ -135,7 +135,7 @@ pub fn switch(ui: &mut Ui, pal: &Palette, value: &mut bool) -> Response {
         ui.painter().circle_stroke(
             thumb_center,
             8.0,
-            Stroke::new(1.0, pal.muted.gamma_multiply(0.5)),
+            Stroke::new(1.0_f32, pal.muted.gamma_multiply(0.5)),
         );
     }
     response
@@ -230,7 +230,7 @@ pub fn outlined_button(
     ui.painter().rect_stroke(
         rect,
         CornerRadius::same(BORDER_RADIUS),
-        Stroke::new(1.0, stroke_color),
+        Stroke::new(1.0_f32, stroke_color),
         StrokeKind::Inside,
     );
     let color = if !enabled {
@@ -336,11 +336,11 @@ pub fn text_field(
     let focused = ui.memory(|memory| memory.has_focus(id));
     let hovered = response.hovered();
     let (stroke, label_color) = if focused {
-        (Stroke::new(2.0, pal.primary), pal.primary)
+        (Stroke::new(2.0_f32, pal.primary), pal.primary)
     } else if hovered {
-        (Stroke::new(1.0, pal.text), pal.muted)
+        (Stroke::new(1.0_f32, pal.text), pal.muted)
     } else {
-        (Stroke::new(1.0, pal.border), pal.muted)
+        (Stroke::new(1.0_f32, pal.border), pal.muted)
     };
     let radius = CornerRadius::same(BORDER_RADIUS);
     ui.painter()
@@ -416,11 +416,11 @@ pub fn combo_field(
     let (rect, response) = ui.allocate_exact_size(size, sense(enabled));
     let hovered = response.hovered();
     let (stroke, label_color) = if open || response.has_focus() {
-        (Stroke::new(2.0, pal.primary), pal.primary)
+        (Stroke::new(2.0_f32, pal.primary), pal.primary)
     } else if hovered && enabled {
-        (Stroke::new(1.0, pal.text), pal.muted)
+        (Stroke::new(1.0_f32, pal.text), pal.muted)
     } else {
-        (Stroke::new(1.0, pal.border), pal.muted)
+        (Stroke::new(1.0_f32, pal.border), pal.muted)
     };
     let radius = CornerRadius::same(BORDER_RADIUS);
     ui.painter()
@@ -519,7 +519,7 @@ pub fn combo_popup(
             ui.set_max_width((width * 1.8).max(width));
             egui::Frame::NONE
                 .fill(pal.surface)
-                .stroke(Stroke::new(1.0, pal.border))
+                .stroke(Stroke::new(1.0_f32, pal.border))
                 .corner_radius(CornerRadius::same(BORDER_RADIUS))
                 .inner_margin(egui::Margin::same(4))
                 .show(ui, |ui| {
@@ -611,7 +611,7 @@ pub fn chip(ui: &mut Ui, pal: &Palette, label: &str, selected: bool) -> Response
         ui.painter().rect_stroke(
             rect,
             CornerRadius::same(BORDER_RADIUS),
-            Stroke::new(1.0, pal.primary),
+            Stroke::new(1.0_f32, pal.primary),
             StrokeKind::Inside,
         );
     } else if response.hovered() {
@@ -633,7 +633,7 @@ pub fn separator(ui: &mut Ui, pal: &Palette) {
     let (rect, _) = ui.allocate_exact_size(Vec2::new(ui.available_width(), 1.0), Sense::hover());
     ui.painter().line_segment(
         [rect.left_center(), rect.right_center()],
-        Stroke::new(1.0, pal.border),
+        Stroke::new(1.0_f32, pal.border),
     );
 }
 
@@ -642,7 +642,7 @@ pub fn vertical_separator(ui: &mut Ui, pal: &Palette, height: f32) {
     let (rect, _) = ui.allocate_exact_size(Vec2::new(1.0, height), Sense::hover());
     ui.painter().line_segment(
         [rect.center_top(), rect.center_bottom()],
-        Stroke::new(1.0, pal.border),
+        Stroke::new(1.0_f32, pal.border),
     );
 }
 
@@ -661,7 +661,7 @@ pub fn help_icon(ui: &mut Ui, pal: &Palette, tooltip: &str) -> Response {
 pub fn card(ui: &mut Ui, rect: Rect, pal: &Palette) -> Rect {
     ui.painter().rect_filled(rect, 0.0, pal.surface);
     ui.painter()
-        .rect_stroke(rect, 0.0, Stroke::new(1.0, pal.border), StrokeKind::Inside);
+        .rect_stroke(rect, 0.0, Stroke::new(1.0_f32, pal.border), StrokeKind::Inside);
     rect
 }
 

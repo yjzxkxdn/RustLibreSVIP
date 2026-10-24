@@ -133,7 +133,7 @@ fn section_header(
     // Disclosure triangle (▾ / ▸), rotated when collapsed.
     let arrow_center = pos2(rect.left() + 18.0, rect.center().y);
     let color = pal.text;
-    let stroke = Stroke::new(1.6, color);
+    let stroke = Stroke::new(1.6_f32, color);
     let size = 5.0;
     if *expanded {
         ui.painter().add(egui::Shape::line(
@@ -286,7 +286,7 @@ fn field_row(
         );
         ui.painter().line_segment(
             [rect.left_center(), rect.right_center()],
-            Stroke::new(1.0, pal.border),
+            Stroke::new(1.0_f32, pal.border),
         );
     }
 }

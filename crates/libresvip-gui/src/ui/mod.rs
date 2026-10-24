@@ -138,7 +138,7 @@ fn split_horizontal(
             pos2(handle.center().x, rect.top()),
             pos2(handle.center().x, rect.bottom()),
         ],
-        Stroke::new(1.0, pal.border),
+        Stroke::new(1.0_f32, pal.border),
     );
     let left = Rect::from_min_size(rect.min, Vec2::new(width, rect.height()));
     let right = Rect::from_min_max(pos2(left.right(), rect.top()), rect.max);
@@ -227,7 +227,7 @@ pub const TITLE_BAR_HEIGHT: f32 = TITLEBAR_HEIGHT;
 /// Draws the dashed drop rectangle used by the empty task list.
 pub fn dashed_rect(ui: &Ui, rect: Rect, pal: &Palette, highlight: bool) {
     let stroke = Stroke::new(
-        if highlight { 3.0 } else { 1.0 },
+        if highlight { 3.0_f32 } else { 1.0_f32 },
         if highlight { pal.primary } else { pal.border },
     );
     let dash = 6.0;

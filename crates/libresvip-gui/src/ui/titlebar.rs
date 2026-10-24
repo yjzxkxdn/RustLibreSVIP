@@ -29,7 +29,7 @@ pub fn show(app: &mut App, ctx: &egui::Context) {
             let rect = ui.max_rect();
             ui.painter().line_segment(
                 [rect.left_bottom(), rect.right_bottom()],
-                Stroke::new(1.0, pal.border),
+                Stroke::new(1.0_f32, pal.border),
             );
             egui::Ui::scope_builder(
                 ui,

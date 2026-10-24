@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
+import { spawnSync } from "node:child_process";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repository = resolve(here, "..");
@@ -27,7 +28,32 @@ const defaultModule = join(
 );
 const modulePath = process.argv[2] ?? defaultModule;
 
-const wasm = readFileSync(modulePath);
+// Optional binaryen post-processing: when `wasm-opt` is on the PATH the module
+// is shrunk with `-Oz` first; otherwise the cargo output is packaged as-is.
+// Pass --skip-opt to disable even when binaryen is installed.
+let optimizedPath = modulePath;
+if (!process.argv.includes("--skip-opt")) {
+  const probe = spawnSync("wasm-opt", ["--version"], { encoding: "utf8" });
+  if (probe.status === 0) {
+    const out = modulePath.replace(/\.wasm$/, ".opt.wasm");
+    const run = spawnSync(
+      "wasm-opt",
+      [modulePath, "-Oz", "--enable-bulk-memory", "-o", out],
+      { encoding: "utf8" },
+    );
+    if (run.status === 0) {
+      console.log(`wasm-opt -Oz: ${readFileSync(modulePath).length} -> ${readFileSync(out).length} bytes`);
+      optimizedPath = out;
+    } else {
+      console.warn(`wasm-opt failed (status ${run.status}), using the unoptimized module`);
+      console.warn(run.stderr);
+    }
+  } else {
+    console.log("wasm-opt not found on PATH; skipping the binaryen pass (install binaryen to enable)");
+  }
+}
+
+const wasm = readFileSync(optimizedPath);
 const page = readFileSync(join(here, "index.html"), "utf8");
 
 writeFileSync(join(here, "libresvip_web.wasm"), wasm);

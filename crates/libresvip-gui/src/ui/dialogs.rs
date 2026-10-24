@@ -578,6 +578,30 @@ fn format_info(app: &mut App, ctx: &egui::Context) {
                 );
                 ui.add_space(8.0);
                 ui.label(app.td(entry.description));
+                // Capability matrix row (see libresvip_plugins::capabilities).
+                if let Some(caps) = libresvip_plugins::capabilities::capabilities_by_id(entry.id) {
+                    let mut lines: Vec<String> = Vec::new();
+                    if !caps.features.is_empty() {
+                        let features = caps
+                            .features
+                            .iter()
+                            .map(|feature| feature.description())
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        lines.push(format!("{} {}", app.t("Supports:"), features));
+                    }
+                    if caps.max_tracks_per_file == Some(1) {
+                        lines.push(app.t("One track per output file.").to_owned());
+                    }
+                    if !lines.is_empty() {
+                        ui.add_space(6.0);
+                        ui.label(
+                            RichText::new(lines.join("\n"))
+                                .size(Palette::small())
+                                .color(pal.muted),
+                        );
+                    }
+                }
                 ui.add_space(8.0);
                 ui.label(format!("{}{}", app.t("Version: "), entry.version));
                 ui.horizontal(|ui| {

@@ -9,7 +9,7 @@
 use std::path::{Path, PathBuf};
 
 use libresvip_core::core::config::ConversionMode;
-use libresvip_core::core::warning_types::CatchWarnings;
+use libresvip_core::core::warning_types::{ConversionWarning, CatchWarnings};
 use libresvip_core::error::LibreSvipError;
 use libresvip_core::model::base::Project;
 use libresvip_core::options::Options;
@@ -36,6 +36,8 @@ pub struct JobResult {
     pub error: Option<String>,
     /// `CatchWarnings.output`
     pub warnings: String,
+    /// The same warnings with machine-readable kinds, for filtering/localising.
+    pub typed_warnings: Vec<ConversionWarning>,
 }
 
 impl JobResult {
@@ -44,6 +46,7 @@ impl JobResult {
             tmp: None,
             error: Some(message.into()),
             warnings: String::new(),
+            typed_warnings: Vec::new(),
         }
     }
 }
@@ -77,17 +80,20 @@ pub fn run_job(cfg: &JobConfig, index: usize, paths: &[PathBuf], temp_root: &Pat
 
     let collector = CatchWarnings::start();
     let outcome = convert_one(cfg, input_plugin, output_plugin, paths, &job_dir);
-    let warnings = collector.finish().join("\n");
+    let (warnings, typed_warnings) = collector.finish_with_typed();
+    let warnings = warnings.join("\n");
     match outcome {
         Ok(tmp) => JobResult {
             tmp: Some(tmp),
             error: None,
             warnings,
+            typed_warnings,
         },
         Err(error) => JobResult {
             tmp: None,
             error: Some(error),
             warnings,
+            typed_warnings,
         },
     }
 }

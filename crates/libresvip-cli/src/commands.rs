@@ -4,10 +4,12 @@ use std::path::{Path, PathBuf};
 
 use clap::{Arg, Command};
 use libresvip_core::core::config;
+use libresvip_core::core::warning_types::take_typed_warnings;
 use libresvip_core::model::base::Project;
 use libresvip_core::options::{OptionFieldDef, Options};
 use libresvip_core::plugin::Middleware;
-use libresvip_middlewares::all_middlewares;
+use libresvip_middlewares::ported_middlewares;
+use libresvip_plugins::capabilities::ALL_CAPABILITIES;
 use libresvip_plugins::{enabled_plugins, output_suffixes, plugin_by_suffix, supported_suffixes};
 
 use crate::output::{display_width, echo, eecho, stdout_is_terminal, Table};
@@ -34,6 +36,7 @@ pub fn run() -> i32 {
         },
         Some(("plugin", sub)) => match sub.subcommand() {
             Some(("list", _)) => plugin_list(),
+            Some(("capabilities", caps)) => plugin_capabilities(caps.get_flag("json")),
             Some(("detail", detail)) => {
                 let name = detail
                     .get_one::<String>("plugin_name")
@@ -54,7 +57,12 @@ pub fn run() -> i32 {
             Some(("convert", convert)) => {
                 let in_path = path_arg(convert, "in_path");
                 let out_path = path_arg(convert, "out_path");
-                proj_convert(&in_path, &out_path)
+                let strict_warnings = convert.get_flag("strict_warnings");
+                let extra_middlewares: Vec<String> = convert
+                    .get_many::<String>("middleware")
+                    .map(|values| values.cloned().collect())
+                    .unwrap_or_default();
+                proj_convert(&in_path, &out_path, strict_warnings, &extra_middlewares)
             }
             Some(("split", split)) => {
                 let in_path = path_arg(split, "in_path");
@@ -68,6 +76,16 @@ pub fn run() -> i32 {
                     .copied()
                     .unwrap_or(1);
                 proj_split(&in_path, &out_dir, &output_ext, max_track_count)
+            }
+            Some(("batch", batch)) => {
+                let in_dir = path_arg(batch, "in_dir");
+                let out_dir = path_arg(batch, "out_dir");
+                let to = batch
+                    .get_one::<String>("to")
+                    .cloned()
+                    .unwrap_or_default();
+                let strict_warnings = batch.get_flag("strict_warnings");
+                proj_batch(&in_dir, &out_dir, &to, strict_warnings)
             }
             Some(("merge", merge)) => {
                 let in_paths: Vec<PathBuf> = merge
@@ -167,6 +185,17 @@ fn build_cli() -> Command {
                 )
                 .subcommand(Command::new("list"))
                 .subcommand(
+                    Command::new("capabilities").about(
+                        t("List what each format can carry (curves, phonemes, vibrato, …)."),
+                    )
+                    .arg(
+                        Arg::new("json")
+                            .long("json")
+                            .num_args(0)
+                            .help(t("Emit machine-readable JSON instead of a table.")),
+                    ),
+                )
+                .subcommand(
                     Command::new("detail")
                         .override_usage(format!("{PROGRAM} plugin detail [OPTIONS] PLUGIN_NAME"))
                         .arg(Arg::new("plugin_name").required(true)),
@@ -181,7 +210,22 @@ fn build_cli() -> Command {
                         .about(t("Convert a file from one format to another."))
                         .override_usage(format!("{PROGRAM} proj convert [OPTIONS] IN_PATH OUT_PATH"))
                         .arg(Arg::new("in_path").required(true))
-                        .arg(Arg::new("out_path").required(true)),
+                        .arg(Arg::new("out_path").required(true))
+                        .arg(
+                            Arg::new("strict_warnings")
+                                .long("strict-warnings")
+                                .num_args(0)
+                                .help(t("Fail the conversion if it produced any warning.")),
+                        )
+                        .arg(
+                            Arg::new("middleware")
+                                .long("middleware")
+                                .num_args(1)
+                                .action(clap::ArgAction::Append)
+                                .help(t(
+                                    "Run an extra opt-in middleware by id (repeatable; see `middleware list`).",
+                                )),
+                        ),
                 )
                 .subcommand(
                     Command::new("split")
@@ -202,6 +246,26 @@ fn build_cli() -> Command {
                                 .value_parser(clap::value_parser!(i64))
                                 .default_value("1")
                                 .help(t("Maximum track count per file")),
+                        ),
+                )
+                .subcommand(
+                    Command::new("batch")
+                        .about(t("Convert every supported project file in a directory tree."))
+                        .override_usage(format!("{PROGRAM} proj batch [OPTIONS] IN_DIR OUT_DIR"))
+                        .arg(Arg::new("in_dir").required(true))
+                        .arg(Arg::new("out_dir").required(true))
+                        .arg(
+                            Arg::new("to")
+                                .long("to")
+                                .num_args(1)
+                                .required(true)
+                                .help(t("Target format, e.g. ust / svp / json")),
+                        )
+                        .arg(
+                            Arg::new("strict_warnings")
+                                .long("strict-warnings")
+                                .num_args(0)
+                                .help(t("Fail each file that produced warnings.")),
                         ),
                 )
                 .subcommand(
@@ -308,6 +372,64 @@ fn conf_set(name: &str, value: &str) -> i32 {
 // ---------------------------------------------------------------------------
 // plugin
 // ---------------------------------------------------------------------------
+
+/// `plugin capabilities` — the format capability matrix, as a table or JSON.
+fn plugin_capabilities(json: bool) -> i32 {
+    if json {
+        let entries: Vec<String> = ALL_CAPABILITIES
+            .iter()
+            .map(|(id, caps)| {
+                let features: Vec<String> = caps
+                    .features
+                    .iter()
+                    .map(|feature| format!("\"{}\"", feature.key()))
+                    .collect();
+                let max_tracks = caps
+                    .max_tracks_per_file
+                    .map(|count| count.to_string())
+                    .unwrap_or_else(|| "null".to_owned());
+                format!(
+                    "{{\"id\":\"{id}\",\"features\":[{}],\"max_tracks_per_file\":{max_tracks}}}",
+                    features.join(",")
+                )
+            })
+            .collect();
+        echo(format!("[{}]", entries.join(",")));
+        return 0;
+    }
+    let margin = "  ";
+    let headers = vec![
+        t("Identifier"),
+        t("Features"),
+        t("Max tracks/file"),
+    ];
+    let rows: Vec<Vec<String>> = ALL_CAPABILITIES
+        .iter()
+        .map(|(id, caps)| {
+            let features = if caps.features.is_empty() {
+                "-".to_owned()
+            } else {
+                caps.features
+                    .iter()
+                    .map(|feature| feature.key())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            };
+            let max_tracks = caps
+                .max_tracks_per_file
+                .map(|count| count.to_string())
+                .unwrap_or_else(|| "-".to_owned());
+            vec![
+                format!("{id}{margin}"),
+                format!("{features}{margin}"),
+                format!("{max_tracks}{margin}"),
+            ]
+        })
+        .collect();
+    let table = Table::new(headers, rows, stdout_is_terminal());
+    echo(table.render());
+    0
+}
 
 fn plugin_list() -> i32 {
     let plugins = enabled_plugins();
@@ -555,7 +677,9 @@ fn prompt_option_sets(
 
 fn prompt_middlewares(prompter: &mut Prompter) -> Vec<(&'static dyn Middleware, Options)> {
     let mut selected = Vec::new();
-    for middleware in all_middlewares() {
+    // Only the ported middlewares are prompted: the Python CLI asks exactly
+    // these six, and `--middleware` is how the Rust-port additions are chosen.
+    for middleware in ported_middlewares() {
         let name = t(middleware.info().name);
         let question = format_msg(&t("Enable {} middleware?"), &[&name]);
         if prompter.confirm(&question, false) {
@@ -583,13 +707,39 @@ fn apply_middlewares(
     Ok(project)
 }
 
+/// `--middleware <id>`: runs one of the opt-in (Rust-port only) middlewares
+/// with its default options, after the interactively selected ones.
+fn explicit_middlewares(
+    ids: &[String],
+) -> Result<Vec<(&'static dyn Middleware, Options)>, String> {
+    let mut selected = Vec::new();
+    for id in ids {
+        let Some(middleware) = libresvip_middlewares::middleware_by_id(id) else {
+            return Err(format!("unknown middleware: {id}"));
+        };
+        let options = Options::from_pairs(
+            middleware
+                .process_options()
+                .iter()
+                .map(|def| (def.key.to_owned(), def.default.clone())),
+        );
+        selected.push((middleware, options));
+    }
+    Ok(selected)
+}
+
 // ---------------------------------------------------------------------------
 // proj convert
 // ---------------------------------------------------------------------------
 
 const CONVERT_USAGE: &str = "proj convert [OPTIONS] IN_PATH OUT_PATH";
 
-fn proj_convert(in_path: &Path, out_path: &Path) -> i32 {
+fn proj_convert(
+    in_path: &Path,
+    out_path: &Path,
+    strict_warnings: bool,
+    extra_middlewares: &[String],
+) -> i32 {
     if let Some(code) = validate_input_path(in_path) {
         return code;
     }
@@ -640,8 +790,15 @@ fn proj_convert(in_path: &Path, out_path: &Path) -> i32 {
         Ok(project) => project,
         Err(error) => return runtime_error(&error.to_string()),
     };
+    // Warnings raised while parsing travel with the project from here on.
+    let mut project = project;
+    project.warnings.extend(take_typed_warnings());
 
-    let middlewares = prompt_middlewares(&mut prompter);
+    let mut middlewares = prompt_middlewares(&mut prompter);
+    match explicit_middlewares(extra_middlewares) {
+        Ok(mut extra) => middlewares.append(&mut extra),
+        Err(message) => return runtime_error(&message),
+    }
     let project = match apply_middlewares(project, &middlewares) {
         Ok(project) => project,
         Err(message) => return runtime_error(&message),
@@ -652,8 +809,19 @@ fn proj_convert(in_path: &Path, out_path: &Path) -> i32 {
         echo(t("Output Options: "));
     }
     let output_options = prompt_option_sets(&output_schema, &mut prompter);
-    match output_plugin.dump(out_path, &project, &output_options) {
-        Ok(()) => 0,
+    let dump_result = output_plugin.dump(out_path, &project, &output_options);
+    let late_warnings = take_typed_warnings();
+    match dump_result {
+        Ok(()) => {
+            if strict_warnings
+                && (!project.warnings.is_empty() || !late_warnings.is_empty())
+            {
+                return runtime_error(
+                    "the conversion produced warnings and --strict-warnings is active",
+                );
+            }
+            0
+        }
         Err(error) => runtime_error(&error.to_string()),
     }
 }
@@ -706,6 +874,8 @@ fn proj_split(in_path: &Path, out_dir: &Path, output_ext: &str, max_track_count:
         Ok(project) => project,
         Err(error) => return runtime_error(&error.to_string()),
     };
+    let mut root_project = root_project;
+    root_project.warnings.extend(take_typed_warnings());
     let sub_projects = match root_project.split_tracks(max_track_count.max(1) as usize) {
         Ok(projects) => projects,
         Err(error) => return runtime_error(&error.to_string()),
@@ -738,6 +908,128 @@ fn proj_split(in_path: &Path, out_dir: &Path, output_ext: &str, max_track_count:
 // proj merge
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// proj batch (directory tree conversion)
+// ---------------------------------------------------------------------------
+
+/// Recursively collects files below `root`, sorted for stable output.
+fn walk_files(root: &Path, out: &mut Vec<PathBuf>) {
+    let Ok(entries) = std::fs::read_dir(root) else {
+        return;
+    };
+    let mut entries: Vec<_> = entries.filter_map(|entry| entry.ok()).collect();
+    entries.sort_by_key(|entry| entry.file_name());
+    for entry in entries {
+        let path = entry.path();
+        if path.is_dir() {
+            walk_files(&path, out);
+        } else {
+            out.push(path);
+        }
+    }
+}
+
+fn proj_batch(in_dir: &Path, out_dir: &Path, to: &str, strict_warnings: bool) -> i32 {
+    if !in_dir.is_dir() {
+        return param_error(
+            "IN_DIR",
+            &format!("'{}' is not a directory.", in_dir.display()),
+            &format!("{PROGRAM} proj batch [OPTIONS] IN_DIR OUT_DIR"),
+            "proj batch",
+        );
+    }
+    let target_ext = extension_str(to);
+    let Some(output_plugin) = plugin_by_suffix(&target_ext) else {
+        let supported = output_suffixes();
+        return param_error(
+            "TO",
+            &unsupported_extension(&target_ext, &supported),
+            &format!("{PROGRAM} proj batch [OPTIONS] IN_DIR OUT_DIR"),
+            "proj batch",
+        );
+    };
+    if output_plugin.info().suffix() != target_ext || !output_plugin.writable() {
+        return runtime_error("plugin does not support writing");
+    }
+    if let Err(error) = std::fs::create_dir_all(out_dir) {
+        return runtime_error(&format!("cannot create {}: {error}", out_dir.display()));
+    }
+
+    let mut files = Vec::new();
+    walk_files(in_dir, &mut files);
+    let input_default = |plugin: &'static dyn libresvip_core::plugin::SvsPlugin| {
+        Options::from_pairs(
+            plugin
+                .input_options()
+                .into_iter()
+                .map(|def| (def.key.to_owned(), def.default.clone())),
+        )
+    };
+    let output_options = Options::from_pairs(
+        output_plugin
+            .output_options()
+            .into_iter()
+            .map(|def| (def.key.to_owned(), def.default.clone())),
+    );
+
+    let mut converted = 0usize;
+    let mut failed = 0usize;
+    let mut skipped = 0usize;
+    for source in &files {
+        let ext = extension_path(source);
+        let Some(input_plugin) = plugin_by_suffix(&ext) else {
+            skipped += 1;
+            continue;
+        };
+        if !input_plugin.readable() {
+            skipped += 1;
+            continue;
+        }
+        let relative = source.strip_prefix(in_dir).unwrap_or(source);
+        let target = out_dir.join(relative).with_extension(&target_ext);
+        if let Some(parent) = target.parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        let load_result = input_plugin.load(source, &input_default(input_plugin));
+        let project = match load_result {
+            Ok(project) => project,
+            Err(error) => {
+                failed += 1;
+                eecho(format!("{}: {}", source.display(), error));
+                continue;
+            }
+        };
+        let mut project = project;
+        project.warnings.extend(take_typed_warnings());
+        let had_warnings = !project.warnings.is_empty();
+        match output_plugin.dump(&target, &project, &output_options) {
+            Ok(()) => {
+                let late = take_typed_warnings();
+                if strict_warnings && (had_warnings || !late.is_empty()) {
+                    failed += 1;
+                    let _ = std::fs::remove_file(&target);
+                    eecho(format!(
+                        "{}: warnings are errors (--strict-warnings)",
+                        source.display()
+                    ));
+                } else {
+                    converted += 1;
+                }
+            }
+            Err(error) => {
+                failed += 1;
+                let _ = take_typed_warnings();
+                eecho(format!("{}: {}", source.display(), error));
+            }
+        }
+    }
+    echo(format!(
+        "{} converted, {} failed, {} skipped (unsupported extensions)",
+        converted, failed, skipped
+    ));
+    i32::from(failed > 0)
+}
+
 fn proj_merge(in_paths: &[PathBuf], out_path: &str) -> i32 {
     let mut prompter = Prompter::new();
     let middlewares = prompt_middlewares(&mut prompter);
@@ -763,6 +1055,8 @@ fn proj_merge(in_paths: &[PathBuf], out_path: &str) -> i32 {
             Ok(project) => project,
             Err(error) => return runtime_error(&error.to_string()),
         };
+        let mut project = project;
+        project.warnings.extend(take_typed_warnings());
         match apply_middlewares(project, &middlewares) {
             Ok(project) => projects.push(project),
             Err(message) => return runtime_error(&message),

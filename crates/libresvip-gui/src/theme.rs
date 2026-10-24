@@ -123,7 +123,7 @@ impl Palette {
     }
 
     pub fn border(&self) -> Stroke {
-        Stroke::new(1.0, self.border)
+        Stroke::new(1.0_f32, self.border)
     }
 }
 
@@ -158,53 +158,53 @@ fn visuals(pal: &Palette) -> Visuals {
     visuals.hyperlink_color = pal.primary;
     visuals.warn_fg_color = pal.warning;
     visuals.error_fg_color = pal.error;
-    visuals.window_stroke = Stroke::new(1.0, pal.border);
+    visuals.window_stroke = Stroke::new(1.0_f32, pal.border);
     visuals.window_corner_radius = CornerRadius::same(8);
     visuals.menu_corner_radius = CornerRadius::same(4);
     visuals.selection = egui::style::Selection {
         bg_fill: pal.primary.gamma_multiply(0.35),
-        stroke: Stroke::new(1.0, pal.primary),
+        stroke: Stroke::new(1.0_f32, pal.primary),
     };
 
     let widgets = &mut visuals.widgets;
     widgets.noninteractive = egui::style::WidgetVisuals {
         bg_fill: pal.surface,
         weak_bg_fill: pal.surface,
-        bg_stroke: Stroke::new(1.0, pal.border),
+        bg_stroke: Stroke::new(1.0_f32, pal.border),
         corner_radius: radius,
-        fg_stroke: Stroke::new(1.0, pal.text),
+        fg_stroke: Stroke::new(1.0_f32, pal.text),
         expansion: 0.0,
     };
     widgets.inactive = egui::style::WidgetVisuals {
         bg_fill: Color32::TRANSPARENT,
         weak_bg_fill: Color32::TRANSPARENT,
-        bg_stroke: Stroke::new(1.0, pal.border),
+        bg_stroke: Stroke::new(1.0_f32, pal.border),
         corner_radius: radius,
-        fg_stroke: Stroke::new(1.0, pal.text),
+        fg_stroke: Stroke::new(1.0_f32, pal.text),
         expansion: 0.0,
     };
     widgets.hovered = egui::style::WidgetVisuals {
         bg_fill: pal.hover,
         weak_bg_fill: pal.hover,
-        bg_stroke: Stroke::new(1.0, pal.primary),
+        bg_stroke: Stroke::new(1.0_f32, pal.primary),
         corner_radius: radius,
-        fg_stroke: Stroke::new(1.0, pal.text),
+        fg_stroke: Stroke::new(1.0_f32, pal.text),
         expansion: 0.0,
     };
     widgets.active = egui::style::WidgetVisuals {
         bg_fill: pal.hover,
         weak_bg_fill: pal.hover,
-        bg_stroke: Stroke::new(2.0, pal.primary),
+        bg_stroke: Stroke::new(2.0_f32, pal.primary),
         corner_radius: radius,
-        fg_stroke: Stroke::new(1.0, pal.text),
+        fg_stroke: Stroke::new(1.0_f32, pal.text),
         expansion: 0.0,
     };
     widgets.open = egui::style::WidgetVisuals {
         bg_fill: pal.surface,
         weak_bg_fill: pal.surface,
-        bg_stroke: Stroke::new(1.0, pal.border),
+        bg_stroke: Stroke::new(1.0_f32, pal.border),
         corner_radius: radius,
-        fg_stroke: Stroke::new(1.0, pal.text),
+        fg_stroke: Stroke::new(1.0_f32, pal.text),
         expansion: 0.0,
     };
     visuals

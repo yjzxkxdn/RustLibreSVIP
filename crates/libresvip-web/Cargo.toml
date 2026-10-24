@@ -12,6 +12,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 libresvip-core = { workspace = true }
+serde_json = { workspace = true }
 libresvip-plugins = { workspace = true }
 # No `libresvip-middlewares` here on purpose: the wasm entry only runs
 # load/dump conversions, so depending on it would needlessly pull the
