@@ -10,7 +10,7 @@ members = [
 ]
 
 [workspace.package]
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 rust-version = "1.80"
 license = "MIT"
@@ -22,6 +22,12 @@ libresvip-plugins = { path = "crates/libresvip-plugins" }
 libresvip-middlewares = { path = "crates/libresvip-middlewares" }
 
 serde = { version = "1", features = ["derive"] }
+# Both features are load-bearing (D2 evaluation):
+# - `float_roundtrip`: Python parses JSON floats exactly; the fast parser can
+#   be one ULP off on real-world inputs outside the golden corpus.
+# - `preserve_order`: the `ds` generator (and friends) emit insertion-ordered
+#   `serde_json::Value` objects to byte-match Python dict order — removing it
+#   turns the keys sorted and breaks the golden suite.
 serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
 serde_yaml = "0.9"
 indexmap = { version = "2", features = ["serde"] }
@@ -30,7 +36,6 @@ anyhow = "1"
 regex = "1"
 encoding_rs = "0.8"
 base64 = "0.22"
-quick-xml = "0.37"
 flate2 = "1"
 
 [profile.release]
