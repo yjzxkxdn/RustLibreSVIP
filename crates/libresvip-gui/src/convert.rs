@@ -264,15 +264,18 @@ mod tests {
             !project.track_list.is_empty(),
             "the generated project keeps at least one track"
         );
-        // The generated file is also byte-identical to the recorded dump for
-        // this plugin.
+        // The generated file is also modelled like the recorded dump. Its bytes
+        // are not compared: the `.acep` container carries a random track colour
+        // and its own decompressed size, so two runs never have the same length.
         let golden_dump = testdata().join("golden").join("acep").join("dump.acep");
-        if let Ok(expected_bytes) = std::fs::read(&golden_dump) {
-            let actual_bytes = std::fs::read(&tmp).expect("read output");
+        if golden_dump.is_file() {
+            let golden_project = plugin
+                .load(&golden_dump, &defaults(plugin, true))
+                .expect("golden dump loads back");
             assert_eq!(
-                actual_bytes.len(),
-                expected_bytes.len(),
-                "output size differs from the golden dump"
+                serde_json::to_value(&golden_project).expect("serialize golden project"),
+                serde_json::to_value(&project).expect("serialize project"),
+                "the generated project differs from the recorded dump"
             );
         }
         let _ = std::fs::remove_dir_all(&root);

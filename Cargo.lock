@@ -1766,7 +1766,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-cli"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "bytes",
  "clap",
@@ -1783,7 +1783,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-core"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "base64",
@@ -1800,7 +1800,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-gui"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "ab_glyph",
  "eframe",
@@ -1816,7 +1816,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-middlewares"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "libresvip-core",
  "regex",
@@ -1827,7 +1827,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-plugins"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "base64",
  "byteorder",
@@ -1851,7 +1851,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-web"
-version = "2.9.2"
+version = "1.0.0"
 dependencies = [
  "libresvip-core",
  "libresvip-middlewares",

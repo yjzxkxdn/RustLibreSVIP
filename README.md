@@ -1,253 +1,113 @@
 # RustLibreSVIP
 
-Pure-Rust port of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP) **2.9.2** —
-CLI and desktop GUI. The Python implementation in `../LibreSVIP` is the source
-of truth; every command, option schema and file format is ported to match it.
+**LibreSVIP 的 Rust 重写版**：歌声合成工程转换器，原生 CLI、桌面 GUI、WebAssembly 网页版共用同一套转换核心。
 
-## Status
+[中文](#中文) · [English](#english)
 
-| area | state |
+---
+
+## 中文
+
+### 这是什么
+
+基于 **LibreSVIP 2.9.2**（Python）的完整移植：40 种工程格式（`.ustx` `.svp` `.acep` `.ust` `.vsqx` `.mid` `.musicxml` `.ppsf` `.tlp` `.nn` …）的读写、6 个中间件、命令行、桌面 GUI 和网页版。
+
+转换结果逐字节对齐 Python 参考实现（golden 测试 40/40），并在此基础上修复了上游若干缺陷（见下方「与 Python 版的差异」），因此本项目使用独立版本号：**1.0.0**。
+
+### 速度
+
+同一台机器、同一个 4 分钟 OpenUtau 工程（579 音符、21 个片段）：
+
+| 转换 | Python 2.9.2 | Rust 1.0 | 提升 |
+| --- | --- | --- | --- |
+| `ustx` → `acep` | 24.7 s | **0.15 s** | ~160× |
+| `ustx` → `svp` | 15.0 s | **0.06 s** | ~250× |
+| `json` → `mid`（1.6 MiB 合成基准） | 17.0 s | **0.10 s** | ~178× |
+
+原生单文件程序，无外部依赖：CLI 11.5 MB，GUI 13.5 MB。
+
+### WebAssembly
+
+`crates/libresvip-web` 把同一套核心编译成 `.wasm`：**零 import**，不需要 WASI，也不需要 wasm-bindgen，`WebAssembly.instantiate(bytes, {})` 即可运行。转换完全在浏览器本地完成，服务器只发静态文件。
+
+| 产物 | 大小 |
 | --- | --- |
-| `libresvip-core` models, serde aliases, tick math, time sync, settings, gettext | done |
-| CLI commands `conf`, `plugin list/detail/toggle` | done, byte-identical output |
-| CLI `proj convert/split/merge` (interactive prompts) | done |
-| Middlewares (6) | ported (Chinese pinyin/romaji conversions still pending) |
-| Format plugins (40) | **all 40 ported and golden-verified** |
-| CLI parity harness | **90/90 cases** (1 documented SKIP where LibreSVIP 2.9.2 crashes) |
-| `rpc server` differential harness | **45/45 cases** (`scripts/check_rpc.py`) |
-| `mcp serve` differential harness | **87/87 cases** (`scripts/check_mcp.py`) |
-| `rpc server` (gRPC) / `mcp serve` (MCP stdio) | done, differentially verified |
-| Desktop GUI (`libresvip-gui`, egui/eframe) | ported, see [Desktop GUI](#desktop-gui) |
+| `libresvip_web.wasm` | 6.32 MB |
+| gzip / brotli（部署时传输） | 2.17 MB / **1.60 MB** |
+| `libresvip-single.html`（wasm 内联，双击即用） | 2.9 MB |
 
-`plugin list` renders exactly the same table as Python (including rich's column
-shrinking and ellipsis rules), and `proj convert` error panels are byte-identical.
+### 下载与发布
 
-## Build
+发布页提供三样东西：
 
-```powershell
-cd E:\RUST_LIBRESVIP\RustLibreSVIP
-$env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
-cargo build --release
-target\release\libresvip-cli.exe --help
-```
-
-## Usage
-
-The command surface mirrors `python -m libresvip.cli`:
-
-```powershell
-libresvip-cli plugin list
-libresvip-cli plugin detail svp
-libresvip-cli conf list
-libresvip-cli proj convert input.svp output.ustx
-libresvip-cli proj split input.svp out_dir --output-ext ust --max-track-count 2
-libresvip-cli proj merge a.svp b.svp --out-path merged.svp
-```
-
-Interactive conversions ask for the same options, middleware questions and
-defaults as the Python CLI.
-
-## Desktop GUI
-
-`crates/libresvip-gui` rebuilds the Python project's Qt Quick interface with
-egui/eframe: the same layout (format card, task list, advanced settings, output
-settings), the same Material light/dark palette and the same conversion
-behaviour (temporary output per task, conflict policy, warning badges).
-
-```powershell
-cargo run -p libresvip-gui --release
-# or start the binary directly
-target\release\libresvip-gui.exe
-```
-
-Files can be passed on the command line or dropped onto the window:
-
-```powershell
-target\release\libresvip-gui.exe song.svp another.svp
-```
-
-On Windows, an unsigned exe started from Explorer can trigger the shell's
-"Open File - Security Warning" or be launched in a security sandbox (low
-integrity level, which blocks every file write). Start it from a console
-instead — `run-gui.cmd` in the repository root does exactly that:
-
-```powershell
-.\run-gui.cmd
-# or
-& .\target\release\libresvip-gui.exe
-```
-
-A checkout that lives in a low-integrity (sandboxed) directory — for example a
-workspace created by an agent harness — stamps that label, a sandbox SID and a
-"Low mandatory level" onto every file built there, and Windows then treats the
-exe as untrusted. `install-gui.ps1` copies the binary to
-`%LOCALAPPDATA%\Programs\RustLibreSVIP`, resets its integrity level and creates
-a Start Menu shortcut:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
-```
-
-(The `-ExecutionPolicy Bypass` is only needed when the machine's policy blocks
-unsigned scripts; `install-gui.ps1` is a plain text file you can also read and
-run line by line.)
-
-| feature | notes |
+| 文件 | 说明 |
 | --- | --- |
-| format combos, auto-detection, swap | read/write plugins from the shared registry |
-| task list: rename stem, change extension, remove | direct / merge / split modes |
-| option forms for input, output and the six middlewares | generated from the same `OptionFieldDef` schemas the CLI uses |
-| output folder, conflict policy, "open folder when done" | reads and writes the same `settings.yml` as the CLI and the Python GUI |
-| light / dark / system theme, zh_CN / en_US / ja_JP / de_DE | translations come from the upstream gettext catalogs |
-| drag & drop, Ctrl+O, Ctrl+Enter, Ctrl+R, Ctrl+Tab, F1 | |
+| `libresvip-cli.exe` | 命令行版，单文件、免安装（Windows x64） |
+| `libresvip-gui.exe` | 桌面版，免安装（Windows x64） |
+| `libresvip-web.zip` | 网页版：`index.html` + `libresvip_web.wasm` + 单文件版 + 说明 |
+
+### 构建
+
+前置：Rust 1.80+（Windows 使用 MSVC 工具链），Node.js 仅用于打包网页版。
 
 ```powershell
-cargo test -p libresvip-gui
-```
+git clone https://github.com/yjzxkxdn/RustLibreSVIP
+cd RustLibreSVIP
 
-The tests drive the real pipeline: a direct conversion re-loads to the project
-recorded in `testdata/golden/acep/project.json`, and split/merge modes produce
-loadable projects.
+# 原生 CLI + GUI
+cargo build --release -p libresvip-cli -p libresvip-gui
 
-Not ported (documented differences):
-
-* the lyric-replacement-rule editor in the settings dialog — rules in
-  `settings.yml` are used, but cannot be edited in the GUI;
-* "Check for Updates" only shows a notice (no network access);
-* the QML compact layout for narrow windows — the split view is always used;
-* colour options are edited as text, without a colour picker.
-
-## WebAssembly
-
-`crates/libresvip-web` builds the same engine for `wasm32-unknown-unknown`. The
-module has **no imports** — no WASI, no wasm-bindgen — so a plain
-`WebAssembly.instantiate(bytes, {})` is enough, and `web/index.html` drives it
-through the small C ABI documented in `crates/libresvip-web/src/lib.rs`.
-
-```powershell
+# 网页版
 rustup target add wasm32-unknown-unknown
 cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
 node web/build-web.mjs
 ```
 
-`web/build-web.mjs` copies the module to `web/libresvip_web.wasm` and writes
-`web/libresvip-single.html`, the same page with the gzip-compressed module
-inlined so it opens straight from disk (no local server, no bundler).
-
-| artifact | size |
-| --- | --- |
-| `libresvip_web.wasm` | 6.32 MiB |
-| gzip / brotli | 2.17 MiB / 1.60 MiB |
-| `libresvip-single.html` | 2.90 MiB |
-
-Serve the module with `Content-Type: application/wasm` plus a pre-compressed
-`.br` next to it (`Content-Encoding: br`) and a long `Cache-Control`: the
-browser downloads it once and runs every conversion locally, so the server only
-serves a static file. The wasm path is exercised in Node:
-`ustx → acep` on a 4 minute project takes ≈ 0.4 s (native: 0.15 s) and produces
-the same project as the CLI.
-
-The web entry point converts one file with the plugins' default options;
-`split`, `merge` and custom options are CLI/GUI-only for now.
-
-## Verification
-
-Everything is verified against the live Python implementation (conda `study12`):
+GUI 安装（重置完整性标签 + 开始菜单快捷方式）：
 
 ```powershell
-$py = "E:\miniconda\envs\study12\python.exe"
-
-# CLI parity: stdout, stderr, exit codes and settings.yml round-trips
-& $py scripts\check_parity.py -v
-
-# Format plugins: byte-identical dumps and identical loaded models
-$env:GOLDEN_ONLY = "svp"      # optional single plugin
-cargo test -p libresvip-plugins golden -- --nocapture
-
-# Regenerate reference fixtures after a Python-side change
-& $py scripts\gen_golden.py
+powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
 ```
 
-Golden fixtures live in `testdata/golden/<plugin-id>/` and are produced by
-`scripts/gen_golden.py`.
+### 注意事项
 
-## Layout
+* **不要把仓库放在“低完整性”目录里运行编译产物**（某些 sandbox / agent 工作区会给目录打上 Low 标签）。在那里编出来的 exe 会被 Windows 当作不可信程序：双击弹“安全警告”，进程以低权限启动，连 `%TEMP%` 都写不了。用 `install-gui.ps1` 复制到 `%LOCALAPPDATA%\Programs` 并重置完整性级别即可。
+* 程序未做代码签名，首次运行可能触发 SmartScreen，选“仍要运行”；从命令行启动不会弹。
+* wasm 构建需要 `wasm32-unknown-unknown` target；`[profile.wasm]` 使用 `opt-level="z"`（体积优先，转换约慢 7%）。
+* 测试：`cargo test --workspace`（68 个单元测试 + 逐格式 golden 对比）。
+* 网页版一次转换一个文件、使用默认选项；`split` / `merge` / 自定义选项目前在 CLI 和 GUI 中。
 
-```
-crates/libresvip-core        models, math, config, options, plugin traits, i18n
-crates/libresvip-plugins     one module per format (src/<plugin-id>.rs)
-crates/libresvip-middlewares the six project middlewares
-crates/libresvip-cli         the `libresvip-cli` binary
-crates/libresvip-gui         the `libresvip-gui` desktop app (egui/eframe)
-crates/libresvip-web         the wasm32 entry point (`cdylib`, C ABI)
-web/                         browser demo page + `build-web.mjs`
-scripts/                     code generation, fixtures, parity harness
-testdata/                    fixtures and golden references
-```
+### 与 Python 版的差异
 
-See [PORTING.md](PORTING.md) for the contributor/agent guide.
+* **解析器不再把歌词抄成“发音”**（`ustx` / `mid` / `vspx` / `svip3`）。否则拼音歌词会被写进音素层，ACE Studio 认不出（`*[wo]`）。`.acep` 和 `.svp` 另有“写入音素层”开关，可整层留空或按目标引擎记法写入。
+* `.acep` 的 pitch 曲线做了两处等价优化（结果逐字节一致），4 分钟工程从 6.7 s 降到 0.15 s。
+* 其余差异（`--help` 排版、错误信息、音频探测只支持 WAV 等）记录在提交历史与 `PORTING.md`。
 
-## Performance
+### 许可
 
-`scripts/bench.py` converts a 1.6 MiB project (10 tracks, 6000 notes, 4000-point
-pitch curves) and compares both implementations (`--repeat 3`, medians):
+MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者。
 
-| conversion | Python | Rust | speed-up | output |
-| --- | --- | --- | --- | --- |
-| json → json | 4.76 s | 0.058 s | **82×** | byte-identical |
-| json → svp | 8.31 s | 0.072 s | **115×** | identical apart from random UUIDs |
-| json → ust | 5.83 s | 0.064 s | **92×** | byte-identical |
-| json → mid | 17.04 s | 0.096 s | **178×** | byte-identical |
-| json → ufdata | 4.73 s | 0.057 s | **83×** | byte-identical |
+---
 
-Real projects hit a different code path: the `.acep` writer smooths a 119-tap
-kernel over the whole song for every vocal pattern, so `ustx → acep` is the
-slowest conversion of both implementations. Measured on a 4 minute OpenUtau
-project (579 notes, 21 patterns, `--repeat 3`, medians):
+## English
 
-| conversion | Python | Rust | speed-up | output |
-| --- | --- | --- | --- | --- |
-| ustx → acep | 24.66 s | 0.147 s | **168×** | identical apart from the random track colours |
+**RustLibreSVIP** is a Rust rewrite of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP), a converter for 40 singing-voice-synthesis project formats.
+
+* **Based on** LibreSVIP 2.9.2 — byte-identical output for the golden fixtures (40/40).
+* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s** (same 4-minute project).
+* **WebAssembly ready**: the same core builds to a zero-import `.wasm` (6.32 MB, 1.60 MB brotli); conversions run in the browser and the server only serves static files.
+* **Targets**: native CLI, native GUI (egui) and the web build share one engine. Release artifacts: `libresvip-cli.exe`, `libresvip-gui.exe`, `libresvip-web.zip`.
 
 ```powershell
-cargo build --release
-& $py scripts\bench.py --repeat 5
-# a real OpenUtau song (any .ustx file works, --input accepts a path)
-& $py scripts\bench.py --pairs ustx:acep --input D:\path\to\song.ustx --repeat 3
+cargo build --release -p libresvip-cli -p libresvip-gui
+rustup target add wasm32-unknown-unknown
+cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
+node web/build-web.mjs
+cargo test --workspace
 ```
 
-Rust used to be as slow as Python on this file: `math.sumprod` was ported as a
-per-product Shewchuk expansion (≈ 119 products × growing partial list per sample
-instead of CPython's constant-size triple-length accumulator), and every pattern
-re-convolved the timeline from second 0. See `acep/music_math.rs` and
-`acep/base_pitch_curve.rs`.
+Notes: do not run the binaries from a low-integrity (sandboxed) directory — Windows then treats them as untrusted and blocks file writes; `install-gui.ps1` copies the GUI to `%LOCALAPPDATA%\Programs` and resets the label. The wasm build needs the `wasm32-unknown-unknown` target.
 
-## Known differences
+Differences from the Python build: the parsers never store the lyric as a pronunciation (`ustx` / `mid` / `vspx` / `svip3`), so romanised lyrics no longer end up in a phoneme layer; `.acep` and `.svp` expose "write the phoneme layer" switches; the `.acep` pitch-curve path is algorithmically equivalent but ~45× faster.
 
-* `--help` screens use clap's layout instead of typer's rich panels (same
-  commands, arguments and option names).
-* Runtime failures print `Error: …` instead of a Python traceback.
-* `rpc server` and `mcp serve` are implemented; their per-request error payloads
-  carry a plain error message instead of a Python traceback.
-* Audio metadata probing understands RIFF/WAVE only (Python uses
-  MediaInfo/libsndfile), so non-WAV backing tracks lose their duration.
-* The parsers never store a pronunciation that merely repeats the lyric
-  (`ustx`, `mid`, `vspx`, `svip3`), while the reference does. Every generator that prefers
-  `Note.pronunciation` over the lyric (`.acep` syllable, `svp` phonemes, `aisp`
-  pinyin, …) then copied pinyin into a phoneme field that the engine cannot
-  parse: an OpenUtau project with pinyin lyrics (`wo`, `cong`, …) came out of
-  ACE Studio with `*[wo]` on every note. Pinyin now stays in the lyric field and
-  the engine phonemises it; `[hint]`/`?hint` lyrics, kana and Hanzi still produce
-  a pronunciation. The `.acep` output option `write_syllable` can drop the syllable layer
-  entirely, which also cleans up a project whose syllables are not valid
-  phonemes.
-* Where LibreSVIP 2.9.2 itself crashes (e.g. `xvsq` with an instrumental track,
-  `vsqx` with parameter curves), the Rust port implements the evident intent and
-  the parity harness reports `SKIP`.
-* Formats that embed wall-clock values (ZIP DOS timestamps in `vpr`/`vog`/`vfp`,
-  UUIDs/song ids in `svp`/`ppsf`/`svip3`/`ace`/`vvproj`, AES salts in
-  `ps_project`) are classified `nondeterministic`: golden tests compare their
-  content instead of raw bytes.
-* `vshp` is import-only and the repository has no sample file; it is verified
-  with Python-`construct`-built fixtures and byte-layout unit tests instead of a
-  golden dump.
+MIT licensed — see [LICENSE](LICENSE). Upstream LibreSVIP © SoulMelody and contributors.

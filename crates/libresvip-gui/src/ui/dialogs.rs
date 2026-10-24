@@ -12,7 +12,7 @@ use crate::theme::Palette;
 use crate::ui::titlebar::{AUTHOR_URL, DOCS_URL, REPO_URL};
 use crate::widgets;
 
-const VERSION: &str = libresvip_core::VERSION;
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn show(app: &mut App, ctx: &egui::Context) {
     about(app, ctx);
@@ -56,7 +56,11 @@ fn about(app: &mut App, ctx: &egui::Context) {
                             .color(pal.muted),
                     );
                     ui.label(
-                        RichText::new(format!("{}{VERSION}", app.t("Version: ")))
+                        RichText::new(format!(
+                            "{}{VERSION} (LibreSVIP {})",
+                            app.t("Version: "),
+                            libresvip_core::VERSION
+                        ))
                             .size(Palette::body()),
                     );
                     ui.label(
