@@ -99,45 +99,18 @@ impl IntervalValue {
     }
 }
 
-#[derive(Clone, Debug)]
-struct IntervalEntry {
-    start: f64,
-    end: f64,
-    closed_end: bool,
-    value: IntervalValue,
-}
-
 /// `PiecewiseIntervalDict` — overlapping intervals are allowed; a lookup
 /// returns the first interval (sorted by its lower bound) that contains `x`.
+/// Storage/matching lives in the shared `IntervalDict`.
 #[derive(Clone, Debug, Default)]
 pub struct PiecewiseIntervalDict {
-    entries: Vec<IntervalEntry>,
-    sorted: bool,
+    dict: crate::interval_dict::IntervalDict<IntervalValue>,
 }
 
 impl PiecewiseIntervalDict {
-    fn set(&mut self, start: f64, end: f64, closed_end: bool, value: IntervalValue) {
-        // `portion.closedopen`/`portion.closed` are empty for `start > end`, and
-        // `closedopen` is empty for `start == end` as well.
-        let empty = if closed_end {
-            start > end
-        } else {
-            start >= end
-        };
-        if empty {
-            return;
-        }
-        self.entries.push(IntervalEntry {
-            start,
-            end,
-            closed_end,
-            value,
-        });
-        self.sorted = false;
-    }
-
     pub fn set_closedopen(&mut self, start: f64, end: f64, value: f64) {
-        self.set(start, end, false, IntervalValue::Constant(value));
+        self.dict
+            .set(start, end, true, false, IntervalValue::Constant(value));
     }
 
     pub fn set_portamento(
@@ -148,9 +121,10 @@ impl PiecewiseIntervalDict {
         to: (f64, f64),
         mode: InterpolationMode,
     ) {
-        self.set(
+        self.dict.set(
             start,
             end,
+            true,
             false,
             IntervalValue::Portamento {
                 start: from,
@@ -160,34 +134,10 @@ impl PiecewiseIntervalDict {
         );
     }
 
-    fn ensure_sorted(&mut self) {
-        if !self.sorted {
-            // `SortedDict` sorts by the lower bound; equal bounds keep their
-            // insertion order (stable sort).
-            self.entries.sort_by(|left, right| {
-                left.start
-                    .partial_cmp(&right.start)
-                    .unwrap_or(std::cmp::Ordering::Equal)
-            });
-            self.sorted = true;
-        }
-    }
-
     /// `PiecewiseIntervalDict.get(x)` — the value of the first matching
     /// interval.
     pub fn get(&mut self, x: f64) -> Option<f64> {
-        self.ensure_sorted();
-        for entry in &self.entries {
-            let matches = if entry.closed_end {
-                entry.start <= x && x <= entry.end
-            } else {
-                entry.start <= x && x < entry.end
-            };
-            if matches {
-                return Some(entry.value.evaluate(x));
-            }
-        }
-        None
+        self.dict.get(x, |value, x| value.evaluate(x))
     }
 }
 
@@ -675,12 +625,12 @@ impl VocaloidPitchHandler {
             return Ok(None);
         }
         all_pitch_points.sort_by_key(|point| point.0);
+        // Positions are sorted, so a duplicate can only be the previous entry.
         let mut unique_points: Vec<(i64, f64)> = Vec::new();
         for (pos, pitch) in all_pitch_points {
-            if let Some(entry) = unique_points.iter_mut().find(|entry| entry.0 == pos) {
-                entry.1 = pitch;
-            } else {
-                unique_points.push((pos, pitch));
+            match unique_points.last_mut() {
+                Some(entry) if entry.0 == pos => entry.1 = pitch,
+                _ => unique_points.push((pos, pitch)),
             }
         }
         let points_data: Vec<Point> = unique_points

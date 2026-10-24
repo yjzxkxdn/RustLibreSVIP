@@ -10,6 +10,7 @@
 //! a `PLUGIN` static implementing [`libresvip_core::plugin::SvsPlugin`].
 
 pub mod plugin_infos;
+pub mod interval_dict;
 pub mod stub;
 
 // Implemented plugins (one module per format identifier).

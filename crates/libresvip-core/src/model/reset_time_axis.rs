@@ -1,15 +1,11 @@
 //! Port of `libresvip.model.reset_time_axis`.
 
+use crate::core::compat::py_round;
 use crate::core::constants::DEFAULT_BPM;
 use crate::core::time_sync::TimeSynchronizer;
 use crate::model::base::{ParamCurve, Params, Project, SongTempo, TimeSignature, Track};
 use crate::model::point::Point;
 use crate::Result;
-
-#[inline]
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
 
 fn remap_curve(
     curve: &ParamCurve,

@@ -32,13 +32,14 @@ impl Default for DsParamCurve {
 }
 
 /// `PitchParamUtils.value_at`.
+///
+/// `segment` is sorted by `x` (the `ParamCurve` contract), so the neighbour
+/// lookup binary-searches like `gender_value_at` below instead of scanning.
 fn pitch_value_at(segment: &[Point], ticks: f64) -> f64 {
-    let left_point = segment.iter().rev().find(|point| point.x as f64 <= ticks);
-    let Some(left_point) = left_point else {
+    let Some(left_point) = binary_find_last(segment, |point| point.x as f64 <= ticks) else {
         return segment[0].y as f64;
     };
-    let right_point = segment.iter().find(|point| point.x as f64 > ticks);
-    let Some(right_point) = right_point else {
+    let Some(right_point) = binary_find_first(segment, |point| point.x as f64 > ticks) else {
         return segment[segment.len() - 1].y as f64;
     };
     let ratio = (ticks - left_point.x as f64) / (right_point.x - left_point.x) as f64;

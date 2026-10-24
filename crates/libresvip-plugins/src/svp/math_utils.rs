@@ -13,10 +13,8 @@ pub fn ticks_to_position(ticks: i64) -> i64 {
 }
 
 /// Python's `round()`: ties to even.
-#[inline]
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// `libresvip.utils.music_math.clamp`.
 #[inline]

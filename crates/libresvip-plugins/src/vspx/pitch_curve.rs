@@ -79,22 +79,12 @@ impl Segment {
     }
 }
 
-#[derive(Clone, Debug)]
-struct IntervalEntry {
-    start: f64,
-    end: f64,
-    start_closed: bool,
-    end_closed: bool,
-    value: Segment,
-}
-
 /// `PiecewiseIntervalDict` — overlapping intervals are allowed and a lookup
 /// returns the value of the first interval (ordered by its lower bound) that
-/// contains the point.
+/// contains the point. Storage/matching lives in the shared `IntervalDict`.
 #[derive(Clone, Debug, Default)]
 pub struct PiecewiseIntervalDict {
-    entries: Vec<IntervalEntry>,
-    sorted: bool,
+    dict: crate::interval_dict::IntervalDict<Segment>,
 }
 
 impl PiecewiseIntervalDict {
@@ -106,24 +96,8 @@ impl PiecewiseIntervalDict {
         end_closed: bool,
         value: Segment,
     ) {
-        // `portion` treats an interval whose lower bound is not less than its
-        // upper bound (equal is enough) as empty.
-        let empty = if start_closed && end_closed {
-            start > end
-        } else {
-            start >= end
-        };
-        if empty {
-            return;
-        }
-        self.entries.push(IntervalEntry {
-            start,
-            end,
-            start_closed,
-            end_closed,
-            value,
-        });
-        self.sorted = false;
+        self.dict
+            .set(start, end, start_closed, end_closed, value);
     }
 
     fn set_closedopen(&mut self, start: f64, end: f64, value: Segment) {
@@ -138,35 +112,8 @@ impl PiecewiseIntervalDict {
         self.set(start, end, false, true, value);
     }
 
-    fn ensure_sorted(&mut self) {
-        if !self.sorted {
-            self.entries.sort_by(|left, right| {
-                left.start
-                    .partial_cmp(&right.start)
-                    .unwrap_or(std::cmp::Ordering::Equal)
-            });
-            self.sorted = true;
-        }
-    }
-
     fn get(&mut self, x: f64) -> Option<f64> {
-        self.ensure_sorted();
-        for entry in &self.entries {
-            let after_start = if entry.start_closed {
-                x >= entry.start
-            } else {
-                x > entry.start
-            };
-            let before_end = if entry.end_closed {
-                x <= entry.end
-            } else {
-                x < entry.end
-            };
-            if after_start && before_end {
-                return Some(entry.value.evaluate(x));
-            }
-        }
-        None
+        self.dict.get(x, |value, x| value.evaluate(x))
     }
 }
 

@@ -29,6 +29,9 @@ pub struct SynthVGenerator {
     first_bar_tick: i64,
     first_bar_tempo: Vec<SongTempo>,
     note_buffer: Vec<Note>,
+    /// Whether `note_buffer` is sorted by `start_pos` (the normal project-model
+    /// order) — enables a binary search in `generate_pitch_diff`.
+    note_buffer_sorted: bool,
     synchronizer: TimeSynchronizer,
     pitch_simulator: GeneratorPitchSimulator,
     no_vibrato_indexes: HashSet<usize>,
@@ -81,6 +84,7 @@ impl SynthVGenerator {
             first_bar_tick: 0,
             first_bar_tempo: Vec::new(),
             note_buffer: Vec::new(),
+            note_buffer_sorted: true,
             synchronizer: TimeSynchronizer::from_project(&[]),
             pitch_simulator: GeneratorPitchSimulator::new(
                 TimeSynchronizer::from_project(&[]),
@@ -194,6 +198,10 @@ impl SynthVGenerator {
                     sv_track.main_ref.database.name = singing.ai_singer_name.clone();
                 }
                 self.note_buffer = singing.note_list.clone();
+                self.note_buffer_sorted = self
+                    .note_buffer
+                    .windows(2)
+                    .all(|pair| pair[0].start_pos <= pair[1].start_pos);
                 self.pitch_simulator =
                     GeneratorPitchSimulator::new(self.synchronizer.clone(), &self.note_buffer);
                 sv_track.main_group.parameters = self.generate_params(&singing.edited_params);
@@ -499,11 +507,15 @@ impl SynthVGenerator {
     }
 
     fn generate_pitch_diff(&mut self, pos: i64, pitch: i64) -> f64 {
-        let target_note_index = find_last_index(&self.note_buffer, |note| note.start_pos <= pos);
-        let target_note = if target_note_index >= 0 {
-            self.note_buffer.get(target_note_index as usize).cloned()
+        // `find_last_index(note_buffer, |note| note.start_pos <= pos)`, binary
+        // when the buffer is sorted and the original reverse scan otherwise.
+        let target_note_index: Option<usize> = if self.note_buffer_sorted {
+            self.note_buffer
+                .partition_point(|note| note.start_pos <= pos)
+                .checked_sub(1)
         } else {
-            None
+            let index = find_last_index(&self.note_buffer, |note| note.start_pos <= pos);
+            usize::try_from(index).ok()
         };
         let simulated_pitch = self
             .pitch_simulator
@@ -512,9 +524,10 @@ impl SynthVGenerator {
             Some(simulated_pitch) => pitch as f64 - simulated_pitch,
             None => 0.0,
         };
-        let Some(target_note) = target_note else {
+        let Some(target_note_index) = target_note_index else {
             return pitch_diff;
         };
+        let target_note = &self.note_buffer[target_note_index];
         if self.options.vibrato == VibratoOption::Hybrid
             && self
                 .synchronizer
@@ -522,8 +535,7 @@ impl SynthVGenerator {
                 > 0.25
             && pos < target_note.end_pos()
         {
-            self.no_vibrato_indexes
-                .insert(target_note_index as usize);
+            self.no_vibrato_indexes.insert(target_note_index);
         }
         pitch_diff
     }

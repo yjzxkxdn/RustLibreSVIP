@@ -4,10 +4,8 @@
 //! builtins that the plugin relies on.
 
 /// Python's `round()`: ties to even, returning an integer.
-#[inline]
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// `libresvip.utils.music_math.db_to_float`.
 #[inline]

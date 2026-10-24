@@ -4,13 +4,8 @@ use std::collections::hash_map::RandomState;
 use std::hash::{BuildHasher, Hash, Hasher};
 
 /// Python's `round(value)` for a single argument: round half to even.
-#[inline]
-pub fn py_round(value: f64) -> i64 {
-    if !value.is_finite() {
-        return 0;
-    }
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 fn entropy_u64() -> u64 {
     let state = RandomState::new();

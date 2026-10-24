@@ -449,6 +449,5 @@ fn to_python_json<T: Serialize>(value: &T) -> Result<Vec<u8>> {
 }
 
 /// Python's `round()` (ties to even) as `i64`.
-fn round_to_i64(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+use libresvip_core::core::compat::py_round as round_to_i64;

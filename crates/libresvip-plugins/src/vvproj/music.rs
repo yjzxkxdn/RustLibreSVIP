@@ -1,9 +1,8 @@
 //! Numeric helpers and the interval dictionary used by the VOICEVOX plugin.
 
 /// `libresvip.utils.music_math.py_round` — Python's ties-to-even `round`.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// `libresvip.utils.music_math.hz2midi`.
 pub fn hz2midi(hz: f64) -> f64 {
@@ -60,53 +59,24 @@ impl IntervalValue {
     }
 }
 
-#[derive(Clone, Debug)]
-struct IntervalEntry {
-    start: f64,
-    end: f64,
-    left_closed: bool,
-    right_closed: bool,
-    value: IntervalValue,
-}
-
 /// Port of `libresvip.core.time_interval.PiecewiseIntervalDict`: intervals may
 /// overlap and lookups return the first match in `(lower, left-open)` order.
-#[derive(Clone, Debug, Default)]
+/// Storage/matching lives in the shared `IntervalDict` (strict `NaN` guard,
+/// closed-left entries first on equal lower bounds).
+#[derive(Clone, Debug)]
 pub struct PiecewiseIntervalDict {
-    entries: Vec<IntervalEntry>,
-    sorted: bool,
+    dict: crate::interval_dict::IntervalDict<IntervalValue>,
+}
+
+impl Default for PiecewiseIntervalDict {
+    fn default() -> Self {
+        Self {
+            dict: crate::interval_dict::IntervalDict::new(true, true),
+        }
+    }
 }
 
 impl PiecewiseIntervalDict {
-    fn set(
-        &mut self,
-        start: f64,
-        end: f64,
-        left_closed: bool,
-        right_closed: bool,
-        value: IntervalValue,
-    ) {
-        // `portion.openclosed` is empty when start >= end; `singleton` never is.
-        let empty = if left_closed && right_closed {
-            start > end
-        } else if left_closed {
-            start > end
-        } else {
-            start >= end
-        };
-        if empty || start.is_nan() || end.is_nan() {
-            return;
-        }
-        self.entries.push(IntervalEntry {
-            start,
-            end,
-            left_closed,
-            right_closed,
-            value,
-        });
-        self.sorted = false;
-    }
-
     pub fn set_openclosed_linear(
         &mut self,
         start: f64,
@@ -114,7 +84,7 @@ impl PiecewiseIntervalDict {
         from: (f64, f64),
         to: (f64, f64),
     ) {
-        self.set(
+        self.dict.set(
             start,
             end,
             false,
@@ -124,7 +94,7 @@ impl PiecewiseIntervalDict {
     }
 
     pub fn set_singleton(&mut self, point: f64, value: f64) {
-        self.set(
+        self.dict.set(
             point,
             point,
             true,
@@ -133,38 +103,9 @@ impl PiecewiseIntervalDict {
         );
     }
 
-    fn ensure_sorted(&mut self) {
-        if !self.sorted {
-            // `SortedDict(_sortkey)` sorts by the lower bound, closed first.
-            self.entries.sort_by(|left, right| {
-                left.start
-                    .partial_cmp(&right.start)
-                    .unwrap_or(std::cmp::Ordering::Equal)
-                    .then_with(|| left.left_closed.cmp(&right.left_closed).reverse())
-            });
-            self.sorted = true;
-        }
-    }
-
     /// `PiecewiseIntervalDict.get(x)`.
     pub fn get(&mut self, x: f64) -> Option<f64> {
-        self.ensure_sorted();
-        for entry in &self.entries {
-            let left = if entry.left_closed {
-                x >= entry.start
-            } else {
-                x > entry.start
-            };
-            let right = if entry.right_closed {
-                x <= entry.end
-            } else {
-                x < entry.end
-            };
-            if left && right {
-                return Some(entry.value.evaluate(x));
-            }
-        }
-        None
+        self.dict.get(x, |value, x| value.evaluate(x))
     }
 
     /// `more_itertools.split_when(items, predicate)`, keeping every group.

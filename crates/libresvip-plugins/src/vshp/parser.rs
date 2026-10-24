@@ -390,7 +390,7 @@ fn round_to_i64(value: f64, what: &str) -> Result<i64> {
             "vshp: {what} is not a finite number"
         )));
     }
-    Ok(value.round_ties_even() as i64)
+    Ok(libresvip_core::core::compat::py_round(value))
 }
 
 /// Python `int()` — truncates towards zero, rejects non-finite values.

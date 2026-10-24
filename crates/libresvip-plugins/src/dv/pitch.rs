@@ -30,9 +30,7 @@ pub struct DvNoteWithPitch {
     pub vibrato: Vec<DvPoint>,
 }
 
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+use libresvip_core::core::compat::py_round;
 
 fn py_floor(value: f64) -> f64 {
     value.floor()

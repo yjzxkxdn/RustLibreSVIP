@@ -50,9 +50,7 @@ fn round_ndigits(value: f64, digits: usize) -> f64 {
         .unwrap_or(value)
 }
 
-fn round_to_i64(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+use libresvip_core::core::compat::py_round as round_to_i64;
 
 /// `_convert_delta_to_cumulative`, returning a converted copy of the tracks.
 fn cumulative_tracks(midi_file: &MidiFile) -> Vec<Vec<MidiEvent>> {

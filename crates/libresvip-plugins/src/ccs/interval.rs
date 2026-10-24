@@ -37,9 +37,8 @@ pub fn float_repr(value: f64) -> String {
 }
 
 /// Python's `round(float)`.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// `repr(float)` for `json.dumps`-style output, kept next to `float_repr`.
 pub fn json_float(value: f64) -> String {

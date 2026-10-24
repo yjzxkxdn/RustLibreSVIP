@@ -16,9 +16,8 @@ pub fn ratio_to_db(ratio: f64) -> f64 {
 }
 
 /// Python's `round(float)`.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// `linear_interpolation(x, start, end)`.
 pub fn linear_interpolation(x: f64, start: (f64, f64), end: (f64, f64)) -> f64 {
@@ -175,41 +174,24 @@ impl IntervalValue {
     }
 }
 
-#[derive(Clone, Debug)]
-struct IntervalEntry {
-    start: f64,
-    end: f64,
-    closed_end: bool,
-    value: IntervalValue,
-}
-
 /// Port of `libresvip.core.time_interval.PiecewiseIntervalDict` restricted to
 /// the closed / closed-open intervals the TuneLab parser uses. Overlapping
 /// intervals are allowed and the first one (sorted by lower bound) wins.
-#[derive(Clone, Debug, Default)]
+/// Storage/matching lives in the shared `IntervalDict` (strict `NaN` guard).
+#[derive(Clone, Debug)]
 pub struct PiecewiseIntervalDict {
-    entries: Vec<IntervalEntry>,
-    sorted: bool,
+    dict: crate::interval_dict::IntervalDict<IntervalValue>,
+}
+
+impl Default for PiecewiseIntervalDict {
+    fn default() -> Self {
+        Self {
+            dict: crate::interval_dict::IntervalDict::new(true, false),
+        }
+    }
 }
 
 impl PiecewiseIntervalDict {
-    fn set(&mut self, start: f64, end: f64, closed_end: bool, value: IntervalValue) {
-        let empty = if closed_end {
-            start > end
-        } else {
-            start >= end
-        };
-        if empty || start.is_nan() || end.is_nan() {
-            return;
-        }
-        self.entries.push(IntervalEntry {
-            start,
-            end,
-            closed_end,
-            value,
-        });
-        self.sorted = false;
-    }
 
     pub fn set_closed_vibrato(
         &mut self,
@@ -220,9 +202,10 @@ impl PiecewiseIntervalDict {
         amplitude: f64,
         phase: f64,
     ) {
-        self.set(
+        self.dict.set(
             start,
             end,
+            true,
             true,
             IntervalValue::Vibrato {
                 start: vibrato_start,
@@ -234,30 +217,11 @@ impl PiecewiseIntervalDict {
     }
 
     pub fn set_closedopen_constant(&mut self, start: f64, end: f64, value: f64) {
-        self.set(start, end, false, IntervalValue::Constant(value));
-    }
-
-    fn ensure_sorted(&mut self) {
-        if !self.sorted {
-            self.entries
-                .sort_by(|left, right| left.start.partial_cmp(&right.start).unwrap_or(std::cmp::Ordering::Equal));
-            self.sorted = true;
-        }
+        self.dict.set(start, end, true, false, IntervalValue::Constant(value));
     }
 
     /// `PiecewiseIntervalDict.get(x)`.
     pub fn get(&mut self, x: f64) -> Option<f64> {
-        self.ensure_sorted();
-        for entry in &self.entries {
-            let matches = if entry.closed_end {
-                entry.start <= x && x <= entry.end
-            } else {
-                entry.start <= x && x < entry.end
-            };
-            if matches {
-                return Some(entry.value.evaluate(x));
-            }
-        }
-        None
+        self.dict.get(x, |value, x| value.evaluate(x))
     }
 }

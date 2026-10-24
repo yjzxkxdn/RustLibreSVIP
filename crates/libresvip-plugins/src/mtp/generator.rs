@@ -14,9 +14,7 @@ use super::model::{
     TRACK_TYPE_SONG,
 };
 
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+use libresvip_core::core::compat::py_round;
 
 /// `LATIN_ALPHABET.fullmatch`.
 fn is_latin_letters(text: &str) -> bool {

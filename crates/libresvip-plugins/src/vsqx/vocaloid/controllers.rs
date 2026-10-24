@@ -11,10 +11,7 @@ pub const PITCH_MAX_VALUE: i64 = 8191;
 pub const DEFAULT_PITCH_BEND_SENSITIVITY: i64 = 2;
 pub const MAX_PITCH_BEND_SENSITIVITY: i64 = 24;
 
-#[inline]
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+pub use libresvip_core::core::compat::py_round;
 
 /// `ControllerEvent`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

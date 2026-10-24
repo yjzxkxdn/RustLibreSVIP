@@ -14,10 +14,8 @@ pub fn first_pinyin(text: &str) -> Option<String> {
         .and_then(|series| series.first().cloned())
 }
 
-/// Python's `round(float)`.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+// Python's `round(float)`.
+pub use libresvip_core::core::compat::py_round;
 
 const MD5_SHIFTS: [u32; 64] = [
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9,

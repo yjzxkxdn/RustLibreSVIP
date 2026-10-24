@@ -23,10 +23,8 @@ pub fn ratio_to_db(ratio: f64) -> f64 {
     20.0 * ratio.log10()
 }
 
-/// Python's `round(float)`.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+// Python's `round(float)`.
+pub use libresvip_core::core::compat::py_round;
 
 pub fn ceil_to_interval(value: i64) -> i64 {
     let quotient = value.div_euclid(5);

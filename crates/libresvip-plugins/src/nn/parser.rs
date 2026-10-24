@@ -130,9 +130,8 @@ impl<'a> NiaoNiaoParser<'a> {
 }
 
 /// Python `round()` — half to even.
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+use libresvip_core::core::compat::py_round;
 
 /// Parse the textual NIAONiao project format.
 pub fn parse_text(text: &str) -> Result<NNProject> {

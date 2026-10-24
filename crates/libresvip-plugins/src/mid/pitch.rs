@@ -30,9 +30,8 @@ pub const DEFAULT_PITCH_BEND_SENSITIVITY: i64 = 2;
 pub const MAX_PITCH_BEND_SENSITIVITY: i64 = 24;
 
 /// Python's `round()` (ties to even) as `i64`.
-pub fn round_to_i64(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round as round_to_i64;
 
 /// `libresvip.utils.music_math.clamp`.
 fn clamp(value: f64, lower: f64, upper: f64) -> f64 {

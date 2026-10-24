@@ -10,9 +10,7 @@ use libresvip_core::model::base::{
 use super::model::{DvAudioTrack, DvNote, DvProject, DvSingingTrack, DvTempo, DvTimeSignature};
 use super::pitch::{convert_note_key_int, pitch_from_dv_track, DvNoteWithPitch, DvSegmentPitchRawData};
 
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+use libresvip_core::core::compat::py_round;
 
 /// `skip_beat_list` (local copy).
 ///

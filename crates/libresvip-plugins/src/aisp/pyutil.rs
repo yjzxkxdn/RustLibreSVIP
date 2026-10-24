@@ -108,10 +108,8 @@ pub fn push_opt_f64(out: &mut String, value: Option<f64>) {
     }
 }
 
-/// Python's `round(float)` — ties to even, returns an integer.
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+// Python's `round(float)` — ties to even, returns an integer.
+pub use libresvip_core::core::compat::py_round;
 
 /// Python's floor division for floats (`a // b`).
 pub fn floordiv_f64(a: f64, b: f64) -> f64 {

@@ -9,10 +9,8 @@ const PITCH_MAP: [&str; 12] = [
 ];
 
 /// Python's `round(float)` (banker's rounding).
-#[inline]
-pub fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+
+pub use libresvip_core::core::compat::py_round;
 
 /// Python's `round(value, ndigits)` for a positive digit count.
 #[inline]

@@ -64,3 +64,14 @@ pub fn binary_find_last<T: Copy>(items: &[T], pred: impl Fn(&T) -> bool) -> Opti
 pub fn ceil_i64(value: f64) -> i64 {
     value.ceil() as i64
 }
+
+/// Python's `round()` for floats, returning `i64` (banker's rounding).
+///
+/// Unified semantics for the whole workspace (previously 20 per-plugin copies
+/// with divergent non-finite handling): the saturating `as` cast — `NaN → 0`,
+/// `±inf → ±i64::MAX`. Python itself raises on non-finite input, so any value
+/// relying on the saturation branches is already corrupt data.
+#[inline]
+pub fn py_round(value: f64) -> i64 {
+    value.round_ties_even() as i64
+}

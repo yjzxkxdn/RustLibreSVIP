@@ -4,7 +4,6 @@
 //! Python model, because `Project::model_dump(by_alias=True)` output order is
 //! part of the observable behaviour (the JSON plugin writes it verbatim).
 
-use serde::de::Error as DeError;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Value;
 
@@ -256,19 +255,57 @@ impl Serialize for ParamCurve {
 
 impl<'de> Deserialize<'de> for ParamCurve {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> std::result::Result<Self, D::Error> {
-        let value = Value::deserialize(deserializer)?;
-        let points_value = match &value {
-            Value::Object(map) => map
-                .get("PointList")
-                .or_else(|| map.get("points"))
-                .cloned()
-                .unwrap_or(Value::Array(Vec::new())),
-            Value::Null => Value::Array(Vec::new()),
-            other => other.clone(),
-        };
-        let points: Vec<Point> = serde_json::from_value(points_value)
-            .map_err(|e| D::Error::custom(format!("invalid PointList: {e}")))?;
-        Ok(ParamCurve { points })
+        struct ParamCurveVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for ParamCurveVisitor {
+            type Value = ParamCurve;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a ParamCurve object or an array of points")
+            }
+
+            fn visit_unit<E: serde::de::Error>(self) -> std::result::Result<Self::Value, E> {
+                Ok(ParamCurve::default())
+            }
+
+            fn visit_seq<A: serde::de::SeqAccess<'de>>(
+                self,
+                mut seq: A,
+            ) -> std::result::Result<Self::Value, A::Error> {
+                let mut points = Vec::with_capacity(seq.size_hint().unwrap_or(0));
+                while let Some(point) = seq.next_element::<Point>()? {
+                    points.push(point);
+                }
+                Ok(ParamCurve { points })
+            }
+
+            fn visit_map<A: serde::de::MapAccess<'de>>(
+                self,
+                mut map: A,
+            ) -> std::result::Result<Self::Value, A::Error> {
+                let mut points: Option<Vec<Point>> = None;
+                while let Some(key) = map.next_key::<std::borrow::Cow<'de, str>>()? {
+                    match &*key {
+                        "PointList" | "points" => {
+                            // A duplicated key keeps the last occurrence, like
+                            // the previous `Value`-based implementation.
+                            let parsed = map
+                                .next_value::<Vec<Point>>()
+                                .map_err(|e| serde::de::Error::custom(format!("invalid PointList: {e}")));
+                            points = Some(parsed?);
+                        }
+                        _ => {
+                            map.next_value::<serde::de::IgnoredAny>()?;
+                        }
+                    }
+                }
+                Ok(ParamCurve {
+                    points: points.unwrap_or_default(),
+                })
+            }
+        }
+
+        deserializer.deserialize_any(ParamCurveVisitor)
     }
 }
 
@@ -673,23 +710,130 @@ impl Serialize for Track {
 
 impl<'de> Deserialize<'de> for Track {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> std::result::Result<Self, D::Error> {
-        let value = Value::deserialize(deserializer)?;
-        let type_value = value
-            .get("Type")
-            .or_else(|| value.get("type_"))
-            .ok_or_else(|| D::Error::missing_field("Type"))?;
-        let type_name = type_value
-            .as_str()
-            .ok_or_else(|| D::Error::custom("Type must be a string"))?;
-        match type_name {
-            TRACK_TYPE_SINGING => serde_json::from_value(value)
-                .map(Track::Singing)
-                .map_err(|e| D::Error::custom(format!("invalid singing track: {e}"))),
-            TRACK_TYPE_INSTRUMENTAL => serde_json::from_value(value)
-                .map(Track::Instrumental)
-                .map_err(|e| D::Error::custom(format!("invalid instrumental track: {e}"))),
-            other => Err(D::Error::custom(format!("unknown track type: {other}"))),
+        struct TrackVisitor;
+
+        // Seeds applying the same lenient coercions as the derived structs.
+        struct LenientBool;
+        struct LenientF64;
+        struct LenientI64;
+
+        impl<'de> serde::de::DeserializeSeed<'de> for LenientBool {
+            type Value = bool;
+            fn deserialize<D: Deserializer<'de>>(
+                self,
+                deserializer: D,
+            ) -> std::result::Result<Self::Value, D::Error> {
+                lenient_bool(deserializer)
+            }
         }
+        impl<'de> serde::de::DeserializeSeed<'de> for LenientF64 {
+            type Value = f64;
+            fn deserialize<D: Deserializer<'de>>(
+                self,
+                deserializer: D,
+            ) -> std::result::Result<Self::Value, D::Error> {
+                lenient_f64(deserializer)
+            }
+        }
+        impl<'de> serde::de::DeserializeSeed<'de> for LenientI64 {
+            type Value = i64;
+            fn deserialize<D: Deserializer<'de>>(
+                self,
+                deserializer: D,
+            ) -> std::result::Result<Self::Value, D::Error> {
+                lenient_i64(deserializer)
+            }
+        }
+
+        impl<'de> serde::de::Visitor<'de> for TrackVisitor {
+            type Value = Track;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a track object")
+            }
+
+            fn visit_map<A: serde::de::MapAccess<'de>>(
+                self,
+                mut map: A,
+            ) -> std::result::Result<Track, A::Error> {
+                let mut title: Option<String> = None;
+                let mut mute: Option<bool> = None;
+                let mut solo: Option<bool> = None;
+                let mut volume: Option<f64> = None;
+                let mut pan: Option<f64> = None;
+                let mut type_value: Option<Value> = None;
+                // Singing fields.
+                let mut ai_singer_name: Option<String> = None;
+                let mut reverb_preset: Option<String> = None;
+                let mut note_list: Option<Vec<Note>> = None;
+                let mut edited_params: Option<Params> = None;
+                // Instrumental fields.
+                let mut audio_file_path: Option<String> = None;
+                let mut offset: Option<i64> = None;
+                // Duplicated keys keep the last occurrence, matching the
+                // previous `Value`-based implementation.
+                while let Some(key) = map.next_key::<std::borrow::Cow<'de, str>>()? {
+                    match &*key {
+                        "Title" | "title" => title = Some(map.next_value()?),
+                        "Mute" | "mute" => mute = Some(map.next_value_seed(LenientBool)?),
+                        "Solo" | "solo" => solo = Some(map.next_value_seed(LenientBool)?),
+                        "Volume" | "volume" => volume = Some(map.next_value_seed(LenientF64)?),
+                        "Pan" | "pan" => pan = Some(map.next_value_seed(LenientF64)?),
+                        "Type" | "type_" => type_value = Some(map.next_value()?),
+                        "AISingerName" | "ai_singer_name" => {
+                            ai_singer_name = Some(map.next_value()?)
+                        }
+                        "ReverbPreset" | "reverb_preset" => {
+                            reverb_preset = Some(map.next_value()?)
+                        }
+                        "NoteList" | "note_list" => note_list = Some(map.next_value()?),
+                        "EditedParams" | "edited_params" => {
+                            edited_params = Some(map.next_value()?)
+                        }
+                        "AudioFilePath" | "audio_file_path" => {
+                            audio_file_path = Some(map.next_value()?)
+                        }
+                        "Offset" | "offset" => offset = Some(map.next_value_seed(LenientI64)?),
+                        _ => {
+                            map.next_value::<serde::de::IgnoredAny>()?;
+                        }
+                    }
+                }
+                let type_value = type_value.ok_or_else(|| serde::de::Error::missing_field("Type"))?;
+                let type_name = type_value
+                    .as_str()
+                    .ok_or_else(|| serde::de::Error::custom("Type must be a string"))?;
+                match type_name {
+                    TRACK_TYPE_SINGING => Ok(Track::Singing(SingingTrack {
+                        title: title.unwrap_or_default(),
+                        mute: mute.unwrap_or(false),
+                        solo: solo.unwrap_or(false),
+                        volume: volume.unwrap_or(1.0),
+                        pan: pan.unwrap_or_default(),
+                        type_: type_name.to_owned(),
+                        ai_singer_name: ai_singer_name.unwrap_or_default(),
+                        reverb_preset: reverb_preset.unwrap_or_default(),
+                        note_list: note_list.unwrap_or_default(),
+                        edited_params: edited_params.unwrap_or_default(),
+                    })),
+                    TRACK_TYPE_INSTRUMENTAL => Ok(Track::Instrumental(InstrumentalTrack {
+                        title: title.unwrap_or_default(),
+                        mute: mute.unwrap_or(false),
+                        solo: solo.unwrap_or(false),
+                        volume: volume.unwrap_or(1.0),
+                        pan: pan.unwrap_or_default(),
+                        type_: type_name.to_owned(),
+                        audio_file_path: audio_file_path.unwrap_or_default(),
+                        offset: offset.unwrap_or_default(),
+                    })),
+                    other => Err(serde::de::Error::custom(format!(
+                        "unknown track type: {other}"
+                    ))),
+                }
+            }
+        }
+
+        deserializer.deserialize_map(TrackVisitor)
     }
 }
 

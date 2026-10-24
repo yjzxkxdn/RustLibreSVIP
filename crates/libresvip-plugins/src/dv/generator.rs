@@ -16,9 +16,7 @@ use super::model::{
 };
 use super::pitch::{convert_note_key_int, generate_for_dv};
 
-fn py_round(value: f64) -> i64 {
-    value.round_ties_even() as i64
-}
+use libresvip_core::core::compat::py_round;
 
 pub struct DeepVocalGenerator;
 
