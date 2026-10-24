@@ -137,26 +137,33 @@ impl PitchSimulator {
         if let Some(value) = self.pitch_override_at_secs(secs) {
             return Some(value);
         }
-        for interval in self.intervals.iter().rev() {
-            if interval.start <= secs && secs < interval.end {
-                if interval.key == 0 {
-                    return None;
-                }
-                return Some(interval.key as f64 * 100.0);
-            }
+        // The intervals are appended in ascending order. The generator samples
+        // every note 500 times, so a linear scan here is quadratic in the song
+        // length; look the candidate up instead.
+        let index = self
+            .intervals
+            .partition_point(|interval| interval.start <= secs);
+        let interval = self.intervals.get(index.checked_sub(1)?)?;
+        if secs < interval.end {
+            // Fixed deviation from LibreSVIP 2.9.2: `if interval.key` treated
+            // key 0 (C-1) as "no pitch"; it is a real note.
+            return Some(interval.key as f64 * 100.0);
         }
         None
     }
 
     fn pitch_override_at_secs(&self, secs: f64) -> Option<f64> {
-        for segment in &self.segments {
-            if segment.start <= secs && secs < segment.end {
-                return Some(linear_interpolation(
-                    secs,
-                    (segment.start, segment.start_value),
-                    (segment.end, segment.end_value),
-                ));
-            }
+        // Segments are appended in ascending order by `merge_pitch_curve`.
+        let index = self
+            .segments
+            .partition_point(|segment| segment.start <= secs);
+        let segment = self.segments.get(index.checked_sub(1)?)?;
+        if secs < segment.end {
+            return Some(linear_interpolation(
+                secs,
+                (segment.start, segment.start_value),
+                (segment.end, segment.end_value),
+            ));
         }
         None
     }

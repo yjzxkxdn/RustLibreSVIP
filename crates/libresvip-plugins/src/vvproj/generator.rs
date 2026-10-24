@@ -42,6 +42,9 @@ pub fn generate_project(project: &Project, _options: &OutputOptions) -> Result<V
         first_bar_length: first_signature.bar_length() as i64,
         time_synchronizer: TimeSynchronizer::from_project(&project.song_tempo_list),
     };
+    // Resolving the catalog chain is not free; the generator warns once per
+    // note that has a non-kana lyric, so do it once per project instead.
+    let unsupported_lyric = translate("Unsupported lyric: ");
     let mut song = VoiceVoxSong {
         tempos: generate_tempos(&project.song_tempo_list),
         time_signatures: generate_time_signatures(&project.time_signature_list),
@@ -51,7 +54,7 @@ pub fn generate_project(project: &Project, _options: &OutputOptions) -> Result<V
         if let Track::Singing(track) = track {
             let track_key = uuid_str();
             song.track_order.push(track_key.clone());
-            song.tracks.push((track_key, generator.generate_track(track)));
+            song.tracks.push((track_key, generator.generate_track(track, &unsupported_lyric)));
         }
     }
     Ok(VoiceVoxProject {
@@ -83,7 +86,11 @@ fn generate_tempos(tempo_list: &[SongTempo]) -> Vec<VoiceVoxTempo> {
 }
 
 impl Generator {
-    fn generate_track(&self, track: &libresvip_core::model::base::SingingTrack) -> VoiceVoxTrack {
+    fn generate_track(
+        &self,
+        track: &libresvip_core::model::base::SingingTrack,
+        unsupported_lyric: &str,
+    ) -> VoiceVoxTrack {
         VoiceVoxTrack {
             name: track.title.clone(),
             solo: track.solo,
@@ -92,22 +99,21 @@ impl Generator {
             notes: track
                 .note_list
                 .iter()
-                .map(Self::generate_note)
+                .map(|note| Self::generate_note(note, unsupported_lyric))
                 .collect(),
             pitch_edit_data: self.generate_pitch(&track.edited_params.pitch),
             ..Default::default()
         }
     }
 
-    fn generate_note(note: &Note) -> VoiceVoxNote {
+    fn generate_note(note: &Note, unsupported_lyric: &str) -> VoiceVoxNote {
         let lyric = if is_kana(&note.lyric) {
             note.lyric.clone()
         } else {
-            show_warning_kind(WarningKind::FallbackApplied, format!(
-                "{} {}",
-                translate("Unsupported lyric: "),
-                note.lyric
-            ));
+            show_warning_kind(
+                WarningKind::FallbackApplied,
+                format!("{unsupported_lyric} {}", note.lyric),
+            );
             libresvip_core::core::constants::DEFAULT_JAPANESE_LYRIC.to_owned()
         };
         VoiceVoxNote::new(note.start_pos, note.length, note.key_number, lyric)

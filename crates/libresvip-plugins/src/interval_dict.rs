@@ -32,6 +32,9 @@ pub struct IntervalDict<V> {
     sorted: bool,
     strict_nan: bool,
     closed_first: bool,
+    /// `Some(true)` when the sorted entries do not overlap, which allows the
+    /// lookup to binary-search instead of scanning every interval.
+    non_overlapping: Option<bool>,
 }
 
 impl<V> Default for IntervalDict<V> {
@@ -48,6 +51,7 @@ impl<V> IntervalDict<V> {
             sorted: true,
             strict_nan,
             closed_first,
+            non_overlapping: Some(true),
         }
     }
 
@@ -76,6 +80,7 @@ impl<V> IntervalDict<V> {
             value,
         });
         self.sorted = false;
+        self.non_overlapping = None;
     }
 
     fn ensure_sorted(&mut self) {
@@ -94,12 +99,54 @@ impl<V> IntervalDict<V> {
                     })
             });
             self.sorted = true;
+            self.non_overlapping = None;
         }
+    }
+
+    /// Sorted and disjoint, so the candidate interval can be found by binary
+    /// search. Overlapping dictionaries (allowed by the `portion` semantics)
+    /// keep the linear first-match scan.
+    fn is_non_overlapping(&mut self) -> bool {
+        if let Some(known) = self.non_overlapping {
+            return known;
+        }
+        let disjoint = self.entries.windows(2).all(|pair| {
+            let (previous, next) = (&pair[0], &pair[1]);
+            next.start > previous.end
+                || (next.start == previous.end && !(next.start_closed && previous.end_closed))
+        });
+        self.non_overlapping = Some(disjoint);
+        disjoint
     }
 
     /// Value of the first interval (in sorted order) containing `x`.
     pub fn get(&mut self, x: f64, eval: impl Fn(&V, f64) -> f64) -> Option<f64> {
         self.ensure_sorted();
+        if self.is_non_overlapping() {
+            // With disjoint intervals at most one entry can contain `x`, and it
+            // must be the last one whose start does not exceed it.
+            let index = self
+                .entries
+                .partition_point(|entry| {
+                    if entry.start_closed {
+                        entry.start <= x
+                    } else {
+                        entry.start < x
+                    }
+                });
+            let entry = self.entries.get(index.checked_sub(1)?)?;
+            let after_start = if entry.start_closed {
+                x >= entry.start
+            } else {
+                x > entry.start
+            };
+            let before_end = if entry.end_closed {
+                x <= entry.end
+            } else {
+                x < entry.end
+            };
+            return (after_start && before_end).then(|| eval(&entry.value, x));
+        }
         for entry in &self.entries {
             let after_start = if entry.start_closed {
                 x >= entry.start

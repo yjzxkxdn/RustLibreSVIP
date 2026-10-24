@@ -23,6 +23,12 @@ impl ConstantIntervals {
         if !(lower < upper) {
             return;
         }
+        // Callers append in ascending order; taking the generic path there
+        // would rebuild the whole vector per insert (quadratic).
+        if self.entries.last().map_or(true, |last| last.1 <= lower) {
+            self.entries.push((lower, upper, value));
+            return;
+        }
         let mut next = Vec::with_capacity(self.entries.len() + 2);
         for (start, end, previous) in self.entries.drain(..) {
             if end <= lower || start >= upper {
@@ -66,6 +72,13 @@ struct LinearIntervals {
 impl LinearIntervals {
     fn insert(&mut self, lower: f64, upper: f64, start_value: f64, end_value: f64) {
         if !(lower < upper) {
+            return;
+        }
+        // `merge_pitch_curve` feeds the edited pitch in ascending order, and the
+        // reference merges it once per export: rebuilding the vector per insert
+        // made `aisp` quadratic in the number of pitch points.
+        if self.entries.last().map_or(true, |last| last.1 <= lower) {
+            self.entries.push((lower, upper, start_value, end_value));
             return;
         }
         let mut next = Vec::with_capacity(self.entries.len() + 2);
@@ -220,10 +233,10 @@ impl PitchSimulator {
         if let Some(value) = self.pitch_override_at_secs(secs) {
             return Some(value);
         }
+        // Fixed deviation from LibreSVIP 2.9.2: `if value:` treated key 0
+        // (C-1) as "no pitch"; it is a real note.
         if let Some(value) = self.note_intervals.get(secs) {
-            if value != 0.0 {
-                return Some(value * 100.0);
-            }
+            return Some(value * 100.0);
         }
         None
     }
@@ -241,10 +254,10 @@ impl PitchSimulator {
                 ));
             }
         }
+        // Fixed deviation: an exact 0-cent edited value is real data, not
+        // "absent" (Python truthiness again).
         if let Some(value) = self.pitch_intervals.get(secs) {
-            if value != 0.0 {
-                return Some(value);
-            }
+            return Some(value);
         }
         None
     }

@@ -6,7 +6,7 @@
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use std::sync::{Mutex, OnceLock};
+use std::sync::{Arc, Mutex, OnceLock};
 
 /// One parsed `.mo` catalog.
 #[derive(Clone, Debug, Default)]
@@ -84,7 +84,7 @@ impl Translation {
 /// A chain of catalogs, queried in order (core, then plugin, then middleware…).
 #[derive(Clone, Debug, Default)]
 pub struct TranslationChain {
-    catalogs: Vec<Translation>,
+    catalogs: Vec<Arc<Translation>>,
 }
 
 impl TranslationChain {
@@ -92,7 +92,7 @@ impl TranslationChain {
         Self::default()
     }
 
-    pub fn push(&mut self, catalog: Translation) {
+    pub fn push(&mut self, catalog: Arc<Translation>) {
         if !catalog.is_empty() {
             self.catalogs.push(catalog);
         }
@@ -138,18 +138,18 @@ pub fn locales_dir() -> PathBuf {
 /// Catalogs already parsed, keyed by `"<plugin_id>:<lang>"` (core uses the
 /// id `"core"`). `gettext_lazy` sits on per-note paths (svp export), so the
 /// `.mo` files must not be re-read and re-parsed on every call.
-fn cached_catalog(key: &str, load: impl FnOnce() -> Translation) -> Translation {
-    static CACHE: OnceLock<Mutex<HashMap<String, Translation>>> = OnceLock::new();
+fn cached_catalog(key: &str, load: impl FnOnce() -> Translation) -> Arc<Translation> {
+    static CACHE: OnceLock<Mutex<HashMap<String, Arc<Translation>>>> = OnceLock::new();
     let cache = CACHE.get_or_init(|| Mutex::new(HashMap::new()));
     let mut guard = cache.lock().unwrap_or_else(|poison| poison.into_inner());
     guard
         .entry(key.to_owned())
-        .or_insert_with(load)
+        .or_insert_with(|| Arc::new(load()))
         .clone()
 }
 
 /// Loads the core catalog for a language (cached).
-pub fn core_catalog(lang: &str) -> Translation {
+pub fn core_catalog(lang: &str) -> Arc<Translation> {
     cached_catalog(&format!("core:{lang}"), || {
         let path = locales_dir()
             .join(lang)
@@ -161,7 +161,7 @@ pub fn core_catalog(lang: &str) -> Translation {
 
 /// Loads one plugin's catalog (cached); the Python side merges every `.mo` in
 /// the plugin's own `locales/<lang>/LC_MESSAGES` directory.
-pub fn plugin_catalog(plugin_id: &str, lang: &str) -> Translation {
+pub fn plugin_catalog(plugin_id: &str, lang: &str) -> Arc<Translation> {
     cached_catalog(&format!("{plugin_id}:{lang}"), || {
         let path = locales_dir()
             .join(lang)
