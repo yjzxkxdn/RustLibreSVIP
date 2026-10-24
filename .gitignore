@@ -21,3 +21,6 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
+
+# Benchmark scratch (old binaries, separate target dir)
+/target_bench/
