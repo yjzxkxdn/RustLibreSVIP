@@ -1788,6 +1788,7 @@ dependencies = [
  "anyhow",
  "base64",
  "encoding_rs",
+ "flate2",
  "indexmap 2.14.2",
  "regex",
  "ruzstd",
@@ -1854,7 +1855,6 @@ name = "libresvip-web"
 version = "1.0.0"
 dependencies = [
  "libresvip-core",
- "libresvip-middlewares",
  "libresvip-plugins",
 ]
 

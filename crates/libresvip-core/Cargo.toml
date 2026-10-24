@@ -17,6 +17,7 @@ anyhow = { workspace = true }
 regex = { workspace = true }
 encoding_rs = { workspace = true }
 base64 = { workspace = true }
+flate2 = { workspace = true }
 
 # Native builds link the reference C implementation (identical output to the
 # Python build); wasm32 uses a pure-Rust decoder plus a stored-block frame

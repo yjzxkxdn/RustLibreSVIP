@@ -20,10 +20,38 @@ use std::sync::OnceLock;
 use crate::error::{LibreSvipError, Result};
 
 /// `assets/phoneme/pinyin_normal.tsv` — `<char>\t<pinyin>` for every entry of
-/// pypinyin's `pinyin_dict` (first reading, no tone).
-const PINYIN_NORMAL_TSV: &str = include_str!("../../../../../assets/phoneme/pinyin_normal.tsv");
+/// pypinyin's `pinyin_dict` (first reading, no tone). Embedded as a zlib
+/// stream (~40% of the raw size); regenerate the `.zlib` files with
+/// `python scripts/compress_phoneme_assets.py`.
+const PINYIN_NORMAL_TSV_ZLIB: &[u8] =
+    include_bytes!("../../../../../assets/phoneme/pinyin_normal.tsv.zlib");
 /// `assets/phoneme/phrases.tsv` — `<phrase>\t<syllable> <syllable> ...`.
-const PHRASES_TSV: &str = include_str!("../../../../../assets/phoneme/phrases.tsv");
+const PHRASES_TSV_ZLIB: &[u8] = include_bytes!("../../../../../assets/phoneme/phrases.tsv.zlib");
+
+/// The decompressed `<char>\t<pinyin>` table, or `None` on inflate failure.
+static PINYIN_NORMAL_TSV: OnceLock<Option<String>> = OnceLock::new();
+/// The decompressed `<phrase>\t<syllables>` table, or `None` on failure.
+static PHRASES_TSV: OnceLock<Option<String>> = OnceLock::new();
+
+fn pinyin_normal_tsv() -> Option<&'static str> {
+    PINYIN_NORMAL_TSV
+        .get_or_init(|| {
+            crate::compression::zlib_decompress(PINYIN_NORMAL_TSV_ZLIB)
+                .ok()
+                .and_then(|bytes| String::from_utf8(bytes).ok())
+        })
+        .as_deref()
+}
+
+fn phrases_tsv() -> Option<&'static str> {
+    PHRASES_TSV
+        .get_or_init(|| {
+            crate::compression::zlib_decompress(PHRASES_TSV_ZLIB)
+                .ok()
+                .and_then(|bytes| String::from_utf8(bytes).ok())
+        })
+        .as_deref()
+}
 
 /// `zhon.hanzi.characters` — the characters matching Python's `CHINESE_RE`.
 pub fn is_chinese_char(character: char) -> bool {
@@ -95,8 +123,10 @@ fn phrase_data() -> Result<&'static PhraseData> {
 }
 
 fn load_pinyin_dict() -> Result<HashMap<char, String>> {
+    let tsv = pinyin_normal_tsv()
+        .ok_or_else(|| LibreSvipError::msg("pinyin dictionary asset failed to decompress"))?;
     let mut dictionary = HashMap::with_capacity(43_000);
-    for line in PINYIN_NORMAL_TSV.lines() {
+    for line in tsv.lines() {
         let Some((character, pinyin)) = line.split_once('\t') else {
             continue;
         };
@@ -120,9 +150,11 @@ struct PhraseData {
 }
 
 fn load_phrase_data() -> Result<PhraseData> {
+    let tsv = phrases_tsv()
+        .ok_or_else(|| LibreSvipError::msg("pinyin phrase asset failed to decompress"))?;
     let mut phrases = HashMap::with_capacity(48_000);
     let mut prefixes: HashSet<String> = HashSet::with_capacity(220_000);
-    for line in PHRASES_TSV.lines() {
+    for line in tsv.lines() {
         let Some((phrase, syllables)) = line.split_once('\t') else {
             continue;
         };

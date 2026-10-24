@@ -9,7 +9,19 @@ use libresvip_core::core::lyric_phoneme::chinese::is_chinese_char;
 use crate::svp::constants::{DEFAULT_DURATIONS, DEFAULT_PHONE_RATIO};
 
 const PHONEME_CATEGORIES_JSON: &str = include_str!("phoneme_categories.json");
-const PHONEME_DICTIONARY_JSON: &str = include_str!("phoneme_dictionary.json");
+/// Embedded as a zlib stream (~20% of the raw JSON) and inflated on first use;
+/// regenerate with `python scripts/compress_phoneme_assets.py`.
+const PHONEME_DICTIONARY_JSON_ZLIB: &[u8] = include_bytes!("phoneme_dictionary.json.zlib");
+
+fn phoneme_dictionary_json() -> &'static str {
+    static JSON: OnceLock<String> = OnceLock::new();
+    JSON.get_or_init(|| {
+        libresvip_core::compression::zlib_decompress(PHONEME_DICTIONARY_JSON_ZLIB)
+            .ok()
+            .and_then(|bytes| String::from_utf8(bytes).ok())
+            .unwrap_or_default()
+    })
+}
 
 type LanguageMap = HashMap<String, String>;
 
@@ -25,7 +37,7 @@ fn data() -> &'static PhonemeData {
         let categories: HashMap<String, LanguageMap> =
             serde_json::from_str(PHONEME_CATEGORIES_JSON).unwrap_or_default();
         let dictionary: HashMap<String, LanguageMap> =
-            serde_json::from_str(PHONEME_DICTIONARY_JSON).unwrap_or_default();
+            serde_json::from_str(phoneme_dictionary_json()).unwrap_or_default();
         let mut inverse: HashMap<String, LanguageMap> = HashMap::new();
         for (language, mapping) in &dictionary {
             let target = inverse.entry(language.clone()).or_default();

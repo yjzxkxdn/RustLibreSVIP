@@ -13,4 +13,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 libresvip-core = { workspace = true }
 libresvip-plugins = { workspace = true }
-libresvip-middlewares = { workspace = true }
+# No `libresvip-middlewares` here on purpose: the wasm entry only runs
+# load/dump conversions, so depending on it would needlessly pull the
+# `unicode-general-category` tables into the module.

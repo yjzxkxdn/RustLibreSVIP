@@ -111,3 +111,16 @@ mod tests {
         assert_eq!(with_content_size(b"nope", 4), b"nope");
     }
 }
+
+/// Inflates a zlib stream (`python -c "import zlib; zlib.compress(data, 9)"`),
+/// used for the embedded phoneme dictionaries so the wasm data section stays
+/// small; decompression is lazy and one-shot.
+pub fn zlib_decompress(data: &[u8]) -> crate::Result<Vec<u8>> {
+    use std::io::Read;
+    let mut decoder = flate2::read::ZlibDecoder::new(data);
+    let mut out = Vec::new();
+    decoder
+        .read_to_end(&mut out)
+        .map_err(|error| crate::LibreSvipError::msg(format!("zlib decompression failed: {error}")))?;
+    Ok(out)
+}
