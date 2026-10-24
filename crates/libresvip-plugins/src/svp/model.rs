@@ -21,6 +21,61 @@ use crate::svp::constants::{
 };
 use crate::svp::math_utils::{position_to_ticks, py_round, RangeInterval};
 
+/// pydantic's lax `float | None` coercion: Synthesizer V writes
+/// `evenSyllableDuration` as a boolean, which pydantic accepts as `1.0`/`0.0`.
+pub(crate) fn pydantic_float_or_none<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<Option<f64>, D::Error> {
+    struct V;
+    impl<'de> serde::de::Visitor<'de> for V {
+        type Value = Option<f64>;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+            formatter.write_str("a float, a boolean or null")
+        }
+
+        fn visit_none<E: serde::de::Error>(self) -> std::result::Result<Self::Value, E> {
+            Ok(None)
+        }
+
+        fn visit_unit<E: serde::de::Error>(self) -> std::result::Result<Self::Value, E> {
+            Ok(None)
+        }
+
+        fn visit_some<D: Deserializer<'de>>(
+            self,
+            deserializer: D,
+        ) -> std::result::Result<Self::Value, D::Error> {
+            deserializer.deserialize_any(LaxFloatVisitor)
+        }
+    }
+    struct LaxFloatVisitor;
+    impl<'de> serde::de::Visitor<'de> for LaxFloatVisitor {
+        type Value = Option<f64>;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+            formatter.write_str("a float or a boolean")
+        }
+
+        fn visit_f64<E: serde::de::Error>(self, value: f64) -> std::result::Result<Self::Value, E> {
+            Ok(Some(value))
+        }
+
+        fn visit_i64<E: serde::de::Error>(self, value: i64) -> std::result::Result<Self::Value, E> {
+            Ok(Some(value as f64))
+        }
+
+        fn visit_u64<E: serde::de::Error>(self, value: u64) -> std::result::Result<Self::Value, E> {
+            Ok(Some(value as f64))
+        }
+
+        fn visit_bool<E: serde::de::Error>(self, value: bool) -> std::result::Result<Self::Value, E> {
+            Ok(Some(if value { 1.0 } else { 0.0 }))
+        }
+    }
+    deserializer.deserialize_option(V)
+}
+
 // ---------------------------------------------------------------------------
 // Points and parameter curves
 // ---------------------------------------------------------------------------
@@ -436,7 +491,8 @@ pub struct SVNoteAttributes {
     #[serde(
         rename = "evenSyllableDuration",
         alias = "even_syllable_duration",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "pydantic_float_or_none"
     )]
     pub even_syllable_duration: Option<f64>,
     #[serde(rename = "phonemes", skip_serializing_if = "Option::is_none")]
