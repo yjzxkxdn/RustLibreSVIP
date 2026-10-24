@@ -122,8 +122,11 @@ impl Translator {
 fn zh_table(en: &str) -> Option<&'static str> {
     Some(match en {
         "LibreSVIP" => "LibreSVIP",
-        "Rust port of LibreSVIP, with design elements from UtaFormatix3" => {
-            "LibreSVIP 的 Rust 移植，并吸收了 UtaFormatix3 的设计"
+        "Rust implementation based on LibreSVIP 2.9.2 and UtaFormatix3" => {
+            "基于 LibreSVIP 2.9.2 与 UtaFormatix3 的 Rust 实现"
+        }
+        "One engine for 43 singing synthesis formats: LibreSVIP's format plugins and hub model, plus UtaFormatix3's capability matrix, structured warnings and pitch semantics." => {
+            "一套引擎支持 43 种歌声合成格式：LibreSVIP 的格式插件与轴心模型，加上 UtaFormatix3 的能力矩阵、结构化警告与音高语义层。"
         }
         "Based on LibreSVIP 2.9.2 (MIT) and UtaFormatix3 (Apache-2.0; design and algorithms only)" => {
             "基于 LibreSVIP 2.9.2（MIT）与 UtaFormatix3（Apache-2.0，仅借鉴设计与算法）"
@@ -244,8 +247,8 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Browse ..." => "浏览…",
         "Select Folder" => "选择文件夹",
         "Added file" => "已添加文件",
-        "This build of LibreSVIP (Rust port) cannot check for updates online." => {
-            "此版本(LibreSVIP Rust 移植版)无法在线检查更新。"
+        "This build of RustLibreSVIP cannot check for updates online." => {
+            "此版本(RustLibreSVIP)无法在线检查更新。"
         }
         "Open Project Homepage" => "打开项目主页",
         "LibreSVIP is an open-sourced, liberal and extensionable framework that can convert your singing synthesis projects between different file formats." => {
@@ -254,7 +257,7 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "All people should have the right and freedom to choose. That's why we're committed to giving you a second chance to keep your creations free from the constraints of platforms and coterie." => {
             "所有人都应有选择的权利与自由。因此我们致力于给你第二次机会，让你的创作不再受平台与小圈子的束缚。"
         }
-        "Rust port" => "Rust 移植版",
+        "Rust port" => "Rust 实现",
         "Write the syllable (phoneme) layer" => "写入音节（音素）层",
         "This program is running in a restricted (sandboxed) process and cannot write files. Start it normally and trust it in your security software." => {
             "当前程序运行在受限（沙箱）进程中，无法写入文件。请正常启动本程序，并在安全软件中将其设为信任。"

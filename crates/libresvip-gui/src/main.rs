@@ -1,4 +1,4 @@
-//! LibreSVIP desktop GUI (Rust port).
+//! RustLibreSVIP desktop GUI (based on LibreSVIP 2.9.2 and UtaFormatix3).
 //!
 //! A native egui/eframe rebuild of the Python project's Qt Quick interface:
 //! same layout, same Material look, same conversion behaviour.

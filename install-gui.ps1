@@ -35,13 +35,15 @@ Copy-Item -LiteralPath $source -Destination $target -Force
 icacls $target /setintegritylevel Medium | Out-Null
 
 $startMenu = [Environment]::GetFolderPath('Programs')
-$shortcutPath = Join-Path $startMenu 'LibreSVIP (Rust port).lnk'
+$shortcutPath = Join-Path $startMenu 'RustLibreSVIP.lnk'
+$legacyShortcut = Join-Path $startMenu 'LibreSVIP (Rust port).lnk'
+if (Test-Path $legacyShortcut) { Remove-Item -LiteralPath $legacyShortcut -Force }
 $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $target
 $shortcut.WorkingDirectory = $dest
 $shortcut.IconLocation = "$target,0"
-$shortcut.Description = 'LibreSVIP (Rust port)'
+$shortcut.Description = 'RustLibreSVIP (LibreSVIP + UtaFormatix3)'
 $shortcut.Save()
 
 Write-Host "installed: $target"

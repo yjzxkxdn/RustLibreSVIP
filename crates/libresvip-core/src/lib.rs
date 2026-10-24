@@ -29,3 +29,8 @@ pub use plugin::{Middleware, PluginInfo, SvsPlugin};
 
 /// Version of the Python implementation this port tracks.
 pub const VERSION: &str = "2.9.2";
+
+/// The UtaFormatix3 revision whose design this port follows (capability matrix,
+/// structured warnings, pitch semantics, Japanese lyrics, phoneme mapping and
+/// version negotiation). Only the design was adopted; no code was copied.
+pub const UTAFORMATIX3_REVISION: &str = "f3c8335";

@@ -257,7 +257,7 @@ fn menus(app: &mut App, ui: &mut Ui) {
         let label = app.t("Check for Updates");
         if menu_row(ui, &pal, &label, Some(Icon::Refresh), true).clicked() {
             app.update_notice = Some(
-                app.t("This build of LibreSVIP (Rust port) cannot check for updates online."),
+                app.t("This build of RustLibreSVIP cannot check for updates online."),
             );
             ui.close_menu();
         }

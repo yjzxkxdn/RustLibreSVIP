@@ -52,16 +52,17 @@ fn about(app: &mut App, ctx: &egui::Context) {
                     ui.label(RichText::new("RustLibreSVIP").size(24.0).strong());
                     ui.label(
                         RichText::new(app.t(
-                            "Rust port of LibreSVIP, with design elements from UtaFormatix3",
+                            "Rust implementation based on LibreSVIP 2.9.2 and UtaFormatix3",
                         ))
                         .size(Palette::body())
                         .color(pal.muted),
                     );
                     ui.label(
                         RichText::new(format!(
-                            "{}{VERSION} (LibreSVIP {})",
+                            "{}{VERSION} (LibreSVIP {} + UtaFormatix3 {})",
                             app.t("Version: "),
-                            libresvip_core::VERSION
+                            libresvip_core::VERSION,
+                            libresvip_core::UTAFORMATIX3_REVISION
                         ))
                             .size(Palette::body()),
                     );
@@ -80,7 +81,7 @@ fn about(app: &mut App, ctx: &egui::Context) {
                 });
             });
             ui.add_space(8.0);
-            ui.label(app.t("LibreSVIP is an open-sourced, liberal and extensionable framework that can convert your singing synthesis projects between different file formats."));
+            ui.label(app.t("One engine for 43 singing synthesis formats: LibreSVIP's format plugins and hub model, plus UtaFormatix3's capability matrix, structured warnings and pitch semantics."));
             ui.add_space(6.0);
             ui.label(app.t("All people should have the right and freedom to choose. That's why we're committed to giving you a second chance to keep your creations free from the constraints of platforms and coterie."));
             ui.add_space(10.0);
@@ -408,7 +409,7 @@ fn updates_tab(app: &mut App, ui: &mut Ui, pal: &Palette) {
     .clicked()
     {
         app.update_notice = Some(
-            app.t("This build of LibreSVIP (Rust port) cannot check for updates online."),
+            app.t("This build of RustLibreSVIP cannot check for updates online."),
         );
     }
 }

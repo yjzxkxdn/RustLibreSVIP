@@ -1,6 +1,6 @@
 # RustLibreSVIP
 
-**歌声合成工程转换器的 Rust 实现**：桌面 GUI、命令行和 WebAssembly 网页版共用一套转换核心。基于 **LibreSVIP 2.9.2** 的完整移植，并吸收了 **UtaFormatix3** 的若干设计与算法。
+**歌声合成工程转换器的 Rust 实现**：桌面 GUI、命令行和 WebAssembly 网页版共用一套转换核心。**双上游**：**LibreSVIP 2.9.2** 提供格式插件、OpenSVIP 轴心与 CLI/GUI/RPC 交互，**UtaFormatix3** 提供能力矩阵、结构化警告、音高语义层、日文歌词与音素映射等设计与算法。
 
 [中文](#中文) · [English](#english)
 
@@ -14,16 +14,18 @@
 * **11 个中间件**：LibreSVIP 的 6 个（音高变调、工程缩放、歌词发音转换、移除数字与标点、移除短静音、歌词替换）+ 本实现新增的 5 个（日文歌词、音素映射、颤音展开、音高量化、节奏量化）。
 * **一套核心三端共用**：`libresvip-cli`、`libresvip-gui`（egui）、`libresvip-web`（wasm32，零 import，无 wasm-bindgen、无 WASI）。
 
-### 两个来源
+### 两个上游（共同基座）
+
+本项目不是"LibreSVIP 的移植外加一点参考"：两边的产出都在主干上，缺一不可。
 
 | 来源 | 拿来了什么 | 没有拿什么 |
 | --- | --- | --- |
 | **LibreSVIP 2.9.2**（MIT，SoulMelody） | 40 个格式的读写、OpenSVIP `.json` 轴心模型、6 个中间件、CLI/GUI 交互与 RPC 协议 | — |
-| **UtaFormatix3**（Apache-2.0，SderColin） | 只借鉴设计与算法并自行实现：格式能力矩阵、结构化警告、音高语义层、颤音展开、日文歌词、音素映射、中间格式版本协商 | 没有引入它的格式集合；没有采用它的模板生成器方案（见 T9） |
+| **UtaFormatix3**（Apache-2.0，SderColin，参考 `f3c8335`／2025-05） | 只借鉴设计与算法并自行实现：格式能力矩阵、结构化警告、音高语义层、颤音展开、日文歌词、音素映射、中间格式版本协商 | 没有引入它的格式集合；没有采用它的模板生成器方案（见 T9） |
 
 > UtaFormatix3 是 Apache-2.0，本仓库是 MIT。因此**没有复制它的代码**，只吸收上面列出的设计与算法思路。
 
-### UtaFormatix3 带来的能力（逐条）
+### UtaFormatix3 带来的能力（逐条，参考 `f3c8335`）
 
 | 编号 | 能力 | 落在哪 |
 | --- | --- | --- |
@@ -192,11 +194,11 @@ MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者；Uta
 
 ## English
 
-**RustLibreSVIP** is a Rust rewrite of [LibreSVIP](https://github.com/SoulMelody/LibreSVIP) plus selected design ideas from [UtaFormatix3](https://github.com/sdercolin/utaformatix3): 43 singing-voice-synthesis project formats, native CLI, desktop GUI and a zero-import WebAssembly build sharing one engine.
+**RustLibreSVIP** is a Rust implementation built on two upstreams: [LibreSVIP](https://github.com/SoulMelody/LibreSVIP) 2.9.2 (format plugins, the OpenSVIP hub model, CLI/GUI/RPC) and [UtaFormatix3](https://github.com/sdercolin/utaformatix3) (`f3c8335`, design and algorithms only). It handles 43 singing-voice-synthesis project formats through one engine shared by a native CLI, a desktop GUI and a zero-import WebAssembly build.
 
-* **Based on** LibreSVIP 2.9.2 — byte-identical output for the golden fixtures (40/40), plus four intentional fixes of upstream bugs (recorded per format in `testdata/golden/*/meta.json`).
-* **Absorbed from UtaFormatix3** (design only, no code copied): the format-capability matrix, structured warnings, the pitch-semantics layer (RDP / resampling / interpolation / absolute↔relative), vibrato expansion, Japanese lyric detection with CV↔VCV, phoneme mapping and intermediate-format version negotiation. Its template-generator scheme (T9) was not adopted.
-* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 11.99 s → **0.42 s** (a 4-minute, 937-note project).
+* **From LibreSVIP 2.9.2**: all 40 format plugins, the hub model and the CLI/GUI/RPC surface — byte-identical output for the golden fixtures (40/40), plus four intentional fixes of upstream bugs (recorded per format in `testdata/golden/*/meta.json`).
+* **From UtaFormatix3** (design only, no code copied): the format-capability matrix, structured warnings, the pitch-semantics layer (RDP / resampling / interpolation / absolute↔relative), vibrato expansion, Japanese lyric detection with CV↔VCV, phoneme mapping and intermediate-format version negotiation. Its template-generator scheme (T9) was not adopted.
+* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 14.89 s → **0.24 s** (a 4-minute, 937-note project).
 * **WebAssembly ready**: the same core builds to a zero-import `.wasm` (6.01 MB, 1.81 MB brotli); conversions run in the browser and the server only serves static files.
 * **Targets**: native CLI, native GUI (egui) and the web build share one engine. Release artifacts: `libresvip-cli.exe`, `libresvip-gui.exe`, `libresvip-web.zip`.
 
