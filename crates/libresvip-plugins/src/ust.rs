@@ -63,7 +63,7 @@ impl SvsPlugin for UstPlugin {
         let encoding = options.str("encoding", "SHIFT_JIS");
         let import_pitch = options.bool("import_pitch", true);
         let bytes = libresvip_core::io::read(path).at_path(path)?;
-        let text = encode::decode(&bytes, &encoding);
+        let text = encode::decode(&bytes, &encoding)?;
         let ust_project = grammar::parse_ust(&text)?;
         ust_parser::UstParser::new(import_pitch).parse_project(&ust_project)
     }

@@ -3,7 +3,7 @@
 use libresvip_core::core::lyric_phoneme::chinese::get_pinyin_series;
 use libresvip_core::core::tick_counter::shift_tempo_list;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, ParamCurve, Params, Phones, Project, SingingTrack, SongTempo,
@@ -553,7 +553,7 @@ fn apply_normalization(curves: &mut AcepParamCurveList, normalization: &Normaliz
         NORMALIZATION_MINMAX => {
             *curves = curves.minmax_normalize(normalization.scale, normalization.bias);
         }
-        _ => show_warning(format!(
+        _ => show_warning_kind(WarningKind::FallbackApplied, format!(
             "Unknown normalization method: {}",
             normalization.normalize_method
         )),

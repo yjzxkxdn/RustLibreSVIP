@@ -120,7 +120,7 @@ impl SvsPlugin for PocketSingerPlugin {
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let reset_project;
         let project = if project.song_tempo_list.len() != 1 {
-            reset_project = reset_time_axis(project, options.float("tempo", 120.0))?;
+            reset_project = reset_time_axis(project.clone(), options.float("tempo", 120.0))?;
             &reset_project
         } else {
             project

@@ -1,7 +1,7 @@
 //! Port of `libresvip.plugins.ust.ust_parser`.
 
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::model::base::{
     Note, Project, SingingTrack, SongTempo, TimeSignature, Track, DEFAULT_BPM,
 };
@@ -85,6 +85,7 @@ impl UstParser {
             tracks.push(Track::Singing(track));
         }
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: self.tempos.clone(),
             time_signature_list: time_signatures,
@@ -123,7 +124,7 @@ impl UstParser {
             }
         }
         if self.tempos.is_empty() {
-            show_warning("No tempo labels found in the imported project.");
+            show_warning_kind(WarningKind::TempoDropped, "No tempo labels found in the imported project.");
             self.add_tempo(time, DEFAULT_BPM);
         }
         for note in notes {

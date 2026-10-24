@@ -1,0 +1,175 @@
+{
+  "id": "dce3409f-cbd7-4737-8b28-2c5391ea609a",
+  "setup": {
+    "ppq": 480.0,
+    "bpm": 120.0,
+    "time_signature": {
+      "numerator": 4,
+      "denominator": 4
+    },
+    "bpm_events": [
+      {
+        "position": 0,
+        "bpm": 120.0
+      },
+      {
+        "position": 1920,
+        "bpm": 150.0
+      }
+    ],
+    "time_signature_events": [
+      {
+        "position": 0,
+        "time_sig": {
+          "numerator": 4,
+          "denominator": 4
+        }
+      }
+    ]
+  },
+  "main_out": {
+    "id": "c4efa16a-71b9-4862-bdee-77f8daa5817e",
+    "name": "Main Out"
+  },
+  "aux": [],
+  "tracks": [
+    {
+      "id": "88861ba8-f9c8-410e-88da-2bbf22f9442a",
+      "mixer": {
+        "gain": 1.0,
+        "pan": 0.0,
+        "record_arm": false,
+        "solo": false,
+        "mute": false,
+        "output": "c4efa16a-71b9-4862-bdee-77f8daa5817e",
+        "bus": "343b38cc-a2e1-406c-8fab-a2c42ee60947",
+        "sends": []
+      },
+      "name": "Vocal",
+      "color": "orange",
+      "index": 0,
+      "effects": null,
+      "tracks": [],
+      "track_type": "Singer",
+      "instrument": {
+        "Singer": {
+          "name": "Miku",
+          "id": "usid:f060-f5ab-4090-9ef2",
+          "primary_expression": "09273928-610f-4796-b957-2b1ac595bcb3",
+          "loaded_expressions": [],
+          "language": "SingerDefault",
+          "accent": "SingerDefault",
+          "phoneset": "SingerDefault"
+        }
+      },
+      "clips": [
+        {
+          "id": "0c3772fc-db2d-4a87-877f-a722107ce2fd",
+          "clip_id": "0c3772fc-db2d-4a87-877f-a722107ce2fd",
+          "track_id": "88861ba8-f9c8-410e-88da-2bbf22f9442a",
+          "name": "Clip",
+          "color": {
+            "TrackColor": "orange"
+          },
+          "start": 480,
+          "length": 2160,
+          "kind": "Singer",
+          "notes": [
+            {
+              "id": "6b068fa9-ca8c-4413-ab8a-a897fcb01923",
+              "clip_id": "0c3772fc-db2d-4a87-877f-a722107ce2fd",
+              "start": 0,
+              "length": 480,
+              "pitch": 60.0,
+              "lyric": "do",
+              "phonemes": []
+            },
+            {
+              "id": "4120201d-14d1-46cc-9e1a-0f2d888b76bb",
+              "clip_id": "0c3772fc-db2d-4a87-877f-a722107ce2fd",
+              "start": 480,
+              "length": 480,
+              "pitch": 62.0,
+              "lyric": "re",
+              "phonemes": []
+            }
+          ],
+          "parameters": {
+            "Breathiness": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 0,
+                  "value": 0.5
+                }
+              ]
+            },
+            "Tension": {
+              "value": 0.0,
+              "points": []
+            },
+            "PitchTransition": {
+              "value": 0.0,
+              "points": []
+            },
+            "VibratoRate": {
+              "value": 0.0,
+              "points": []
+            },
+            "Character": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 100,
+                  "value": -0.2
+                }
+              ]
+            },
+            "VibratoDepth": {
+              "value": 0.0,
+              "points": []
+            },
+            "Pitch": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 1920,
+                  "value": 0.0
+                },
+                {
+                  "time": 2160,
+                  "value": 1.0
+                }
+              ]
+            },
+            "Roughness": {
+              "value": 0.0,
+              "points": []
+            },
+            "Stability": {
+              "value": 0.0,
+              "points": []
+            },
+            "Dynamics": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 0,
+                  "value": 0.8
+                },
+                {
+                  "time": 480,
+                  "value": 0.4
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "legacy_input": false
+  },
+  "version": 110
+}

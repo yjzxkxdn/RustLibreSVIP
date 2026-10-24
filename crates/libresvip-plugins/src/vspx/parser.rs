@@ -62,6 +62,7 @@ impl VocalSharpParser {
         let mut track_list = self.parse_singing_tracks(&vspx_project.project.tracks)?;
         track_list.extend(self.parse_instrumental_tracks(&vspx_project.project.tracks));
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempos,
             time_signature_list: time_signatures,

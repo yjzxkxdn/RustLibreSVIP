@@ -2,7 +2,7 @@
 
 use libresvip_core::core::tick_counter::skip_tempo_list;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, ParamCurve, Project, SingingTrack, SongTempo, TimeSignature, Track,
@@ -19,6 +19,15 @@ use super::model::{
 use super::singers::singer_id;
 use crate::ppsf::audio::audio_track_duration;
 use crate::ppsf::util::{py_round, random_index};
+
+/// The svip3 protobuf fields are `int32`. Python's `struct` packing raises on
+/// overflow, so a value that does not fit must fail the conversion instead of
+/// silently wrapping around.
+fn i32_of(value: i64) -> Result<i32> {
+    i32::try_from(value).map_err(|_| {
+        LibreSvipError::Validation(format!("value {value} does not fit the svip3 int32 range"))
+    })
+}
 
 pub struct Svip3Generator {
     first_bar_length: i64,
@@ -43,11 +52,11 @@ impl Svip3Generator {
         self.first_bar_length = py_round(first_time_signature.bar_length());
         self.synchronizer = TimeSynchronizer::from_project(&project.song_tempo_list);
         self.song_duration = 0;
-        let beat_list = Self::generate_time_signatures(&project.time_signature_list);
-        let tempo_list = self.generate_song_tempos(&project.song_tempo_list);
-        let track_list = self.generate_tracks(&project.track_list);
+        let beat_list = Self::generate_time_signatures(&project.time_signature_list)?;
+        let tempo_list = self.generate_song_tempos(&project.song_tempo_list)?;
+        let track_list = self.generate_tracks(&project.track_list)?;
         Ok(Svip3Project {
-            duration: self.song_duration as i32,
+            duration: i32_of(self.song_duration)?,
             tempo_list,
             beat_list,
             track_list,
@@ -55,42 +64,51 @@ impl Svip3Generator {
     }
 
     /// `generate_time_signatures`.
-    pub fn generate_time_signatures(time_signature_list: &[TimeSignature]) -> Vec<Svip3SongBeat> {
+    pub fn generate_time_signatures(
+        time_signature_list: &[TimeSignature],
+    ) -> Result<Vec<Svip3SongBeat>> {
         time_signature_list
             .iter()
-            .map(|time_signature| Svip3SongBeat {
-                pos: time_signature.bar_index as i32,
-                beat_size: Some(Svip3BeatSize {
-                    numerator: time_signature.numerator as i32,
-                    denominator: time_signature.denominator as i32,
-                }),
+            .map(|time_signature| {
+                Ok(Svip3SongBeat {
+                    pos: i32_of(time_signature.bar_index)?,
+                    beat_size: Some(Svip3BeatSize {
+                        numerator: i32_of(time_signature.numerator)?,
+                        denominator: i32_of(time_signature.denominator)?,
+                    }),
+                })
             })
             .collect()
     }
 
     /// `generate_song_tempos`.
-    pub fn generate_song_tempos(&self, song_tempo_list: &[SongTempo]) -> Vec<Svip3SongTempo> {
+    pub fn generate_song_tempos(
+        &self,
+        song_tempo_list: &[SongTempo],
+    ) -> Result<Vec<Svip3SongTempo>> {
         let song_tempo_list = skip_tempo_list(song_tempo_list, self.first_bar_length);
         song_tempo_list
             .iter()
-            .map(|song_tempo| Svip3SongTempo {
-                tempo: py_round(song_tempo.bpm * 100.0) as i32,
-                pos: song_tempo.position as i32,
+            .map(|song_tempo| {
+                Ok(Svip3SongTempo {
+                    tempo: i32_of(py_round(song_tempo.bpm * 100.0))?,
+                    pos: i32_of(song_tempo.position)?,
+                })
             })
             .collect()
     }
 
-    fn generate_tracks(&mut self, track_list: &[Track]) -> Vec<ProtoAny> {
+    fn generate_tracks(&mut self, track_list: &[Track]) -> Result<Vec<ProtoAny>> {
         let mut svip3_track_list = Vec::new();
         for track in track_list {
             let color = COLORS[random_index(COLORS.len())];
             let (type_url, value) = match track {
                 Track::Singing(singing_track) => {
-                    let svip3_track = self.generate_singing_track(singing_track, color);
+                    let svip3_track = self.generate_singing_track(singing_track, color)?;
                     (SINGING_TRACK_URL, svip3_track.encode())
                 }
                 Track::Instrumental(instrumental_track) => {
-                    let svip3_track = self.generate_instrumental_track(instrumental_track, color);
+                    let svip3_track = self.generate_instrumental_track(instrumental_track, color)?;
                     (AUDIO_TRACK_URL, svip3_track.encode())
                 }
             };
@@ -99,31 +117,34 @@ impl Svip3Generator {
                 value,
             });
         }
-        svip3_track_list
+        Ok(svip3_track_list)
     }
 
     fn generate_instrumental_track(
         &mut self,
         track: &InstrumentalTrack,
         color: &str,
-    ) -> Svip3AudioTrack {
-        Svip3AudioTrack {
+    ) -> Result<Svip3AudioTrack> {
+        Ok(Svip3AudioTrack {
             name: track.title.clone(),
             color: color.to_owned(),
             mute: track.mute,
             solo: track.solo,
             volume: to_decibel_volume(track.volume) as f32,
             pan: generate_pan(track.pan) as f32,
-            pattern_list: self.generate_audio_patterns(track),
-        }
+            pattern_list: self.generate_audio_patterns(track)?,
+        })
     }
 
-    fn generate_audio_patterns(&mut self, track: &InstrumentalTrack) -> Vec<Svip3AudioPattern> {
+    fn generate_audio_patterns(
+        &mut self,
+        track: &InstrumentalTrack,
+    ) -> Result<Vec<Svip3AudioPattern>> {
         let Some(audio_info) = audio_track_duration(&track.audio_file_path, false) else {
-            return Vec::new();
+            return Ok(Vec::new());
         };
         let audio_duration_in_ticks =
-            py_round(self.synchronizer.get_actual_ticks_from_secs(audio_info)) as i32;
+            i32_of(py_round(self.synchronizer.get_actual_ticks_from_secs(audio_info)))?;
         let mut pattern = Svip3AudioPattern {
             real_dur: audio_duration_in_ticks,
             play_dur: audio_duration_in_ticks,
@@ -132,13 +153,13 @@ impl Svip3Generator {
         if track.offset >= 0 {
             pattern.play_pos = 0;
             pattern.real_pos =
-                py_round(self.synchronizer.get_actual_ticks_from_ticks(track.offset)) as i32;
+                i32_of(py_round(self.synchronizer.get_actual_ticks_from_ticks(track.offset)))?;
         } else {
             // The Python code assigns `play_pos` twice; the first assignment is
             // overwritten immediately, so only the second one has an effect.
-            pattern.play_pos = (i64::from(audio_duration_in_ticks) - track.offset) as i32;
-            pattern.play_pos = track.offset as i32;
-            pattern.real_pos = (-track.offset) as i32;
+            pattern.play_pos = i32_of(i64::from(audio_duration_in_ticks) - track.offset)?;
+            pattern.play_pos = i32_of(track.offset)?;
+            pattern.real_pos = i32_of(-track.offset)?;
         }
         let pattern_end = i64::from(pattern.real_pos) + i64::from(pattern.play_dur);
         if pattern_end > self.song_duration {
@@ -146,11 +167,15 @@ impl Svip3Generator {
         }
         pattern.audio_file_path = track.audio_file_path.clone();
         pattern.name = track.title.clone();
-        vec![pattern]
+        Ok(vec![pattern])
     }
 
-    fn generate_singing_track(&mut self, track: &SingingTrack, color: &str) -> Svip3SingingTrack {
-        Svip3SingingTrack {
+    fn generate_singing_track(
+        &mut self,
+        track: &SingingTrack,
+        color: &str,
+    ) -> Result<Svip3SingingTrack> {
+        Ok(Svip3SingingTrack {
             name: track.title.clone(),
             color: color.to_owned(),
             mute: track.mute,
@@ -158,31 +183,34 @@ impl Svip3Generator {
             volume: to_decibel_volume(track.volume) as f32,
             pan: generate_pan(track.pan) as f32,
             ai_singer_id: singer_id(&track.ai_singer_name).to_owned(),
-            pattern_list: self.generate_singing_patterns(track),
-        }
+            pattern_list: self.generate_singing_patterns(track)?,
+        })
     }
 
-    fn generate_singing_patterns(&mut self, track: &SingingTrack) -> Vec<Svip3SingingPattern> {
+    fn generate_singing_patterns(
+        &mut self,
+        track: &SingingTrack,
+    ) -> Result<Vec<Svip3SingingPattern>> {
         let Some(last_note) = track.note_list.last() else {
-            return Vec::new();
+            return Ok(Vec::new());
         };
         let last_note_end = last_note.end_pos();
         if last_note_end > self.song_duration {
             self.song_duration = last_note_end + self.first_bar_length;
         }
-        vec![Svip3SingingPattern {
+        Ok(vec![Svip3SingingPattern {
             name: track.title.clone(),
             real_pos: 0,
             play_pos: 0,
-            real_dur: (last_note_end + self.first_bar_length) as i32,
-            play_dur: (last_note_end + self.first_bar_length) as i32,
+            real_dur: i32_of(last_note_end + self.first_bar_length)?,
+            play_dur: i32_of(last_note_end + self.first_bar_length)?,
             is_mute: track.mute,
-            note_list: self.generate_notes(&track.note_list),
-            edited_pitch_line: self.generate_pitch_param(&track.edited_params.pitch),
-        }]
+            note_list: self.generate_notes(&track.note_list)?,
+            edited_pitch_line: self.generate_pitch_param(&track.edited_params.pitch)?,
+        }])
     }
 
-    fn generate_notes(&self, note_list: &[Note]) -> Vec<Svip3Note> {
+    fn generate_notes(&self, note_list: &[Note]) -> Result<Vec<Svip3Note>> {
         let mut svip3_note_list = Vec::new();
         for note in note_list {
             let mut consonant_length = 0i32;
@@ -197,10 +225,10 @@ impl Svip3Generator {
                     let phone_start_in_ticks = self
                         .synchronizer
                         .get_actual_ticks_from_secs(phone_start_in_secs);
-                    consonant_length = py_round(
+                    consonant_length = i32_of(py_round(
                         self.synchronizer.get_actual_ticks_from_ticks(note.start_pos)
                             - phone_start_in_ticks,
-                    ) as i32;
+                    ))?;
                 }
             }
             let pronunciation = if is_pinyin(&note.lyric) {
@@ -225,25 +253,25 @@ impl Svip3Generator {
             };
             let mut pronunciation = pronunciation;
             if note.lyric != "-" && !is_pinyin(&pronunciation) {
-                show_warning(format!("Unsupported pinyin: {pronunciation}"));
+                show_warning_kind(WarningKind::PhonemeDropped, format!("Unsupported pinyin: {pronunciation}"));
                 pronunciation.clear();
             }
             let note_duration = self
                 .synchronizer
                 .get_duration_secs_from_ticks(note.start_pos, note.end_pos());
             let length_valid_tag = if note_duration < MIN_NOTE_DURATION {
-                show_warning(format!("Note duration is too short: {}", note.lyric));
+                show_warning_kind(WarningKind::LengthTruncated, format!("Note duration is too short: {}", note.lyric));
                 length_validate_tag::TOO_SHORT
             } else if note_duration > MAX_NOTE_DURATION {
-                show_warning(format!("Note duration is too long: {}", note.lyric));
+                show_warning_kind(WarningKind::LengthTruncated, format!("Note duration is too long: {}", note.lyric));
                 length_validate_tag::TOO_LONG
             } else {
                 length_validate_tag::NONE
             };
             svip3_note_list.push(Svip3Note {
-                start_pos: note.start_pos as i32,
-                width_pos: note.length as i32,
-                key_index: note.key_number as i32,
+                start_pos: i32_of(note.start_pos)?,
+                width_pos: i32_of(note.length)?,
+                key_index: i32_of(note.key_number)?,
                 lyric: note.lyric.clone(),
                 pronouncing: pronunciation,
                 consonant_len: consonant_length,
@@ -261,10 +289,10 @@ impl Svip3Generator {
                 length_validate_tag: length_valid_tag,
             });
         }
-        svip3_note_list
+        Ok(svip3_note_list)
     }
 
-    fn generate_pitch_param(&self, curve: &ParamCurve) -> Vec<Svip3LineParamNode> {
+    fn generate_pitch_param(&self, curve: &ParamCurve) -> Result<Vec<Svip3LineParamNode>> {
         let mut point_list = Vec::new();
         for segment in curve.split_into_segments(-100) {
             if segment.is_empty() {
@@ -281,26 +309,26 @@ impl Svip3Generator {
                 } else if !left_interrupt {
                     left_interrupt = true;
                     point_list.push(Svip3LineParamNode {
-                        pos: (point.x - self.first_bar_length) as i32,
+                        pos: i32_of(point.x - self.first_bar_length)?,
                         value: -1.0,
                     });
                 }
                 let pos = point.x - self.first_bar_length;
                 let value = (point.y + 50) as f64 / 100.0;
                 point_list.push(Svip3LineParamNode {
-                    pos: pos as i32,
+                    pos: i32_of(pos)?,
                     value: value as f32,
                 });
                 prev_pos = point.x;
             }
             if let Some(last_point) = segment.last() {
                 point_list.push(Svip3LineParamNode {
-                    pos: (last_point.x - self.first_bar_length) as i32,
+                    pos: i32_of(last_point.x - self.first_bar_length)?,
                     value: -1.0,
                 });
             }
         }
-        point_list
+        Ok(point_list)
     }
 }
 

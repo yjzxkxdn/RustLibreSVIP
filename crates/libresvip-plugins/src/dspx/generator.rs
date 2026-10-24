@@ -313,9 +313,12 @@ fn generate_note(note: &LibreNote, origin: i64, options: &Options) -> Option<Not
 // `dspx_io.dump_model`
 // ---------------------------------------------------------------------------
 
-pub fn dump_model(model: &DspxModel) -> Vec<u8> {
-    let json = serde_json::to_string(model).unwrap_or_else(|_| String::from("{}"));
+pub fn dump_model(model: &DspxModel) -> libresvip_core::Result<Vec<u8>> {
+    // A "{}" fallback would silently write an empty project; serialization
+    // failure must fail the conversion.
+    let json = serde_json::to_string(model)?;
     // `ZSTD_compress` (one-shot), like Python's `zstd.compress`: the frame
-    // records the decompressed size in its header.
-    libresvip_core::compression::compress(json.as_bytes(), 3).unwrap_or_else(|_| json.into_bytes())
+    // records the decompressed size in its header. An uncompressed fallback
+    // would produce a file the target app cannot open, so propagate errors.
+    libresvip_core::compression::compress(json.as_bytes(), 3)
 }

@@ -49,6 +49,13 @@ impl<'a> UstxGenerator<'a> {
             ustx_time_signatures.push(UTimeSignature::default());
         }
         let first_time_signature = &ustx_time_signatures[0];
+        // Python raises ZeroDivisionError here; a zero beat unit must fail the
+        // conversion instead of panicking.
+        if first_time_signature.beat_unit == 0 {
+            return Err(LibreSvipError::msg(
+                "time signature beat unit must not be zero",
+            ));
+        }
         let first_bar_length =
             1920 * first_time_signature.beat_per_bar / first_time_signature.beat_unit;
 

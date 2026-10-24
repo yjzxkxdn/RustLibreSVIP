@@ -2,7 +2,7 @@
 
 use libresvip_core::core::constants::KEY_IN_OCTAVE;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Note, Project, SingingTrack, SongTempo, TimeSignature, Track};
 use libresvip_core::options::Options;
@@ -211,7 +211,7 @@ fn is_romaji(text: &str) -> bool {
 /// The `phoneme = DEFAULT_PHONEME` branch of `generate_notes`.
 fn fallback_phoneme(lyric: &str) -> String {
     if !is_kana(lyric) && !is_romaji(lyric) {
-        show_warning(format!("Unsupported lyric:  {lyric}"));
+        show_warning_kind(WarningKind::FallbackApplied, format!("Unsupported lyric:  {lyric}"));
         DEFAULT_PHONEME.to_owned()
     } else {
         String::new()

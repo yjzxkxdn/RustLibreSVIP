@@ -27,23 +27,28 @@ impl BasePitchGenerator {
 
     /// `base_pitch` — one sample every `pitch_interval` ticks.
     pub fn base_pitch(&self, part: &UVoicePart) -> Vec<f64> {
+        // Python divides by the fixed constant 5; guard the public field so a
+        // zero/negative interval can never reach the division or the sizing.
+        let pitch_interval = self.pitch_interval.max(1);
         let Some(last_note) = part.notes.last() else {
             return Vec::new();
         };
-        let mut pitches = vec![0.0f64; (last_note.end() / self.pitch_interval) as usize];
+        // Python: `[0.0] * (last_note.end() // pitch_interval)` — a negative
+        // count yields an empty list instead of wrapping around like `as usize`.
+        let mut pitches = vec![0.0f64; (last_note.end() / pitch_interval).max(0) as usize];
         let mut prev_note: Option<&UNote> = None;
 
         let mut index: usize = 0;
         for note in &part.notes {
             if index > 0
                 && index < pitches.len()
-                && self.pitch_start + index as i64 * self.pitch_interval < note.position
+                && self.pitch_start + index as i64 * pitch_interval < note.position
             {
                 pitches[index] = pitches[index - 1];
                 index += 1;
             }
             if index < pitches.len() {
-                let pad = div_floor(note.end() - self.pitch_start, self.pitch_interval)
+                let pad = div_floor(note.end() - self.pitch_start, pitch_interval)
                     - index as i64;
                 if pad >= 0 {
                     let pad = pad as usize;
@@ -71,18 +76,18 @@ impl BasePitchGenerator {
                 continue;
             }
             let start_index =
-                ((note.position - self.pitch_start) as f64 / self.pitch_interval as f64) as i64;
+                ((note.position - self.pitch_start) as f64 / pitch_interval as f64) as i64;
             let start_index = start_index.max(0) as usize;
             let end_index = std::cmp::min(
                 pitches.len(),
-                div_floor(note.end() - self.pitch_start, self.pitch_interval) as usize,
+                div_floor(note.end() - self.pitch_start, pitch_interval) as usize,
             );
             let n_period = vibrato.period
                 / self
                     .time_axis
                     .ms_between_tick_pos(note.position as f64, note.end() as f64);
             for i in start_index..end_index {
-                let n_pos = (self.pitch_start + i as i64 * self.pitch_interval - note.position)
+                let n_pos = (self.pitch_start + i as i64 * pitch_interval - note.position)
                     as f64
                     / note.duration as f64;
                 let point = vibrato.evaluate(n_pos, n_period, note);
@@ -155,7 +160,7 @@ impl BasePitchGenerator {
             let mut prev_point = pitch_points[0].clone();
             let mut index = {
                 let offset = (prev_point.x - self.pitch_start as f64)
-                    / self.pitch_interval as f64;
+                    / pitch_interval as f64;
                 if offset <= 0.0 {
                     0usize
                 } else {
@@ -164,7 +169,7 @@ impl BasePitchGenerator {
             };
             for point in pitch_points.iter().skip(1) {
                 let mut x =
-                    self.pitch_start as f64 + index as f64 * self.pitch_interval as f64;
+                    self.pitch_start as f64 + index as f64 * pitch_interval as f64;
                 while x <= point.x && index < pitches.len() {
                     let shape = prev_point
                         .shape
@@ -183,7 +188,7 @@ impl BasePitchGenerator {
                     };
                     pitches[index] += pitch - base_pitch;
                     index += 1;
-                    x += self.pitch_interval as f64;
+                    x += pitch_interval as f64;
                 }
                 prev_point = point.clone();
             }

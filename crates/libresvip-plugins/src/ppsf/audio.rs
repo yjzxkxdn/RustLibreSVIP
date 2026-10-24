@@ -7,7 +7,7 @@
 //! result the reference produces for files it cannot inspect. Callers use the
 //! duration (and, for `ppsf`, the `only_wav` filter).
 
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 
 /// Port of the `SoundFileInfo` dataclass.
 #[derive(Clone, Debug, PartialEq)]
@@ -98,7 +98,7 @@ pub fn audio_track_info(path: &str, only_wav: bool) -> Option<SoundFileInfo> {
     let data = match libresvip_core::io::read(path) {
         Ok(data) => data,
         Err(_) => {
-            show_warning(format!(
+            show_warning_kind(WarningKind::FieldDropped, format!(
                 "{}{}",
                 libresvip_core::utils::translation::gettext_lazy("Invalid audio file: "),
                 path
@@ -107,7 +107,7 @@ pub fn audio_track_info(path: &str, only_wav: bool) -> Option<SoundFileInfo> {
         }
     };
     let Some(info) = parse_wav(&data) else {
-        show_warning(format!(
+        show_warning_kind(WarningKind::FieldDropped, format!(
             "{}{}",
             libresvip_core::utils::translation::gettext_lazy("Invalid audio file: "),
             path

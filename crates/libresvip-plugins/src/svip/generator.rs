@@ -1,7 +1,7 @@
 //! Port of `libresvip.plugins.svip.binsvip_generator`.
 
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::Result;
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, ParamCurve, Params, Phones, Project, Track, VibratoParam,
@@ -312,13 +312,13 @@ impl BinarySvipGenerator {
             .synchronizer
             .get_duration_secs_from_ticks(note.start_pos, note.end_pos());
         if note_duration < MIN_NOTE_DURATION {
-            show_warning(format!(
+            show_warning_kind(WarningKind::LengthTruncated, format!(
                 "{} {}",
                 gettext_lazy("Note duration is too short:"),
                 note.lyric
             ));
         } else if note_duration > MAX_NOTE_DURATION {
-            show_warning(format!(
+            show_warning_kind(WarningKind::LengthTruncated, format!(
                 "{} {}",
                 gettext_lazy("Note duration is too long:"),
                 note.lyric

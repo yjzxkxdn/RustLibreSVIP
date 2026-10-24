@@ -10,7 +10,7 @@ use std::f64::consts::{E, TAU};
 
 use libresvip_core::core::compat::find_last_index;
 use libresvip_core::core::tick_counter::shift_tempo_list;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{ParamCurve, SongTempo};
 use libresvip_core::model::point::Point;
@@ -333,7 +333,7 @@ pub fn pitch_from_track(data: &TrackPitchData) -> Result<Option<ParamCurve>> {
             }
         };
         if overflow {
-            show_warning("Pitch value is out of bounds");
+            show_warning_kind(WarningKind::PitchDropped, "Pitch value is out of bounds");
         } else {
             if value != current_value || next_pos != Some(pos as f64) {
                 converted_points.push(Point::new(pos, value));

@@ -58,6 +58,7 @@ pub fn parse_project(project: &VoiceVoxProject, options: &InputOptions) -> Resul
         track_list.push(Track::Singing(singing_track));
     }
     Ok(Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list,
         time_signature_list,

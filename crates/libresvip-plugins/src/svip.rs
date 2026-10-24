@@ -152,6 +152,7 @@ mod tests {
 
     fn sample_project() -> Project {
         Project {
+            warnings: Vec::new(),
             version: "SVIP6.0.0".to_owned(),
             song_tempo_list: vec![SongTempo::new(0, 120.0)],
             time_signature_list: vec![TimeSignature::new(0, 4, 4)],

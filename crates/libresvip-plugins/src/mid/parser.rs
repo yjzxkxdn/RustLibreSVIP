@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use libresvip_core::core::constants::{DEFAULT_PHONEME, TICKS_IN_BEAT};
 use libresvip_core::core::tick_counter::find_bar_index;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{
     Note, ParamCurve, Params, Project, SingingTrack, SongTempo, TimeSignature, Track,
@@ -155,6 +155,14 @@ impl MidiParser<'_> {
                 "MIDI file with SMPTE time division is not supported.",
             ));
         }
+        // Python divides TICKS_IN_BEAT by this value and would raise
+        // ZeroDivisionError; zero must fail instead of yielding an infinite
+        // tick rate that silently corrupts every position.
+        if midi_file.ticks_per_beat == 0 {
+            return Err(LibreSvipError::msg(
+                "MIDI file with zero ticks per beat is not supported.",
+            ));
+        }
         self.ticks_per_beat = midi_file.ticks_per_beat;
         let tracks = cumulative_tracks(midi_file);
         if let Some(master_track) = tracks.first() {
@@ -164,6 +172,7 @@ impl MidiParser<'_> {
         self.synchronizer = TimeSynchronizer::from_project(&song_tempo_list);
         let track_list = self.parse_tracks(&tracks)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list,
             time_signature_list: self.time_signatures,
@@ -224,7 +233,7 @@ impl MidiParser<'_> {
             }
         }
         if tempos.is_empty() {
-            show_warning("No tempo labels found in the imported project.");
+            show_warning_kind(WarningKind::TempoDropped, "No tempo labels found in the imported project.");
             tempos.push(SongTempo::new(0, self.options.default_bpm));
         } else {
             tempos.sort_by_key(|tempo| tempo.position);

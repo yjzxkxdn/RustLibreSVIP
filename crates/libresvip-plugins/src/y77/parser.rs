@@ -30,6 +30,7 @@ impl<'a> Y77Parser<'a> {
             .ok_or_else(|| LibreSvipError::msg("missing time signature"))?;
         self.first_bar_length = round_ties_even(first.bar_length());
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, y77_project.bpm)],
             time_signature_list: time_signatures,

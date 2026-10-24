@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Note, Project, SingingTrack, SongTempo, TimeSignature, Track};
 use libresvip_core::model::point::Point;
@@ -81,6 +81,7 @@ impl VxBetaParser {
             track_list.push(Track::Singing(self.parse_track(track)?));
         }
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list,
             time_signature_list,
@@ -114,7 +115,7 @@ impl VxBetaParser {
             }
         }
         if tempos.is_empty() {
-            show_warning(translate(
+            show_warning_kind(WarningKind::TempoDropped, translate(
                 "No tempo labels found in the imported project.",
             ));
             tempos.push(SongTempo::new(0, self.options.default_bpm));

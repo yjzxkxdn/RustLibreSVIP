@@ -76,6 +76,7 @@ impl SynthVEditorParser {
             ));
         }
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempo_list,
             time_signature_list: self.time_signatures.clone(),

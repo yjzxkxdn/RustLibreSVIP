@@ -132,7 +132,7 @@ impl SvsPlugin for DiffSingerPlugin {
                 }
             }
         } else {
-            let reset_project = reset_time_axis(project, DEFAULT_RESET_TEMPO)?;
+            let reset_project = reset_time_axis(project.clone(), DEFAULT_RESET_TEMPO)?;
             let phoneme_table = pinyin::load_phoneme_table(&dict_name)?;
             let generator = note_list::DiffSingerGenerator {
                 phoneme_table: &phoneme_table,

@@ -3,7 +3,7 @@
 
 use libresvip_core::core::lyric_phoneme::japanese::{is_kana, is_romaji};
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Note, Project, SongTempo, TimeSignature, Track};
 use libresvip_core::options::Options;
@@ -244,7 +244,7 @@ fn generate_notes(notes: &[Note]) -> Vec<NoteOut> {
             Some(pronunciation) if !pronunciation.is_empty() => Some(pronunciation.clone()),
             _ => {
                 if !is_kana(&lyric) && !is_romaji(&lyric) {
-                    show_warning(format!("Unsupported lyric:  {lyric}"));
+                    show_warning_kind(WarningKind::FallbackApplied, format!("Unsupported lyric:  {lyric}"));
                     Some(DEFAULT_PHONEME.to_owned())
                 } else {
                     None

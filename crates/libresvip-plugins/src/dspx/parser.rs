@@ -66,6 +66,7 @@ impl DspxParser {
         self.synchronizer = TimeSynchronizer::from_project(&tempos);
         self.master_control = model.content.master.control.clone();
         Project {
+            warnings: Vec::new(),
             version: model.version.clone(),
             song_tempo_list: tempos,
             time_signature_list: time_signatures,

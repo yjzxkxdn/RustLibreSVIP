@@ -7,7 +7,7 @@ use libresvip_core::core::lyric_phoneme::chinese::{get_pinyin_series_with, Pinyi
 use libresvip_core::core::lyric_phoneme::japanese::{is_legato_char, to_romaji};
 use libresvip_core::core::lyric_phoneme::korean::hangul2xsampa;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Params, Project, SingingTrack, SongTempo, TimeSignature, Track};
 use libresvip_core::options::Options;
@@ -338,7 +338,7 @@ impl VocaloidGenerator {
                 language::SIMPLIFIED_CHINESE | language::JAPANESE | language::KOREAN
             )
         {
-            show_warning(
+            show_warning_kind(WarningKind::PhonemeDropped,
                 "Phonemes of all notes were set to \"la\". Please use \"Job\" -> \"Convert Phonemes to Match Languages\" in the menu of VOCALOID to reset them.",
             );
         }

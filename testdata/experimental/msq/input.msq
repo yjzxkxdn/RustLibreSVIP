@@ -1,0 +1,180 @@
+{
+  "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "version": 110,
+  "setup": {
+    "ppq": 480,
+    "bpm": 120.0,
+    "time_signature": {
+      "numerator": 4,
+      "denominator": 4
+    },
+    "bpm_events": [
+      {
+        "position": 0,
+        "bpm": 120.0
+      },
+      {
+        "position": 1920,
+        "bpm": 150.0
+      }
+    ],
+    "time_signature_events": [
+      {
+        "position": 0,
+        "time_sig": {
+          "numerator": 4,
+          "denominator": 4
+        }
+      }
+    ]
+  },
+  "main_out": {
+    "id": "main-out-id",
+    "name": "Main Out"
+  },
+  "aux": [],
+  "tracks": [
+    {
+      "id": "track-1",
+      "track_type": "Singer",
+      "name": "Vocal",
+      "color": "orange",
+      "index": 0,
+      "effects": null,
+      "tracks": [],
+      "mixer": {
+        "gain": 1.0,
+        "pan": 0.0,
+        "record_arm": false,
+        "solo": false,
+        "mute": false,
+        "output": "main-out-id",
+        "sends": []
+      },
+      "instrument": {
+        "Singer": {
+          "name": "Miku",
+          "id": "usid:123456789abcdef012",
+          "loaded_expressions": [],
+          "language": "SingerDefault",
+          "accent": "SingerDefault",
+          "phoneset": "SingerDefault"
+        }
+      },
+      "clips": [
+        {
+          "id": "clip-1",
+          "clip_id": "clip-1",
+          "track_id": "track-1",
+          "name": "Clip",
+          "color": {
+            "TrackColor": "orange"
+          },
+          "start": 480,
+          "length": 1920,
+          "kind": "Singer",
+          "notes": [
+            {
+              "id": "n1",
+              "clip_id": "clip-1",
+              "start": 0,
+              "length": 480,
+              "pitch": 60,
+              "lyric": "do",
+              "phonemes": []
+            },
+            {
+              "id": "n2",
+              "clip_id": "clip-1",
+              "start": 480,
+              "length": 480,
+              "pitch": 62,
+              "lyric": "re",
+              "phonemes": [
+                {
+                  "phoneme": "r",
+                  "time": 0,
+                  "velocity": 100,
+                  "lock_timing": false
+                }
+              ]
+            }
+          ],
+          "parameters": {
+            "Breathiness": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 0,
+                  "value": 0.5
+                }
+              ]
+            },
+            "Tension": {
+              "value": 0.0,
+              "points": []
+            },
+            "PitchTransition": {
+              "value": 0.0,
+              "points": []
+            },
+            "VibratoRate": {
+              "value": 0.0,
+              "points": []
+            },
+            "Character": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 100,
+                  "value": -0.2
+                }
+              ]
+            },
+            "VibratoDepth": {
+              "value": 0.0,
+              "points": []
+            },
+            "Pitch": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 0,
+                  "value": 0.0
+                },
+                {
+                  "time": 240,
+                  "value": 1.0
+                }
+              ]
+            },
+            "Roughness": {
+              "value": 0.0,
+              "points": []
+            },
+            "Stability": {
+              "value": 0.0,
+              "points": []
+            },
+            "Dynamics": {
+              "value": 0.0,
+              "points": [
+                {
+                  "time": 0,
+                  "value": 0.8
+                },
+                {
+                  "time": 480,
+                  "value": 0.4
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "legacy_input": false
+  }
+}

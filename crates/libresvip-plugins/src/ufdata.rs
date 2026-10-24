@@ -10,6 +10,7 @@ use std::path::Path;
 
 use libresvip_core::core::tick_counter::{shift_beat_list, shift_tempo_list, skip_tempo_list};
 use libresvip_core::core::time_sync::TimeSynchronizer;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{IoContext, LibreSvipError, Result};
 use libresvip_core::model::base::{
     Note, ParamCurve, Project, SingingTrack, SongTempo, TimeSignature,
@@ -127,6 +128,9 @@ fn default_format_version() -> i64 {
     1
 }
 
+/// The newest `formatVersion` this build understands.
+const KNOWN_FORMAT_VERSION: i64 = 1;
+
 // ---------------------------------------------------------------------------
 // Plugin
 // ---------------------------------------------------------------------------
@@ -152,6 +156,18 @@ impl SvsPlugin for UfDataPlugin {
         let bytes = libresvip_core::io::read(path).at_path(path)?;
         let text = to_unicode(&bytes);
         let data: UfData = serde_json::from_str(&text)?;
+        // UtaFormatix emits `ImportWarning.IncompatibleFormatSerialization`
+        // for anything newer than the version it knows; mirror that instead of
+        // silently dropping unknown future fields.
+        if data.format_version > KNOWN_FORMAT_VERSION {
+            show_warning_kind(
+                WarningKind::IncompatibleVersion,
+                format!(
+                    "ufdata format version {} is newer than the supported version {}; unknown fields may be dropped",
+                    data.format_version, KNOWN_FORMAT_VERSION
+                ),
+            );
+        }
         parse_project(&data, options.bool("import_pitch", true))
     }
 
@@ -189,6 +205,7 @@ fn parse_project(data: &UfData, import_pitch: bool) -> Result<Project> {
         import_pitch,
     )?;
     Ok(Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list,
         time_signature_list: shift_beat_list(&time_signatures, uf_project.measure_prefix),

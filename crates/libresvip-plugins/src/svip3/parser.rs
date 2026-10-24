@@ -43,6 +43,7 @@ impl<'a> Svip3Parser<'a> {
             Self::parse_song_tempos(&svip3_project.tempo_list, self.first_bar_length);
         let track_list = self.parse_tracks(&svip3_project.track_list)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: self.song_tempo_list.clone(),
             time_signature_list,
@@ -159,6 +160,7 @@ impl<'a> Svip3Parser<'a> {
 
     fn parse_note(&self, svip3_note: &Svip3Note, offset: i64) -> Note {
         Note {
+            attrs: Default::default(),
             start_pos: i64::from(svip3_note.start_pos) + offset,
             length: i64::from(svip3_note.width_pos),
             key_number: i64::from(svip3_note.key_index),

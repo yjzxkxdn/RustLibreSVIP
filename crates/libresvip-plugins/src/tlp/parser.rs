@@ -2,7 +2,7 @@
 
 use libresvip_core::core::tick_counter::shift_tempo_list;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, Project, SingingTrack, SongTempo, TimeSignature, Track,
@@ -71,6 +71,7 @@ impl TuneLabParser {
         self.synchronizer = TimeSynchronizer::from_project(&tempo_list);
         let track_list = self.parse_tracks(&project.tracks)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempo_list,
             time_signature_list,
@@ -186,7 +187,7 @@ impl TuneLabParser {
                     if distance < normalized_duration as f64 {
                         normalized_duration = distance as i64;
                         if normalized_duration > 0 {
-                            show_warning(format!(
+                            show_warning_kind(WarningKind::LengthTruncated, format!(
                                 "{}{}",
                                 translate("Note overlap detected, cutting note "),
                                 tlp_note.lyric
@@ -207,7 +208,7 @@ impl TuneLabParser {
                         },
                     );
                 } else {
-                    show_warning(format!(
+                    show_warning_kind(WarningKind::NoteSkipped, format!(
                         "{}{}",
                         translate("Note overlap detected, skipping note "),
                         tlp_note.lyric

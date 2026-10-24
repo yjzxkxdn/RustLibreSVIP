@@ -127,8 +127,8 @@ impl SynthVGenerator {
             .collect();
         self.synchronizer =
             TimeSynchronizer::new(&project.song_tempo_list, self.first_bar_tick, false, 60.0);
-        for tempo in self.synchronizer.tempo_list.clone() {
-            sv_project.time_sig.tempo.push(Self::generate_tempo(&tempo));
+        for tempo in self.synchronizer.tempo_list.iter() {
+            sv_project.time_sig.tempo.push(Self::generate_tempo(tempo));
         }
         if project
             .time_signature_list
@@ -204,7 +204,7 @@ impl SynthVGenerator {
                     .all(|pair| pair[0].start_pos <= pair[1].start_pos);
                 self.pitch_simulator =
                     GeneratorPitchSimulator::new(self.synchronizer.clone(), &self.note_buffer);
-                sv_track.main_group.parameters = self.generate_params(&singing.edited_params);
+                sv_track.main_group.parameters = self.generate_params(&singing.edited_params)?;
                 if self.options.version_compatibility == VERSION_ABOVE_2_0_0 {
                     sv_track.main_group.pitch_controls = self
                         .generate_pitch_controls(
@@ -300,14 +300,14 @@ impl SynthVGenerator {
         ratio_to_db(volume.max(0.06)).max(-24.0)
     }
 
-    fn generate_params(&mut self, parameters: &Params) -> SVParameters {
+    fn generate_params(&mut self, parameters: &Params) -> Result<SVParameters> {
         let down_sample = self.options.down_sample;
         let loudness = self.generate_param_curve(
             &parameters.volume.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
             &|value: i64| {
-                if value >= 0 {
+                Ok(if value >= 0 {
                     value as f64 / 1000.0 * 12.0
                 } else {
                     ratio_to_db(if value > -997 {
@@ -316,27 +316,37 @@ impl SynthVGenerator {
                         0.0039
                     })
                     .max(-48.0)
-                }
+                })
             },
-        );
+        )?;
+        // Python divides by the raw value and raises ZeroDivisionError on a
+        // zero sample; erroring is more useful than emitting `Infinity`
+        // (serde_json would silently write `null`).
+        let invert = |value: i64| -> Result<f64, LibreSvipError> {
+            if value == 0 {
+                Err(LibreSvipError::msg("division by zero in parameter curve"))
+            } else {
+                Ok(1000.0 / value as f64)
+            }
+        };
         let tension = self.generate_param_curve(
             &parameters.strength.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &|value: i64| 1000.0 / value as f64,
-        );
+            &invert,
+        )?;
         let breathiness = self.generate_param_curve(
             &parameters.breath.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &|value: i64| 1000.0 / value as f64,
-        );
+            &invert,
+        )?;
         let gender = self.generate_param_curve(
             &parameters.gender.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &|value: i64| -1000.0 / value as f64,
-        );
+            &|value: i64| Ok(-invert(value)?),
+        )?;
         let mut sv_params = SVParameters {
             loudness,
             tension,
@@ -349,7 +359,7 @@ impl SynthVGenerator {
                 &parameters.pitch.reduce_sample_rate(down_sample, -100),
             );
         }
-        sv_params
+        Ok(sv_params)
     }
 
     fn generate_pitch_controls(&self, curve: &ParamCurve) -> Vec<SVCurvePitchControl> {
@@ -545,11 +555,11 @@ impl SynthVGenerator {
         curve: &ParamCurve,
         termination: i64,
         default_value: f64,
-        mapping_func: &dyn Fn(i64) -> f64,
-    ) -> SVParamCurve {
+        mapping_func: &dyn Fn(i64) -> Result<f64, LibreSvipError>,
+    ) -> Result<SVParamCurve> {
         let mut sv_curve = SVParamCurve::default();
         if curve.points.is_empty() {
-            return sv_curve;
+            return Ok(sv_curve);
         }
         if self.options.down_sample > 15 {
             sv_curve.mode = "cubic".to_owned();
@@ -560,10 +570,10 @@ impl SynthVGenerator {
                 if curve.points[0].y != termination {
                     sv_curve.points.push(SVPoint::new(
                         0,
-                        mapping_func(curve.points[0].y),
+                        mapping_func(curve.points[0].y)?,
                     ));
                 }
-                return sv_curve;
+                return Ok(sv_curve);
             }
             skipped = 1;
             let valid_index = find_index(&curve.points, |point| point.x >= self.first_bar_tick);
@@ -578,7 +588,7 @@ impl SynthVGenerator {
                 let y0 = curve.points[valid_index as usize].y;
                 sv_curve.points.push(SVPoint::new(
                     ticks_to_position(x0 - self.first_bar_tick),
-                    mapping_func(y0),
+                    mapping_func(y0)?,
                 ));
             }
         }
@@ -612,7 +622,7 @@ impl SynthVGenerator {
                     for tmp_point in &buffer {
                         sv_curve.points.push(SVPoint::new(
                             ticks_to_position(tmp_point.x),
-                            mapping_func(tmp_point.y),
+                            mapping_func(tmp_point.y)?,
                         ));
                     }
                     last_point = buffer.last().copied();
@@ -628,7 +638,7 @@ impl SynthVGenerator {
                     .points
                     .push(SVPoint::new(ticks_to_position(last.x + min_interval), default_value));
             }
-            return sv_curve;
+            return Ok(sv_curve);
         }
         if last_point
             .map(|last| last.x + min_interval < buffer[0].x)
@@ -650,7 +660,7 @@ impl SynthVGenerator {
         for tmp_point in &buffer {
             sv_curve.points.push(SVPoint::new(
                 ticks_to_position(tmp_point.x),
-                mapping_func(tmp_point.y),
+                mapping_func(tmp_point.y)?,
             ));
         }
         let last_point = *buffer.last().unwrap_or(&Point::default());
@@ -660,7 +670,7 @@ impl SynthVGenerator {
                 .points
                 .push(SVPoint::new(ticks_to_position(last_point.x + min_interval), default_value));
         }
-        sv_curve
+        Ok(sv_curve)
     }
 
     fn generate_notes_with_phones(&self, notes: &[Note]) -> Vec<SVNote> {
@@ -953,6 +963,7 @@ mod phoneme_layer_tests {
 
     fn project(lyric: &str, pronunciation: Option<&str>) -> Project {
         Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, 120.0)],
             time_signature_list: vec![TimeSignature::default()],

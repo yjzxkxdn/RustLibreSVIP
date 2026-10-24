@@ -1,11 +1,10 @@
-//! Port of `libresvip.plugins.ust.interpolation`.
+//! TODO(hub-v2): only the UTAU `PitchBendMode` mapping remains here; the
+//! shape machinery lives in `libresvip_core::semantics::pitch::interpolation`
+//! since the T4 migration.
 
 use libresvip_core::model::point::Point;
+use libresvip_core::semantics::pitch::interpolation::{interpolate as interpolate_with, CurveShape};
 
-use super::math::{
-    interpolate_cosine_ease_in, interpolate_cosine_ease_in_out, interpolate_cosine_ease_out,
-    interpolate_linear,
-};
 use super::model::PitchBendMode;
 
 /// `interpolate`.
@@ -15,13 +14,11 @@ pub fn interpolate(
     curve_type: PitchBendMode,
     sampling_interval_tick: i64,
 ) -> Vec<Point> {
-    let input_data = [last_point, this_point];
-    match curve_type {
-        PitchBendMode::S => interpolate_linear(&input_data, sampling_interval_tick),
-        PitchBendMode::J => interpolate_cosine_ease_in(&input_data, sampling_interval_tick),
-        PitchBendMode::R => interpolate_cosine_ease_out(&input_data, sampling_interval_tick),
-        PitchBendMode::Empty => {
-            interpolate_cosine_ease_in_out(&input_data, sampling_interval_tick)
-        }
-    }
+    let shape = match curve_type {
+        PitchBendMode::S => CurveShape::Linear,
+        PitchBendMode::J => CurveShape::EaseIn,
+        PitchBendMode::R => CurveShape::EaseOut,
+        PitchBendMode::Empty => CurveShape::EaseInOut,
+    };
+    interpolate_with(last_point, this_point, shape, sampling_interval_tick)
 }

@@ -2,7 +2,7 @@
 
 use libresvip_core::core::lyric_phoneme::japanese::is_kana;
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Note, ParamCurve, Project, SongTempo, TimeSignature, Track};
 use libresvip_core::utils::text::uuid_str;
@@ -103,7 +103,7 @@ impl Generator {
         let lyric = if is_kana(&note.lyric) {
             note.lyric.clone()
         } else {
-            show_warning(format!(
+            show_warning_kind(WarningKind::FallbackApplied, format!(
                 "{} {}",
                 translate("Unsupported lyric: "),
                 note.lyric

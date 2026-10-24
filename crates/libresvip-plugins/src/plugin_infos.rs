@@ -101,6 +101,19 @@ pub const INFO_DV: PluginInfo = PluginInfo {
 };
 pub const INFO_DV_VERSION: &str = "1.0.0";
 
+pub const INFO_GJ: PluginInfo = PluginInfo {
+    id: "gj",
+    name: "Gejigeji",
+    author: "FlutyDeer",
+    website: "https://space.bilibili.com/386270936",
+    file_format: "Gejigeji project file",
+    description: "Conversion plugin for Gejigeji project file.
+Only Gejigeji v2.0 spec is supported.",
+    suffixes: &["gj"],
+    icon_base64: None,
+};
+pub const INFO_GJ_VERSION: &str = "1.7.3";
+
 pub const INFO_JSON: PluginInfo = PluginInfo {
     id: "json",
     name: "JsonSvip",
@@ -136,6 +149,18 @@ pub const INFO_MID: PluginInfo = PluginInfo {
     icon_base64: None,
 };
 pub const INFO_MID_VERSION: &str = "1.0.0";
+
+pub const INFO_MSQ: PluginInfo = PluginInfo {
+    id: "msq",
+    name: "Mikoto Studio",
+    author: "LibreSVIP",
+    website: "https://github.com/LibreSVIP/LibreSVIP",
+    file_format: "Mikoto Studio Project file",
+    description: "Conversion plugin for Mikoto Studio project file",
+    suffixes: &["msq"],
+    icon_base64: None,
+};
+pub const INFO_MSQ_VERSION: &str = "1.0.0";
 
 pub const INFO_MTP: PluginInfo = PluginInfo {
     id: "mtp",
@@ -388,6 +413,18 @@ pub const INFO_VPR: PluginInfo = PluginInfo {
     icon_base64: None,
 };
 pub const INFO_VPR_VERSION: &str = "1.0.0";
+
+pub const INFO_VSP: PluginInfo = PluginInfo {
+    id: "vsp",
+    name: "VocalinaStudio",
+    author: "SoulMelody",
+    website: "https://space.bilibili.com/175862486",
+    file_format: "Vocalina Studio project file",
+    description: "Conversion plugin for vsp file",
+    suffixes: &["vsp"],
+    icon_base64: None,
+};
+pub const INFO_VSP_VERSION: &str = "1.0.0";
 
 pub const INFO_VSHP: PluginInfo = PluginInfo {
     id: "vshp",

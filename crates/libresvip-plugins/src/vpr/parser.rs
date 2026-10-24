@@ -7,7 +7,7 @@ use libresvip_core::core::constants::{
     DEFAULT_CHINESE_LYRIC, DEFAULT_ENGLISH_LYRIC, DEFAULT_JAPANESE_LYRIC, DEFAULT_KOREAN_LYRIC,
 };
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::Result;
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, Params, Project, SingingTrack, SongTempo, TimeSignature, Track,
@@ -90,6 +90,7 @@ impl<'a> VocaloidParser<'a> {
             self.parse_time_signatures(&vpr_project.master_track.time_sig.events)?;
         self.time_signatures = time_signatures;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list,
             time_signature_list: self.time_signatures.clone(),
@@ -303,7 +304,7 @@ impl<'a> VocaloidParser<'a> {
                     if distance < normalized_duration {
                         normalized_duration = distance;
                         if normalized_duration > 0 {
-                            show_warning(format!("{CUT_NOTE_WARNING}{}", note.lyric));
+                            show_warning_kind(WarningKind::LengthTruncated, format!("{CUT_NOTE_WARNING}{}", note.lyric));
                         }
                     }
                 }
@@ -324,13 +325,14 @@ impl<'a> VocaloidParser<'a> {
                         },
                     );
                 } else {
-                    show_warning(format!("{SKIP_NOTE_WARNING}{}", note.lyric));
+                    show_warning_kind(WarningKind::NoteSkipped, format!("{SKIP_NOTE_WARNING}{}", note.lyric));
                 }
                 next_pos = Some(note.pos);
             }
         }
         if !pitch_points.is_empty() {
-            pitch_points.insert(0, Point::start_point());
+            pitch_points.push(Point::start_point());
+            pitch_points.rotate_right(1);
             pitch_points.push(Point::end_point());
         }
         (note_list, pitch_points)

@@ -6,7 +6,7 @@
 
 use libresvip_core::core::tick_counter::{shift_beat_list, skip_tempo_list};
 use libresvip_core::core::time_sync::TimeSynchronizer;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, ParamCurve, Params, Project, SingingTrack, SongTempo, TimeSignature,
@@ -204,7 +204,7 @@ pub fn generate_project(project: &Project, options: &OutputOptions) -> Result<St
         default_track.title = "Track".to_owned();
         singing_tracks.push(&default_track);
     } else if !matches!(options.default_lang_id, 0 | 2 | 4) {
-        show_warning(format!(
+        show_warning_kind(WarningKind::PhonemeDropped, format!(
             "Phonemes of all notes were set to \"la\". Please use \"Lyrics\" -> \"Convert Phonemes\" in the menu of VOCALOID{} to reset them.",
             if version == VsqxVersion::Vsq3 { 3 } else { 4 }
         ));

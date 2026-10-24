@@ -645,6 +645,7 @@ mod tests {
     /// phonemes in ACE Studio.
     fn project_with(notes: &[(&str, Option<&str>)]) -> Project {
         Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, 120.0)],
             time_signature_list: vec![TimeSignature::default()],

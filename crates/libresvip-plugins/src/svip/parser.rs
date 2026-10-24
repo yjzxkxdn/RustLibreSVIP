@@ -125,6 +125,7 @@ impl BinarySvipParser {
 
     fn parse_note(&self, note: &XsClass) -> Result<Note> {
         let mut result = Note {
+            attrs: Default::default(),
             start_pos: note.i64("start_pos")?,
             length: note.i64("width_pos")?,
             key_number: note.i64("key_index")? - 12,

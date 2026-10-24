@@ -47,6 +47,7 @@ impl DiffSingerParser {
         let note_list = self.parse_notes(ds_items, &synchronizer)?;
         let pitch = self.parse_pitch(ds_items, &synchronizer)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list,
             time_signature_list: vec![TimeSignature::new(0, 4, 4)],

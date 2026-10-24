@@ -77,6 +77,7 @@ impl DeepVocalParser {
         let mut track_list = singing_tracks;
         track_list.extend(instrumental_tracks);
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             time_signature_list: time_signatures,
             song_tempo_list: tempos,

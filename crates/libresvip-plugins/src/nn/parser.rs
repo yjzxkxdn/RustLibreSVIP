@@ -40,6 +40,7 @@ impl<'a> NiaoNiaoParser<'a> {
             .clone()
             .ok_or_else(|| LibreSvipError::Parse("missing NIAONiao info line".to_owned()))?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, info_line.tempo)],
             time_signature_list: vec![TimeSignature::new(

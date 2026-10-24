@@ -65,17 +65,21 @@ impl SvsPlugin for VfpPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let reset_required = project.song_tempo_list.len() != 1;
-        let project = if reset_required {
+        // Borrow the project when no reset is needed instead of cloning
+        // the whole thing just to unify the branch type.
+        let reset;
+        let project_ref: &Project = if reset_required {
             if project.song_tempo_list.is_empty() {
                 return Err(LibreSvipError::msg("no tempo found"));
             }
-            reset_time_axis(project, options.float("tempo", 120.0))?
+            reset = reset_time_axis(project.clone(), options.float("tempo", 120.0))?;
+            &reset
         } else {
-            project.clone()
+            &project
         };
         let mut generator = generator::VOXFactoryGenerator::new(options);
-        let vox_project = generator.generate_project(&project)?;
-        let text = python_json_spaced(&serde_json::to_string(&vox_project)?);
+        let vox_project = generator.generate_project(project_ref)?;
+        let text = crate::python_json::to_spaced_json(&vox_project)?;
 
         let mut audio_blobs: Vec<(&String, Vec<u8>)> = Vec::new();
         for (name, audio_path) in &generator.audio_paths {
@@ -117,31 +121,6 @@ impl SvsPlugin for VfpPlugin {
     }
 }
 
-/// `json.dumps(..., ensure_ascii=False)` formatting: the default separators are
-/// `", "` and `": "`, so a compact serde string gets one space after every
-/// structural comma/colon (never inside strings).
-fn python_json_spaced(compact: &str) -> String {
-    let mut output = String::with_capacity(compact.len() + compact.len() / 8);
-    let mut in_string = false;
-    let mut escaped = false;
-    for character in compact.chars() {
-        output.push(character);
-        if in_string {
-            if escaped {
-                escaped = false;
-            } else if character == '\\' {
-                escaped = true;
-            } else if character == '"' {
-                in_string = false;
-            }
-        } else if character == '"' {
-            in_string = true;
-        } else if character == ',' || character == ':' {
-            output.push(' ');
-        }
-    }
-    output
-}
 
 fn read_zip_entry(bytes: &[u8], name: &str) -> Result<Vec<u8>> {
     let mut archive = ::zip::ZipArchive::new(Cursor::new(bytes))

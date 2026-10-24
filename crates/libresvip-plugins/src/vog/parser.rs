@@ -20,6 +20,7 @@ impl<'a> VogenParser<'a> {
 
     pub fn parse_project(&self, vogen_project: &VogenProject) -> Result<Project> {
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: vec![SongTempo::new(0, vogen_project.bpm0)],
             time_signature_list: vec![self.parse_time_signature(&vogen_project.time_sig0)?],

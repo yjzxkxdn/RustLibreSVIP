@@ -93,7 +93,8 @@ pub fn parse_project(bytes: &[u8], path_display: &str, options: &InputOptions) -
         .ok_or_else(|| LibreSvipError::Message("no part with measures".to_owned()))?;
 
     let mut parser = MusicXmlParser::new(options, root);
-    let (time_signatures, mut tempos, import_tick_rate, divisions) = parser.parse_master_track(master);
+    let (time_signatures, mut tempos, import_tick_rate, divisions) =
+        parser.parse_master_track(master)?;
 
     let mut tracks: Vec<SingingTrack> = Vec::new();
     let mut track_fermatas: Vec<Vec<FermataInfo>> = Vec::new();
@@ -129,6 +130,7 @@ pub fn parse_project(bytes: &[u8], path_display: &str, options: &InputOptions) -
     }
 
     let mut project = Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list: tempos,
         time_signature_list: time_signatures,
@@ -421,21 +423,28 @@ impl<'a> MusicXmlParser<'a> {
     fn parse_master_track(
         &mut self,
         part_node: Node<'a, 'a>,
-    ) -> (Vec<TimeSignature>, Vec<SongTempo>, f64, i64) {
+    ) -> Result<(Vec<TimeSignature>, Vec<SongTempo>, f64, i64)> {
         let measure_nodes = children_named(part_node, "measure");
         let Some(first_measure) = measure_nodes.first() else {
-            return (
-                Vec::new(),
-                Vec::new(),
-                0.0,
-                0,
-            );
+            return Ok((Vec::new(), Vec::new(), 0.0, 0));
         };
         let first_attributes = child(*first_measure, "attributes");
+        // Python asserts that the first measure declares <divisions> and then
+        // divides by it; a missing or zero value would silently poison every
+        // tick with an infinite tick rate instead of failing the conversion.
         let divisions = first_attributes
             .and_then(|attributes| child(attributes, "divisions"))
             .and_then(int_text)
-            .unwrap_or(0);
+            .ok_or_else(|| {
+                LibreSvipError::Parse(
+                    "MusicXML first measure must declare <divisions>".to_owned(),
+                )
+            })?;
+        if divisions == 0 {
+            return Err(LibreSvipError::Parse(
+                "MusicXML <divisions> must not be zero".to_owned(),
+            ));
+        }
         let import_tick_rate = TICKS_IN_BEAT as f64 / divisions as f64;
 
         let mut time_signatures: Vec<TimeSignature> = Vec::new();
@@ -507,7 +516,7 @@ impl<'a> MusicXmlParser<'a> {
                 _ => deduped.push(tempo),
             }
         }
-        (time_signatures, deduped, import_tick_rate, divisions)
+        Ok((time_signatures, deduped, import_tick_rate, divisions))
     }
 
     fn parse_track(

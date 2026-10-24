@@ -118,7 +118,7 @@ impl SvsPlugin for DspxPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let model = generator::generate_project(project, options);
-        let data = generator::dump_model(&model);
+        let data = generator::dump_model(&model)?;
         libresvip_core::io::write(path, data).at_path(path)?;
         Ok(())
     }

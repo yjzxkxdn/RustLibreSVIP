@@ -35,6 +35,7 @@ impl<'a> VoxFactoryParser<'a> {
         let time_signature = self.parse_time_signature(&vox_project.time_signature)?;
         let track_list = self.parse_tracks(vox_project)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempos,
             time_signature_list: vec![time_signature],

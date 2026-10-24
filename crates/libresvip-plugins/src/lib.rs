@@ -10,6 +10,8 @@
 //! a `PLUGIN` static implementing [`libresvip_core::plugin::SvsPlugin`].
 
 pub mod plugin_infos;
+pub mod capabilities;
+pub mod python_json;
 pub mod interval_dict;
 pub mod stub;
 
@@ -22,9 +24,11 @@ pub mod ccs;
 pub mod ds;
 pub mod dspx;
 pub mod dv;
+pub mod gj;
 pub mod json;
 pub mod lrc;
 pub mod mid;
+pub mod msq;
 pub mod mtp;
 pub mod musicxml;
 pub mod nn;
@@ -50,6 +54,7 @@ pub mod vshp;
 pub mod vspx;
 pub mod vsq;
 pub mod vsqx;
+pub mod vsp;
 pub mod vvproj;
 pub mod vxf;
 pub mod xvsq;
@@ -72,9 +77,11 @@ fn implemented_instances() -> Vec<&'static dyn SvsPlugin> {
         &ds::PLUGIN as &'static dyn SvsPlugin,
         &dspx::PLUGIN as &'static dyn SvsPlugin,
         &dv::PLUGIN as &'static dyn SvsPlugin,
+        &gj::PLUGIN as &'static dyn SvsPlugin,
         &json::PLUGIN as &'static dyn SvsPlugin,
         &lrc::PLUGIN as &'static dyn SvsPlugin,
         &mid::PLUGIN as &'static dyn SvsPlugin,
+        &msq::PLUGIN as &'static dyn SvsPlugin,
         &mtp::PLUGIN as &'static dyn SvsPlugin,
         &musicxml::PLUGIN as &'static dyn SvsPlugin,
         &nn::PLUGIN as &'static dyn SvsPlugin,
@@ -100,6 +107,7 @@ fn implemented_instances() -> Vec<&'static dyn SvsPlugin> {
         &vspx::PLUGIN as &'static dyn SvsPlugin,
         &vsq::PLUGIN as &'static dyn SvsPlugin,
         &vsqx::PLUGIN as &'static dyn SvsPlugin,
+        &vsp::PLUGIN as &'static dyn SvsPlugin,
         &vvproj::PLUGIN as &'static dyn SvsPlugin,
         &vxf::PLUGIN as &'static dyn SvsPlugin,
         &xvsq::PLUGIN as &'static dyn SvsPlugin,

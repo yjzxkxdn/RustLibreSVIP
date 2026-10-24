@@ -27,6 +27,7 @@ fn build_segment(
 ) -> Project {
     let segment_notes = buffer.iter().map(|index| notes[*index].clone()).collect();
     Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list: song_tempo_list.to_vec(),
         time_signature_list: vec![TimeSignature::new(0, 4, 4)],
@@ -72,7 +73,7 @@ pub fn split_into_segments(
     // not remapped by `reset_time_axis`) while the segment project uses the
     // reset tempo list.
     let source = source.clone();
-    let reset_project = reset_time_axis(project, DEFAULT_RESET_TEMPO)?;
+    let reset_project = reset_time_axis(project.clone(), DEFAULT_RESET_TEMPO)?;
     let mut notes = source.note_list.clone();
     let mut segments: Vec<(f64, Project, f64)> = Vec::new();
 

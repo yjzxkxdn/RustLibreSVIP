@@ -53,6 +53,7 @@ impl<'a> PiaproStudioNtParser<'a> {
                 .map(libresvip_core::model::base::Track::Instrumental),
         );
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempos,
             time_signature_list: time_signatures,

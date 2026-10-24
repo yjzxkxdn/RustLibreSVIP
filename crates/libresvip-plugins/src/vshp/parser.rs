@@ -71,6 +71,7 @@ impl VocalShifterParser {
         let time_signature_list = self.parse_time_signature(&data.project_metadata);
         let track_list = self.parse_track_list(data)?;
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list,
             time_signature_list,

@@ -75,13 +75,8 @@ fn sv_g2p_one(buffer: &[String], language: Option<&str>) -> Vec<String> {
             buffer
                 .iter()
                 .map(|part| {
-                    let stripped = strip_trailing_digits(part);
-                    let stripped = stripped.trim();
-                    if stripped.is_empty() {
-                        part.clone()
-                    } else {
-                        stripped.to_owned()
-                    }
+                    libresvip_core::core::lyric_phoneme::cantonese::toneless_or_original(part)
+                        .unwrap_or_else(|_| part.clone())
                 })
                 .collect(),
             "l a",
@@ -103,18 +98,6 @@ fn sv_g2p_one(buffer: &[String], language: Option<&str>) -> Vec<String> {
                 .unwrap_or_else(|| default_phoneme.to_owned())
         })
         .collect()
-}
-
-fn strip_trailing_digits(text: &str) -> String {
-    let mut trimmed = text;
-    while let Some(last) = trimmed.chars().last() {
-        if last.is_ascii_digit() {
-            trimmed = &trimmed[..trimmed.len() - last.len_utf8()];
-        } else {
-            break;
-        }
-    }
-    trimmed.to_owned()
 }
 
 /// `sv_g2p`.
@@ -206,14 +189,18 @@ pub fn default_phone_marks(phoneme: &str, language: &str) -> Vec<f64> {
         return res;
     }
     if let Some(categories) = get_phoneme_categories(&phoneme_parts, language) {
-        let mut index = 0usize;
-        if matches!(categories[0].as_str(), "vowel" | "diphthong") {
-            res[index] = DEFAULT_DURATIONS.get(&categories[0]).unwrap_or(0.0);
-            index += 1;
-        }
-        if res_len > index {
-            for slot in &mut res[index..res_len] {
-                *slot = DEFAULT_PHONE_RATIO;
+        // Python's walrus binding is falsy for an empty category list (an
+        // empty phoneme string with a known language), so the block is skipped.
+        if let Some(first) = categories.first() {
+            let mut index = 0usize;
+            if matches!(first.as_str(), "vowel" | "diphthong") {
+                res[index] = DEFAULT_DURATIONS.get(first).unwrap_or(0.0);
+                index += 1;
+            }
+            if res_len > index {
+                for slot in &mut res[index..res_len] {
+                    *slot = DEFAULT_PHONE_RATIO;
+                }
             }
         }
     }

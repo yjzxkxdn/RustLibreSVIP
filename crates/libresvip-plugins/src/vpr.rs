@@ -131,8 +131,7 @@ impl SvsPlugin for VprPlugin {
         let output_options = generator::OutputOptions::from_options(options);
         let mut generator = generator::VocaloidGenerator::new(output_options);
         let vpr_project = generator.generate_project(project)?;
-        let compact = serde_json::to_string(&vpr_project)?;
-        let text = python_json_spaced(&compact);
+        let text = crate::python_json::to_spaced_json(&vpr_project)?;
 
         // `zipfile.ZipFile.writestr` for str data sets `0o600 << 16`.
         const FILE_EXTERNAL_ATTR: u32 = 0o600u32 << 16;
@@ -210,28 +209,3 @@ fn extract_audio(path: &Path, bytes: &[u8], vpr_project: &model::VocaloidProject
     Ok(())
 }
 
-/// `json.dumps(..., ensure_ascii=False)` formatting: the default separators are
-/// `", "` and `": "`, so a compact serde string gets one space after every
-/// structural comma/colon (never inside strings).
-pub fn python_json_spaced(compact: &str) -> String {
-    let mut output = String::with_capacity(compact.len() + compact.len() / 8);
-    let mut in_string = false;
-    let mut escaped = false;
-    for character in compact.chars() {
-        output.push(character);
-        if in_string {
-            if escaped {
-                escaped = false;
-            } else if character == '\\' {
-                escaped = true;
-            } else if character == '"' {
-                in_string = false;
-            }
-        } else if character == '"' {
-            in_string = true;
-        } else if character == ',' || character == ':' {
-            output.push(' ');
-        }
-    }
-    output
-}

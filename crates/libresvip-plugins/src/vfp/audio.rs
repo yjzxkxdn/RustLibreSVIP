@@ -7,7 +7,7 @@
 
 use std::path::Path;
 
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::utils::translation::gettext_lazy;
 
 pub struct AudioTrackInfo {
@@ -20,7 +20,7 @@ pub fn audio_track_info(path: &Path) -> Option<AudioTrackInfo> {
     let bytes = match libresvip_core::io::read(path) {
         Ok(bytes) => bytes,
         Err(_) => {
-            show_warning(format!(
+            show_warning_kind(WarningKind::FieldDropped, format!(
                 "{}{}",
                 gettext_lazy("Invalid audio file: "),
                 path.display()

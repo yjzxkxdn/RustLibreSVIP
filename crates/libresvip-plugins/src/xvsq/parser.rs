@@ -398,6 +398,7 @@ pub fn parse_project(bytes: &[u8], options: &InputOptions) -> Result<Project> {
     }
     track_list.extend(parser.parse_instrumental_tracks(&file.bgm_files, tick_prefix));
     Ok(Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list: tempos,
         time_signature_list: parser.time_signatures,

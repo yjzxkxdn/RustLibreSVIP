@@ -4,14 +4,14 @@
 //!
 //! * the modern format: a ZIP archive holding `ppsf.json` (JSON model of the
 //!   NT project) — see [`model`], [`parser`] and [`generator`];
-//! * the legacy binary `PPSF` chunk format — **not ported yet** (it needs the
-//!   construct-based `legacy_model` and a 40 KB byte-template generator). The
-//!   `use_legacy_format` output option is exposed, but selecting it returns
-//!   [`LibreSvipError::NotImplemented`].
+//! * the legacy binary `PPSF` chunk format — see [`legacy`] and
+//!   [`legacy_generator`].
 
 pub(crate) mod audio;
 pub(crate) mod generator;
 pub(crate) mod interval_dict;
+pub(crate) mod legacy;
+pub(crate) mod legacy_generator;
 pub(crate) mod model;
 pub(crate) mod parser;
 pub(crate) mod util;
@@ -71,7 +71,12 @@ impl SvsPlugin for PpsfPlugin {
             let ppsf_project = model::PpsfProject::from_json(&text)?;
             parser::PiaproStudioNtParser::new(options).parse_project(ppsf_project)
         } else if content.starts_with(b"PPSF") {
-            Err(LibreSvipError::NotImplemented)
+            legacy::parse_legacy_project(
+                &content,
+                legacy::LegacyInputOptions {
+                    import_pitch: options.bool("import_pitch", true),
+                },
+            )
         } else {
             Err(LibreSvipError::InvalidFileType)
         }
@@ -79,7 +84,9 @@ impl SvsPlugin for PpsfPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         if options.bool("use_legacy_format", false) {
-            return Err(LibreSvipError::NotImplemented);
+            let bytes = legacy_generator::generate_legacy_project(project)?;
+            libresvip_core::io::write(path, bytes).at_path(path)?;
+            return Ok(());
         }
         let ppsf_project = generator::PiaproStudioGenerator::new(options).generate_project(project)?;
         let text = ppsf_project.to_json()?;

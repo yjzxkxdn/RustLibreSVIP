@@ -7,6 +7,10 @@ use libresvip_core::model::base::{
     Note, ParamCurve, Params, Project, SingingTrack, SongTempo, TimeSignature, Track,
 };
 
+use std::sync::OnceLock;
+
+use regex::Regex;
+
 use super::ini::Ini;
 use super::midi::{parse_midi, tempo2bpm, MetaEvent, MidiEventKind, MidiTrack};
 use crate::vsqx::vocaloid::{
@@ -14,6 +18,14 @@ use crate::vsqx::vocaloid::{
 };
 
 pub const BREATH_PATTERN: &str = r"br[1-5]";
+
+/// The breath-note pattern is constant; compile it once instead of per track.
+fn breath_regex() -> &'static Regex {
+    static PATTERN: OnceLock<Regex> = OnceLock::new();
+    PATTERN.get_or_init(|| {
+        Regex::new(&format!(r"\A{BREATH_PATTERN}\z")).expect("static breath regex")
+    })
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BreathOption {
@@ -149,6 +161,7 @@ pub fn parse_project(bytes: &[u8], options: &InputOptions) -> Result<Project> {
         track_list.push(parser.parse_track(text, index + 1, tick_prefix)?);
     }
     Ok(Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list,
         time_signature_list: time_signatures,
@@ -401,8 +414,7 @@ impl VsqParser<'_> {
     }
 
     fn parse_notes(&self, ini: &Ini, tick_prefix: i64) -> Result<Vec<Note>> {
-        let breath_pattern = regex::Regex::new(&format!(r"\A{BREATH_PATTERN}\z"))
-            .map_err(LibreSvipError::Regex)?;
+        let breath_pattern = breath_regex();
         let mut notes = Vec::new();
         for (tick_str, event_key) in ini.items("EventList") {
             let tick = tick_str.trim().parse::<i64>().map_err(|_| {

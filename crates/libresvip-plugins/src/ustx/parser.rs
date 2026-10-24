@@ -5,7 +5,7 @@ use std::path::Path;
 use libresvip_core::core::lyric_phoneme::chinese;
 use libresvip_core::core::lyric_phoneme::japanese;
 use libresvip_core::core::tick_counter::find_bar_index;
-use libresvip_core::core::warning_types::show_warning;
+use libresvip_core::core::warning_types::{show_warning_kind, WarningKind};
 use libresvip_core::model::base::{
     InstrumentalTrack, Note, Project, SingingTrack, SongTempo, TimeSignature, Track, DEFAULT_BPM,
 };
@@ -116,6 +116,7 @@ impl<'a> UstxParser<'a> {
         }
         tracks.extend(self.parse_wave_parts(&ustx_project.tracks, &ustx_project.wave_parts)?);
         Ok(Project {
+            warnings: Vec::new(),
             version: String::new(),
             song_tempo_list: tempos,
             time_signature_list: self.time_signatures.clone(),
@@ -284,7 +285,7 @@ impl<'a> UstxParser<'a> {
                 } else if japanese::is_kana(&ustx_note.lyric) {
                     // `wanakana.to_romaji` is not ported in the core crate yet.
                     note.pronunciation = japanese::to_romaji(&ustx_note.lyric).or_else(|| {
-                        show_warning("Kana->Romaji conversion is not implemented yet");
+                        show_warning_kind(WarningKind::FallbackApplied, "Kana->Romaji conversion is not implemented yet");
                         None
                     });
                 } else if chinese::contains_chinese(&ustx_note.lyric) {
@@ -297,7 +298,7 @@ impl<'a> UstxParser<'a> {
                         match chinese::lazy_pinyin(&chinese_char.to_string()) {
                             Ok(pinyin) => note.pronunciation = Some(pinyin.join(" ")),
                             Err(_) => {
-                                show_warning(
+                                show_warning_kind(WarningKind::FallbackApplied,
                                     "Hanzi->Pinyin conversion is not implemented yet",
                                 );
                             }

@@ -53,15 +53,19 @@ impl SvsPlugin for VogPlugin {
 
     fn dump(&self, path: &Path, project: &Project, options: &Options) -> Result<()> {
         let reset_required = project.song_tempo_list.len() != 1;
-        let project = if reset_required {
+        // Borrow the project when no reset is needed instead of cloning
+        // the whole thing just to unify the branch type.
+        let reset;
+        let project_ref: &Project = if reset_required {
             if project.song_tempo_list.is_empty() {
                 return Err(LibreSvipError::msg("no tempo found"));
             }
-            reset_time_axis(project, options.float("tempo", 120.0))?
+            reset = reset_time_axis(project.clone(), options.float("tempo", 120.0))?;
+            &reset
         } else {
-            project.clone()
+            &project
         };
-        let vogen_project = generator::VogenGenerator::new(options).generate_project(&project)?;
+        let vogen_project = generator::VogenGenerator::new(options).generate_project(project_ref)?;
         let chart = model::to_json(&vogen_project)?;
         let archive = model::write_archive(chart.as_bytes());
         libresvip_core::io::write(path, archive).at_path(path)?;

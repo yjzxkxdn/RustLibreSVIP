@@ -523,6 +523,7 @@ pub fn parse_project(
     ));
 
     Ok(Project {
+        warnings: Vec::new(),
         version: String::new(),
         song_tempo_list: tempos,
         time_signature_list: parser.time_signatures,
