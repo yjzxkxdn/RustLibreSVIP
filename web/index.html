@@ -1,158 +1,446 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RustLibreSVIP 网页转换器（LibreSVIP + UtaFormatix3 / WebAssembly）</title>
-<link rel="icon" href="data:image/png;base64,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">
-
-
+<title>RustLibreSVIP · 网页转换器</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233F51B5'/%3E%3Cpath d='M9 21.5V10.5h6.2c2.6 0 4.1 1.3 4.1 3.4 0 1.6-.9 2.7-2.3 3.1l2.9 4.5h-3l-2.5-4.1h-2.6v4.1H9zm2.8-6.4h3.1c1.1 0 1.7-.5 1.7-1.3s-.6-1.3-1.7-1.3h-3.1v2.6z' fill='white'/%3E%3C/svg%3E">
 <style>
   :root {
-    --indigo: #3f51b5;
-    --indigo-dark: #303f9f;
     --bg: #fafafa;
     --surface: #ffffff;
+    --surface-2: #f5f5f5;
     --border: #e0e0e0;
-    --text: #212121;
-    --muted: #6b6b6b;
+    --text: #1f1f1f;
+    --muted: #757575;
+    --primary: #3f51b5;
+    --primary-hover: #5c6bc0;
+    --on-primary: #ffffff;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --error: #f44336;
+    --info: #2196f3;
+    --hover: rgba(0, 0, 0, .05);
+    --shadow: 0 1px 3px rgba(0, 0, 0, .10);
+    --radius: 10px;
   }
+  html[data-theme="dark"] {
+    --bg: #121212;
+    --surface: #1e1e1e;
+    --surface-2: #252525;
+    --border: #424242;
+    --text: #e6e6e6;
+    --muted: #a0a0a0;
+    --primary: #7986cb;
+    --primary-hover: #8f9bdd;
+    --on-primary: #101010;
+    --hover: rgba(255, 255, 255, .06);
+    --shadow: 0 1px 3px rgba(0, 0, 0, .45);
+  }
+
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0;
-    font: 14px/1.6 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    font: 14px/1.55 "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
     color: var(--text);
     background: var(--bg);
-  }
-  header {
-    background: var(--indigo);
-    color: #fff;
-    padding: 14px 20px;
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
+  }
+  h1, h2, h3 { margin: 0; font-weight: 600; }
+  .muted { color: var(--muted); font-size: 12px; }
+
+  /* ---------------------------------------------------------------- titlebar */
+  .titlebar {
+    display: flex;
+    align-items: center;
     gap: 12px;
-  }
-  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
-  header span { font-size: 12px; opacity: .8; }
-  main { max-width: 880px; margin: 24px auto; padding: 0 16px 48px; }
-  .card {
+    height: 52px;
+    padding: 0 18px;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
-  .row { display: flex; gap: 16px; flex-wrap: wrap; }
-  .field { flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; }
-  label { font-size: 12px; color: var(--muted); }
-  select, input[type=file], input[type=text], input[type=number] {
-    font: inherit;
-    padding: 8px 10px;
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand svg { width: 28px; height: 28px; flex: none; }
+  .brand h1 { font-size: 16px; letter-spacing: .2px; }
+  .brand .sub { font-size: 11px; color: var(--muted); }
+  .titlebar .spacer { flex: 1; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 13px;
+    background: var(--surface-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    background: #fff;
-  }
-  button {
-    font: inherit;
-    font-weight: 600;
-    color: #fff;
-    background: var(--indigo);
-    border: 0;
-    border-radius: 4px;
-    padding: 10px 22px;
-    cursor: pointer;
-  }
-  button:disabled { background: #b0b0b0; cursor: default; }
-  button:hover:not(:disabled) { background: var(--indigo-dark); }
-  button.ghost {
-    background: transparent;
-    color: var(--indigo);
-    border: 1px solid var(--border);
-    padding: 4px 10px;
+    color: var(--muted);
     font-size: 12px;
+    white-space: nowrap;
   }
-  #drop {
-    border: 2px dashed var(--border);
-    border-radius: 6px;
-    padding: 26px;
-    text-align: center;
+  .icon-button {
+    width: 32px; height: 32px;
+    display: inline-grid; place-items: center;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
     color: var(--muted);
     cursor: pointer;
   }
-  #drop.over { border-color: var(--indigo); background: #f3f5ff; }
-  #drop strong { color: var(--text); }
-  #file-list { list-style: none; margin: 12px 0 0; padding: 0; }
-  #file-list li {
+  .icon-button:hover { background: var(--hover); color: var(--text); }
+
+  /* ---------------------------------------------------------------- workspace */
+  .workspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 16px;
+    align-items: start;
+  }
+  .column { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 4px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
+  }
+  .card-header h2 { font-size: 14px; }
+  .card-header .spacer { flex: 1; }
+  .card-body { padding: 14px 16px 16px; }
+
+  /* drop zone */
+  .dropzone {
+    margin: 0 16px;
+    padding: 22px 16px;
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    text-align: center;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color .12s, background .12s;
+  }
+  .dropzone:hover, .dropzone.over { border-color: var(--primary); background: var(--hover); }
+  .dropzone strong { color: var(--text); }
+  .dropzone svg { width: 26px; height: 26px; color: var(--primary); display: block; margin: 0 auto 6px; }
+
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 0;
+  }
+  .field-row > label { width: 44px; font-size: 12px; color: var(--muted); flex: none; }
+  select, input[type="text"], input[type="number"] {
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 9px;
+    min-width: 0;
+    width: 100%;
+  }
+  select:focus, input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+
+  .caps { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 16px 4px; }
+  .pill {
+    font-size: 11px;
+    line-height: 18px;
+    padding: 0 7px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+  .pill.on { color: var(--primary); border-color: var(--primary); background: transparent; }
+  .pill.warn { color: var(--warning); border-color: var(--warning); background: transparent; }
+
+  .file-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .file-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--border);
     font-size: 13px;
   }
-  #file-list li .name { flex: 1; overflow-wrap: anywhere; }
-  #file-list li .format { color: var(--muted); font-size: 12px; }
-  #options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 8px; }
-  #options-grid .option { display: flex; flex-direction: column; gap: 4px; }
-  #options-grid .option .title { font-size: 12px; color: var(--muted); }
-  #options-grid .option .title code { color: var(--text); }
-  #status { white-space: pre-wrap; font-family: Consolas, monospace; font-size: 12px; }
-  #status.error { color: #c62828; }
-  #status.ok { color: #2e7d32; }
-  .hint { font-size: 12px; color: var(--muted); }
-  a.download { display: block; margin-top: 4px; color: var(--indigo); font-weight: 600; }
-  footer { text-align: center; font-size: 12px; color: var(--muted); }
-  details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+  .file-list li:first-child { border-top: 0; }
+  .file-list .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-list .size { color: var(--muted); font-size: 12px; flex: none; }
+  .file-list .format { color: var(--muted); font-size: 12px; flex: none; }
+  .file-list .remove {
+    border: 0; background: transparent; color: var(--muted);
+    cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1;
+  }
+  .file-list .remove:hover { background: var(--hover); color: var(--error); }
+  .empty { padding: 6px 16px 14px; color: var(--muted); font-size: 12px; }
+
+  /* settings */
+  .settings-group { border-top: 1px solid var(--border); }
+  .settings-group:first-of-type { border-top: 0; }
+  .settings-group > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .settings-group > summary::-webkit-details-marker { display: none; }
+  .settings-group > summary .caret {
+    width: 0; height: 0;
+    border-left: 5px solid var(--muted);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: transform .12s;
+  }
+  .settings-group[open] > summary .caret { transform: rotate(90deg); }
+  .settings-group > summary:hover { background: var(--hover); }
+  .settings-group > summary .count { margin-left: auto; }
+  .fields { padding: 2px 16px 12px; }
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-top: 1px dashed var(--border);
+  }
+  .field:first-child { border-top: 0; }
+  .field .label {
+    flex: 0 0 46%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    min-width: 0;
+  }
+  .field .label span.text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .field .label .help {
+    flex: none;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 13px;
+    text-align: center;
+    cursor: help;
+  }
+  .field .control { flex: 1; display: flex; justify-content: flex-end; min-width: 0; }
+  .field .control > * { max-width: 190px; }
+
+  /* switch */
+  .switch { position: relative; display: inline-block; width: 38px; height: 21px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .track {
+    position: absolute; inset: 0;
+    background: var(--border);
+    border-radius: 11px;
+    transition: background .15s;
+  }
+  .switch .track::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+    transition: transform .15s;
+  }
+  .switch input:checked + .track { background: var(--primary); }
+  .switch input:checked + .track::after { transform: translateX(17px); }
+  .switch input:focus-visible + .track { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* action */
+  .action { padding: 14px 16px 16px; }
+  button.primary {
+    width: 100%;
+    font: inherit;
+    font-weight: 600;
+    color: var(--on-primary);
+    background: var(--primary);
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 18px;
+    cursor: pointer;
+  }
+  button.primary:hover:not(:disabled) { background: var(--primary-hover); }
+  button.primary:disabled { background: var(--border); color: var(--muted); cursor: default; }
+
+  .status { margin-top: 10px; font-size: 12.5px; color: var(--muted); min-height: 18px; }
+  .status.error { color: var(--error); }
+  .status.ok { color: var(--success); }
+  .results { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .results li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12.5px;
+  }
+  .results li.failed { border-color: var(--error); color: var(--error); }
+  .results .grow { flex: 1; min-width: 0; }
+  .results a.download {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    flex: none;
+  }
+  .results a.download:hover { text-decoration: underline; }
+  .results details { flex-basis: 100%; }
+  .results details pre {
+    margin: 6px 0 0;
+    white-space: pre-wrap;
+    font: 11.5px/1.45 Consolas, monospace;
+    color: var(--muted);
+    max-height: 160px;
+    overflow: auto;
+  }
+  .footer {
+    text-align: center;
+    padding: 12px 16px 22px;
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+  .footer a { color: var(--primary); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .workspace { grid-template-columns: 1fr; }
+    .titlebar .chip.hide-small { display: none; }
+  }
 </style>
 </head>
 <body>
-<header>
-  <h1>RustLibreSVIP 网页转换器</h1>
-  <span>Rust → WebAssembly 演示 · 40 种工程格式 · 全部在本机浏览器里完成</span>
+
+<header class="titlebar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3F51B5"/><path d="M9 21.5V10.5h6.2c2.6 0 4.1 1.3 4.1 3.4 0 1.6-.9 2.7-2.3 3.1l2.9 4.5h-3l-2.5-4.1h-2.6v4.1H9zm2.8-6.4h3.1c1.1 0 1.7-.5 1.7-1.3s-.6-1.3-1.7-1.3h-3.1v2.6z" fill="#fff"/></svg>
+    <div>
+      <h1>RustLibreSVIP</h1>
+      <div class="sub">网页版 · WebAssembly · 文件不离开本机</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip hide-small" id="chip-formats">加载中…</span>
+  <span class="chip hide-small" id="chip-build"></span>
+  <button class="icon-button" id="theme-toggle" title="切换明暗主题" aria-label="切换明暗主题">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5A5 5 0 0 1 8 1.5z"/></svg>
+  </button>
 </header>
 
-<main>
-  <div class="card">
-    <div class="row">
-      <div class="field">
-        <label for="file">输入文件（可多选）</label>
-        <input id="file" type="file" multiple>
+<main class="workspace">
+  <!-- ------------------------------------------------------------- left -->
+  <section class="column">
+    <article class="card">
+      <div class="card-header">
+        <h2>输入</h2>
+        <div class="spacer"></div>
+        <span class="muted" id="input-count">未选择文件</span>
       </div>
-      <div class="field">
-        <label for="input-format">输入格式</label>
+      <div class="dropzone" id="drop" role="button" tabindex="0" aria-label="选择或拖入工程文件">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4L8 8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round"/></svg>
+        <div id="drop-label">把工程文件拖到这里，或<strong>点击选择</strong></div>
+        <div class="muted" style="margin-top:4px">可一次选择多个，后缀决定输入格式</div>
+      </div>
+      <input id="drop-input" type="file" multiple hidden>
+      <div class="field-row">
+        <label for="input-format">格式</label>
         <select id="input-format"></select>
       </div>
-      <div class="field">
-        <label for="output-format">输出格式</label>
+      <div class="caps" id="input-caps"></div>
+      <ul class="file-list" id="file-list"></ul>
+      <div class="empty" id="file-empty">还没有选择文件。</div>
+    </article>
+
+    <article class="card">
+      <div class="card-header">
+        <h2>输出</h2>
+        <div class="spacer"></div>
+        <span class="muted" id="output-suffix"></span>
+      </div>
+      <div class="field-row">
+        <label for="output-format">格式</label>
         <select id="output-format"></select>
       </div>
-    </div>
-    <p class="hint">也可以把文件拖进下面的区域（支持一次多个）。所有转换都在本地完成，文件不会上传。</p>
-    <div id="drop"><span id="drop-label">把工程文件拖到这里，或点击<strong>选择文件</strong></span><input id="drop-input" type="file" hidden multiple></div>
-    <ul id="file-list"></ul>
-  </div>
+      <div class="caps" id="output-caps"></div>
+      <div class="empty" id="output-hint">写入哪一种工程格式。</div>
+    </article>
+  </section>
 
-  <div class="card">
-    <details id="options-panel">
-      <summary>转换选项（默认隐藏，展开后按所选格式显示）</summary>
-      <div id="options-grid"></div>
-    </details>
-  </div>
+  <!-- ------------------------------------------------------------- right -->
+  <section class="column">
+    <article class="card">
+      <div class="card-header">
+        <h2>高级设置</h2>
+        <div class="spacer"></div>
+        <span class="chip" id="option-badge">默认</span>
+      </div>
+      <details class="settings-group" id="input-options">
+        <summary><span class="caret"></span>输入选项<span class="muted" id="input-options-name"></span><span class="count muted" id="input-options-count"></span></summary>
+        <div class="fields" data-side="input"></div>
+      </details>
+      <details class="settings-group" id="output-options">
+        <summary><span class="caret"></span>输出选项<span class="muted" id="output-options-name"></span><span class="count muted" id="output-options-count"></span></summary>
+        <div class="fields" data-side="output"></div>
+      </details>
+    </article>
 
-  <div class="card">
-    <button id="run" disabled>开始转换</button>
-    <p id="status" class="hint">正在加载 WebAssembly 模块…</p>
-  </div>
-
-  <footer id="build"></footer>
+    <article class="card">
+      <div class="action">
+        <button class="primary" id="run" disabled>开始转换</button>
+        <div class="status" id="status">正在加载 WebAssembly 模块…</div>
+        <ul class="results" id="results"></ul>
+      </div>
+    </article>
+  </section>
 </main>
+
+<footer class="footer" id="build">
+  RustLibreSVIP · MIT · 基于 LibreSVIP 与 UtaFormatix3 · <a href="https://github.com/yjzxkxdn/RustLibreSVIP" target="_blank" rel="noreferrer">GitHub</a>
+</footer>
 
 <script>
 "use strict";
 
-const state = { api: null, files: [], formats: [], schemas: null };
+const state = { api: null, files: [], formats: [], schemas: null, wasmBytes: 0, bootMs: 0 };
 
 const $ = (selector) => document.querySelector(selector);
+
+const FEATURE_LABELS = {
+  pitch: "音高",
+  volume: "音量",
+  breath: "气声",
+  gender: "性别",
+  strength: "张力",
+  phonemes: "音素",
+  vibrato: "颤音",
+  instrumental_tracks: "伴奏轨",
+};
 
 function formatBytes(size) {
   if (size < 1024) return `${size} B`;
@@ -163,7 +451,7 @@ function formatBytes(size) {
 function setStatus(text, kind) {
   const node = $("#status");
   node.textContent = text;
-  node.className = kind ? `hint ${kind}` : "hint";
+  node.className = kind ? `status ${kind}` : "status";
 }
 
 function writeString(api, text) {
@@ -179,8 +467,12 @@ function readResult(api) {
   return new Uint8Array(api.memory.buffer, pointer, length).slice();
 }
 
+function formatById(id) {
+  return state.formats.find((item) => item.id === id) || null;
+}
+
 function extensionFor(id) {
-  const format = state.formats.find((item) => item.id === id);
+  const format = formatById(id);
   return format && format.suffixes.length ? format.suffixes[0] : id;
 }
 
@@ -190,16 +482,46 @@ function detectFormat(name) {
   return matches.length ? matches[0].id : null;
 }
 
+/* ------------------------------------------------------------------ formats */
+
 function fillSelect(select, selected) {
   select.innerHTML = "";
   for (const format of state.formats) {
     const option = document.createElement("option");
     option.value = format.id;
-    option.textContent = `${format.name}（.${format.suffixes.join(" .") || format.id}）`;
+    const suffixes = format.suffixes.length ? format.suffixes.join(" ") : format.id;
+    option.textContent = `${format.name}（${suffixes}）`;
     if (format.id === selected) option.selected = true;
     select.append(option);
   }
 }
+
+function renderCaps(target, id) {
+  const node = $(target);
+  node.innerHTML = "";
+  const format = formatById(id);
+  if (!format) return;
+  for (const feature of format.features) {
+    const pill = document.createElement("span");
+    pill.className = "pill on";
+    pill.textContent = FEATURE_LABELS[feature] || feature;
+    node.append(pill);
+  }
+  if (!format.features.length) {
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = "仅音符 / 歌词";
+    node.append(pill);
+  }
+  if (format.max_tracks_per_file) {
+    const pill = document.createElement("span");
+    pill.className = "pill warn";
+    pill.textContent = `单文件 ${format.max_tracks_per_file} 轨`;
+    node.append(pill);
+  }
+}
+
+/* ------------------------------------------------------------------- files */
 
 function renderFileList() {
   const list = $("#file-list");
@@ -207,37 +529,58 @@ function renderFileList() {
   state.files.forEach((file, index) => {
     const item = document.createElement("li");
     const detected = detectFormat(file.name);
+
     const name = document.createElement("span");
     name.className = "name";
-    name.textContent = `${file.name} · ${formatBytes(file.size)}`;
+    name.textContent = file.name;
+    name.title = file.name;
+
+    const size = document.createElement("span");
+    size.className = "size";
+    size.textContent = formatBytes(file.size);
+
     const format = document.createElement("span");
     format.className = "format";
-    format.textContent = detected ? `.${detected}` : "未识别后缀";
+    format.textContent = detected ? `.${detected}` : "未知后缀";
+
     const remove = document.createElement("button");
-    remove.className = "ghost";
-    remove.textContent = "移除";
+    remove.className = "remove";
+    remove.title = "移除";
+    remove.textContent = "✕";
     remove.addEventListener("click", () => {
       state.files.splice(index, 1);
       renderFileList();
-      $("#run").disabled = !state.api || state.files.length === 0;
     });
-    item.append(name, format, remove);
+
+    item.append(name, format, size, remove);
     list.append(item);
   });
+  $("#file-empty").style.display = state.files.length ? "none" : "";
+  $("#input-count").textContent = state.files.length
+    ? `${state.files.length} 个文件 · ${formatBytes(state.files.reduce((sum, file) => sum + file.size, 0))}`
+    : "未选择文件";
+  $("#drop-label").innerHTML = state.files.length
+    ? `<strong>${state.files.length} 个文件</strong>，继续拖入可追加`
+    : "把工程文件拖到这里，或<strong>点击选择</strong>";
   $("#run").disabled = !state.api || state.files.length === 0;
 }
 
 function addFiles(fileList) {
   for (const file of fileList) state.files.push(file);
-  if (state.files.length) {
-    const detected = detectFormat(state.files[state.files.length - 1].name);
-    if (detected) $("#input-format").value = detected;
-  }
-  $("#drop-label").innerHTML = state.files.length
-    ? `<strong>${state.files.length} 个文件</strong>（继续拖放可追加）`
-    : "把工程文件拖到这里，或点击<strong>选择文件</strong>";
+  const last = state.files[state.files.length - 1];
+  const detected = last ? detectFormat(last.name) : null;
+  if (detected) $("#input-format").value = detected;
   renderFileList();
-  refreshOptions();
+  refreshFormats();
+}
+
+/* ---------------------------------------------------------------- options */
+
+async function refreshFormats() {
+  renderCaps("#input-caps", $("#input-format").value);
+  renderCaps("#output-caps", $("#output-format").value);
+  $("#output-suffix").textContent = `.${extensionFor($("#output-format").value)}`;
+  await refreshOptions();
 }
 
 async function refreshOptions() {
@@ -252,21 +595,29 @@ async function refreshOptions() {
   if (outName.length) api.dealloc(outName.pointer, outName.length);
   if (status !== 0) {
     state.schemas = null;
+    renderOptions();
     return;
   }
   state.schemas = JSON.parse(new TextDecoder().decode(readResult(api)));
   renderOptions();
 }
 
+function switchControl(field) {
+  const label = document.createElement("label");
+  label.className = "switch";
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.dataset.key = field.key;
+  input.dataset.kind = "bool";
+  input.checked = ["True", "true", "1"].includes(field.default);
+  const track = document.createElement("span");
+  track.className = "track";
+  label.append(input, track);
+  return label;
+}
+
 function optionControl(field) {
-  if (field.kind === "bool") {
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.checked = field.default === "True" || field.default === "true" || field.default === "1";
-    input.dataset.key = field.key;
-    input.dataset.kind = "bool";
-    return input;
-  }
+  if (field.kind === "bool") return switchControl(field);
   if (field.kind === "enum" && field.choices.length) {
     const select = document.createElement("select");
     select.dataset.key = field.key;
@@ -298,38 +649,64 @@ function optionControl(field) {
   return input;
 }
 
+function renderField(field, side) {
+  const row = document.createElement("div");
+  row.className = "field";
+
+  const label = document.createElement("div");
+  label.className = "label";
+  const text = document.createElement("span");
+  text.className = "text";
+  text.textContent = field.title || field.key;
+  text.title = `${field.key}${field.description ? ` — ${field.description}` : ""}`;
+  label.append(text);
+  if (field.description) {
+    const help = document.createElement("span");
+    help.className = "help";
+    help.textContent = "?";
+    help.title = field.description;
+    label.append(help);
+  }
+
+  const control = document.createElement("div");
+  control.className = "control";
+  const widget = optionControl(field);
+  widget.dataset.side = side;
+  widget.addEventListener("change", updateOptionBadge);
+  control.append(widget);
+
+  row.append(label, control);
+  return row;
+}
+
 function renderOptions() {
-  const grid = $("#options-grid");
-  grid.innerHTML = "";
-  if (!state.schemas) return;
-  for (const [heading, fields] of [["输入选项", state.schemas.input], ["输出选项", state.schemas.output]]) {
-    if (!fields.length) continue;
-    const group = document.createElement("div");
-    group.className = "option";
-    const title = document.createElement("div");
-    title.className = "title";
-    title.innerHTML = `<strong>${heading}</strong>`;
-    group.append(title);
-    grid.append(group);
-    for (const field of fields) {
-      const wrap = document.createElement("div");
-      wrap.className = "option";
-      const label = document.createElement("label");
-      const name = document.createElement("code");
-      name.textContent = field.title || field.key;
-      label.append(name);
-      if (field.description) label.title = field.description;
-      const control = optionControl(field);
-      control.dataset.side = heading === "输入选项" ? "input" : "output";
-      wrap.append(label, control);
-      grid.append(wrap);
+  const defaultText = { input: "使用默认值", output: "使用默认值" };
+  for (const side of ["input", "output"]) {
+    const host = document.querySelector(`.fields[data-side="${side}"]`);
+    host.innerHTML = "";
+    const fields = state.schemas ? state.schemas[side] : [];
+    const details = $(`#${side}-options`);
+    const format = formatById($(`#${side}-format`).value);
+    $(`#${side}-options-name`).textContent = format ? ` · ${format.name}` : "";
+    $(`#${side}-options-count`).textContent = fields.length ? `${fields.length} 项` : "";
+    if (!fields.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = defaultText[side];
+      host.append(empty);
+      details.open = false;
+    } else {
+      for (const field of fields) host.append(renderField(field, side));
+      // a handful of options fits on screen; a long list starts collapsed
+      details.open = fields.length <= 6;
     }
   }
+  updateOptionBadge();
 }
 
 function collectOptions() {
   const result = { input: {}, output: {} };
-  for (const control of document.querySelectorAll("#options-grid [data-key]")) {
+  for (const control of document.querySelectorAll(".fields [data-key]")) {
     const side = control.dataset.side;
     let value;
     if (control.dataset.kind === "bool") {
@@ -349,20 +726,80 @@ function collectOptions() {
   return result;
 }
 
+function updateOptionBadge() {
+  const options = collectOptions();
+  const count = Object.keys(options.input).length + Object.keys(options.output).length;
+  const badge = $("#option-badge");
+  badge.textContent = count ? `${count} 项已改` : "默认";
+  badge.className = count ? "chip pill on" : "chip";
+}
+
+/* ---------------------------------------------------------------- convert */
+
+function renderResults(results, outputFormat) {
+  const list = $("#results");
+  list.innerHTML = "";
+  for (const item of results) {
+    const row = document.createElement("li");
+    if (item.error) {
+      row.className = "failed";
+      const text = document.createElement("span");
+      text.className = "grow";
+      text.textContent = `${item.file}：${item.error}`;
+      row.append(text);
+      list.append(row);
+      continue;
+    }
+    const name = document.createElement("span");
+    name.className = "grow";
+    const outputName = `${item.file.replace(/\.[^.]+$/, "")}.${extensionFor(outputFormat)}`;
+    name.textContent = outputName;
+    name.title = outputName;
+
+    const meta = document.createElement("span");
+    meta.className = "muted";
+    meta.textContent = `${formatBytes(item.payload.length)} · ${item.elapsed.toFixed(0)} ms`;
+
+    const blob = new Blob([item.payload], { type: "application/octet-stream" });
+    const link = document.createElement("a");
+    link.className = "download";
+    link.href = URL.createObjectURL(blob);
+    link.download = outputName;
+    link.textContent = "下载";
+
+    row.append(name, meta, link);
+
+    if (item.warnings.length) {
+      const details = document.createElement("details");
+      const summary = document.createElement("summary");
+      summary.className = "muted";
+      summary.textContent = `${item.warnings.length} 条警告`;
+      const pre = document.createElement("pre");
+      pre.textContent = item.warnings
+        .map((warning) => `· ${warning.kind}${warning.detail ? `：${warning.detail}` : ""}`)
+        .join("\n");
+      details.append(summary, pre);
+      row.append(details);
+    }
+    list.append(row);
+  }
+}
+
 async function convert() {
   const api = state.api;
   if (!api || !state.files.length) return;
   $("#run").disabled = true;
+  $("#results").innerHTML = "";
   const inputFormat = $("#input-format").value;
   const outputFormat = $("#output-format").value;
   const options = collectOptions();
+  const results = [];
 
   try {
     const inName = writeString(api, inputFormat);
     const outName = writeString(api, outputFormat);
     const inOptions = writeString(api, JSON.stringify(options.input));
     const outOptions = writeString(api, JSON.stringify(options.output));
-    const results = [];
     for (let index = 0; index < state.files.length; index += 1) {
       const file = state.files[index];
       setStatus(`转换中 ${index + 1}/${state.files.length}：${file.name}（${inputFormat} → ${outputFormat}）…`);
@@ -379,15 +816,15 @@ async function convert() {
       );
       const elapsed = performance.now() - started;
       const payload = readResult(api);
-      const warnings = api.warnings_json
-        ? new TextDecoder().decode(readResult(api))
-        : "[]";
+      api.warnings_json();
+      const warnings = JSON.parse(new TextDecoder().decode(readResult(api)));
       if (input.length) api.dealloc(inputPointer, input.length);
       if (status !== 0) {
         results.push({ file: file.name, error: new TextDecoder().decode(payload) });
       } else {
         results.push({ file: file.name, payload, elapsed, warnings });
       }
+      renderResults(results, outputFormat);
     }
     for (const [pointer, length] of [
       [inName.pointer, inName.length],
@@ -397,32 +834,12 @@ async function convert() {
     ]) {
       if (length > 0) api.dealloc(pointer, length);
     }
-
-    $("#status").className = "hint";
-    $("#status").textContent = "";
-    const failures = results.filter((item) => item.error);
-    for (const item of results) {
-      if (item.error) continue;
-      const outputName = `${item.file.replace(/\.[^.]+$/, "")}.${extensionFor(outputFormat)}`;
-      const blob = new Blob([item.payload], { type: "application/octet-stream" });
-      const link = document.createElement("a");
-      link.className = "download";
-      link.href = URL.createObjectURL(blob);
-      link.download = outputName;
-      const warningCount = JSON.parse(item.warnings).length;
-      link.textContent =
-        `下载 ${outputName}（${formatBytes(item.payload.length)}，${item.elapsed.toFixed(0)} ms` +
-        (warningCount ? `，${warningCount} 条警告` : "") + "）";
-      $("#status").append(link);
-    }
-    if (failures.length) {
-      const summary = document.createElement("div");
-      summary.style.color = "#c62828";
-      summary.textContent = failures.map((item) => `${item.file}: ${item.error}`).join("\n");
-      $("#status").append(summary);
-      setStatus(`完成：${results.length - failures.length} 成功 / ${failures.length} 失败`, failures.length ? "error" : "ok");
+    const failures = results.filter((item) => item.error).length;
+    const total = results.reduce((sum, item) => sum + (item.elapsed || 0), 0);
+    if (failures) {
+      setStatus(`完成：${results.length - failures} 成功 / ${failures} 失败（${total.toFixed(0)} ms）`, "error");
     } else {
-      setStatus(`完成：${results.length} 个文件全部转换成功`, "ok");
+      setStatus(`完成：${results.length} 个文件，共 ${total.toFixed(0)} ms`, "ok");
     }
   } catch (error) {
     setStatus(`出错：${error && error.message ? error.message : error}`, "error");
@@ -431,11 +848,14 @@ async function convert() {
   }
 }
 
+/* ------------------------------------------------------------------- boot */
+
 async function boot(wasmBytes) {
   const started = performance.now();
   const { instance } = await WebAssembly.instantiate(wasmBytes, {});
   const api = instance.exports;
   state.api = api;
+  state.wasmBytes = wasmBytes.length;
 
   api.formats_json();
   state.formats = JSON.parse(new TextDecoder().decode(readResult(api)))
@@ -443,20 +863,40 @@ async function boot(wasmBytes) {
 
   fillSelect($("#input-format"), "ustx");
   fillSelect($("#output-format"), "acep");
-  $("#build").textContent =
-    `${state.formats.length} 个格式 · wasm ${formatBytes(wasmBytes.length)} · 实例化 ${(performance.now() - started).toFixed(0)} ms`;
-  setStatus("模块已加载，选择工程文件即可开始（支持一次多个；文件不会离开这台电脑）。");
-  $("#run").disabled = state.files.length === 0;
-  refreshOptions();
+  state.bootMs = performance.now() - started;
+  $("#chip-formats").textContent = `${state.formats.length} 种格式`;
+  $("#chip-build").textContent = `wasm ${formatBytes(wasmBytes.length)}`;
+  setStatus("模块已加载，选择工程文件即可开始。");
+  renderFileList();
+  await refreshFormats();
+}
+
+/* ------------------------------------------------------------------- wire */
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem("libresvip-theme", theme); } catch (error) { /* private mode */ }
 }
 
 function wire() {
-  $("#file").addEventListener("change", (event) => {
-    if (event.target.files.length) addFiles(event.target.files);
+  const stored = (() => {
+    try { return localStorage.getItem("libresvip-theme"); } catch (error) { return null; }
+  })();
+  applyTheme(stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  $("#theme-toggle").addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   });
+
   $("#drop").addEventListener("click", () => $("#drop-input").click());
+  $("#drop").addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      $("#drop-input").click();
+    }
+  });
   $("#drop-input").addEventListener("change", (event) => {
     if (event.target.files.length) addFiles(event.target.files);
+    event.target.value = "";
   });
   $("#drop").addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -468,9 +908,13 @@ function wire() {
     $("#drop").classList.remove("over");
     if (event.dataTransfer.files.length) addFiles(event.dataTransfer.files);
   });
+
   $("#run").addEventListener("click", convert);
-  $("#input-format").addEventListener("change", refreshOptions);
-  $("#output-format").addEventListener("change", refreshOptions);
+  $("#input-format").addEventListener("change", refreshFormats);
+  $("#output-format").addEventListener("change", refreshFormats);
+  document.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") convert();
+  });
 }
 
 function base64ToBytes(text) {
