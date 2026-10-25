@@ -671,7 +671,15 @@ function renderField(field, side) {
   const control = document.createElement("div");
   control.className = "control";
   const widget = optionControl(field);
+  // The switch returns a <label> wrapper and keeps data-key on the inner
+  // <input>, so the side has to be copied down to every keyed element —
+  // otherwise collectOptions() sees an undefined side and throws.
   widget.dataset.side = side;
+  for (const keyed of widget.querySelectorAll("[data-key]")) {
+    keyed.dataset.side = side;
+    keyed.dataset.def = field.default ?? "";
+  }
+  if (widget.dataset.key) widget.dataset.def = field.default ?? "";
   widget.addEventListener("change", updateOptionBadge);
   control.append(widget);
 
@@ -708,6 +716,8 @@ function collectOptions() {
   const result = { input: {}, output: {} };
   for (const control of document.querySelectorAll(".fields [data-key]")) {
     const side = control.dataset.side;
+    // A control without a side would otherwise write through `undefined`.
+    if (side !== "input" && side !== "output") continue;
     let value;
     if (control.dataset.kind === "bool") {
       value = control.checked;
@@ -726,12 +736,24 @@ function collectOptions() {
   return result;
 }
 
+/* A control still sits on its declared default? Text/number inputs start
+   empty for "None" defaults, and switches carry a "True"-style default. */
+function atDefault(control) {
+  const def = control.dataset.def ?? "";
+  if (control.dataset.kind === "bool") {
+    return control.checked === ["True", "true", "1"].includes(def);
+  }
+  if (control.value === "" && (def === "" || def === "None")) return true;
+  return control.value === def;
+}
+
 function updateOptionBadge() {
-  const options = collectOptions();
-  const count = Object.keys(options.input).length + Object.keys(options.output).length;
+  const changed = [...document.querySelectorAll(".fields [data-key]")].filter(
+    (control) => !atDefault(control),
+  ).length;
   const badge = $("#option-badge");
-  badge.textContent = count ? `${count} 项已改` : "默认";
-  badge.className = count ? "chip pill on" : "chip";
+  badge.textContent = changed ? `${changed} 项已改` : "默认";
+  badge.className = changed ? "chip pill on" : "chip";
 }
 
 /* ---------------------------------------------------------------- convert */
