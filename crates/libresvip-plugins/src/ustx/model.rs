@@ -23,6 +23,10 @@ fn default_shape() -> Option<String> {
     Some("io".to_owned())
 }
 
+fn is_zero(value: &i64) -> bool {
+    *value == 0
+}
+
 /// `PitchPoint`.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PitchPoint {
@@ -124,6 +128,76 @@ impl UCurve {
     }
 }
 
+/// One run of consecutive values of a masked curve, on the 5-tick grid.
+///
+/// USTX 0.10 (`OpenUtau.Core/Ustx/UMaskedCurve.cs`).
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct UMaskedRun {
+    /// Part-relative tick of the first value.
+    #[serde(default)]
+    pub x: i64,
+    /// `float32` in OpenUtau; `f64` here so the sampler needs no casts.
+    #[serde(default)]
+    pub ys: Vec<f64>,
+}
+
+/// A curve that has no value over some stretches, unlike [`UCurve`], which
+/// always has at least its default. Only expression graphs read it.
+///
+/// USTX 0.10 (`OpenUtau.Core/Ustx/UMaskedCurve.cs`).
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct UMaskedCurve {
+    #[serde(default)]
+    pub abbr: String,
+    #[serde(default, deserialize_with = "vec_or_default")]
+    pub runs: Vec<UMaskedRun>,
+}
+
+impl UMaskedCurve {
+    /// `IsEmpty`.
+    pub fn is_empty(&self) -> bool {
+        self.runs.iter().all(|run| run.ys.is_empty())
+    }
+
+    /// `TrySample` — the value at a part-relative tick, linear between grid
+    /// steps, or `None` when no run covers it.
+    pub fn try_sample(&self, tick: f64, interval: i64) -> Option<f64> {
+        let interval = interval.max(1) as f64;
+        // The last run starting at or before the tick; runs are sorted and do
+        // not overlap.
+        let found = self
+            .runs
+            .partition_point(|run| run.x as f64 <= tick)
+            .checked_sub(1)?;
+        let run = &self.runs[found];
+        if run.ys.is_empty() {
+            return None;
+        }
+        let end = run.x as f64 + (run.ys.len() as f64 - 1.0) * interval;
+        if tick > end {
+            return None;
+        }
+        let position = (tick - run.x as f64) / interval;
+        let index = (position.floor() as i64).clamp(0, run.ys.len() as i64 - 1) as usize;
+        if index + 1 >= run.ys.len() {
+            return Some(run.ys[index]);
+        }
+        let fraction = position - index as f64;
+        Some(run.ys[index] + fraction * (run.ys[index + 1] - run.ys[index]))
+    }
+}
+
+/// `null` and a missing key both mean "empty list" for the collections below:
+/// OpenUtau writes `voice_parts: null` for a project without parts, and pydantic
+/// accepted that.
+fn vec_or_default<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Ok(Option::<Vec<T>>::deserialize(deserializer)?.unwrap_or_default())
+}
+
 /// `UVibrato`.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UVibrato {
@@ -201,7 +275,7 @@ impl UVibrato {
         }
         (
             note.position as f64 + note.duration as f64 * n_pos,
-            note.tone as f64 + y / 100.0,
+            (note.pitch_cents() + y) / 100.0,
         )
     }
 }
@@ -244,6 +318,11 @@ pub struct UNote {
     pub position: i64,
     pub duration: i64,
     pub tone: i64,
+    /// Fine tuning of the note in cents (USTX 0.10). `AdjustedTone` in OpenUtau
+    /// is `tone + tuning / 100`. Kept out of the output when zero so files we
+    /// write stay byte-identical to the 0.6 ones.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub tuning: i64,
     pub lyric: String,
     #[serde(default)]
     pub pitch: UPitch,
@@ -261,6 +340,12 @@ impl UNote {
     /// `end`.
     pub fn end(&self) -> i64 {
         self.position + self.duration
+    }
+
+    /// The note's pitch in cents, `AdjustedTone * 100` in OpenUtau terms:
+    /// `tone` plus the USTX 0.10 fine tuning, which is already in cents.
+    pub fn pitch_cents(&self) -> f64 {
+        self.tone as f64 * 100.0 + self.tuning as f64
     }
 }
 
@@ -367,10 +452,19 @@ pub struct UVoicePart {
     pub track_no: i64,
     #[serde(default)]
     pub comment: Option<String>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub notes: Vec<UNote>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub curves: Vec<UCurve>,
+    /// USTX 0.10. Only expression graphs read these, but dropping them loses the
+    /// pitch a 1.571+ project actually renders. Not written back: we still emit
+    /// `ustx_version: 0.6`, and a 0.6 reader must not see 0.10 keys.
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "vec_or_default"
+    )]
+    pub masked_curves: Vec<UMaskedCurve>,
     /// `computed_field duration` — recomputed when the part is generated.
     #[serde(default)]
     pub duration: i64,
@@ -443,17 +537,17 @@ pub struct UstxProject {
     pub beat_unit: i64,
     #[serde(default = "default_resolution")]
     pub resolution: i64,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub time_signatures: Vec<UTimeSignature>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub tempos: Vec<UTempo>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub expressions: Option<serde_yaml::Value>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub tracks: Vec<UTrack>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub voice_parts: Vec<UVoicePart>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "vec_or_default")]
     pub wave_parts: Vec<UWavePart>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub exp_selectors: Option<Vec<String>>,

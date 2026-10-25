@@ -56,7 +56,7 @@ impl BasePitchGenerator {
                     let stop = (index + pad + 1).min(pitches.len());
                     pitches.splice(
                         index..stop,
-                        std::iter::repeat(note.tone as f64 * 100.0).take(pad + 1),
+                        std::iter::repeat(note.pitch_cents()).take(pad + 1),
                     );
                     index += pad + 1;
                 }
@@ -105,7 +105,7 @@ impl BasePitchGenerator {
                 ) - part.position;
                 let candidate = PitchPoint {
                     x: x as f64,
-                    y: point.y * 10.0 + note.tone as f64 * 100.0,
+                    y: point.y * 10.0 + note.pitch_cents(),
                     shape: point.shape.clone(),
                 };
                 if pitch_points
@@ -120,12 +120,12 @@ impl BasePitchGenerator {
             if pitch_points.is_empty() {
                 pitch_points.push(PitchPoint {
                     x: note.position as f64,
-                    y: note.tone as f64 * 100.0,
+                    y: note.pitch_cents(),
                     shape: None,
                 });
                 pitch_points.push(PitchPoint {
                     x: note.end() as f64,
-                    y: note.tone as f64 * 100.0,
+                    y: note.pitch_cents(),
                     shape: None,
                 });
             }
@@ -183,8 +183,8 @@ impl BasePitchGenerator {
                         shape,
                     );
                     let base_pitch = match prev_note {
-                        Some(prev) if x <= prev.end() as f64 => prev.tone as f64 * 100.0,
-                        _ => note.tone as f64 * 100.0,
+                        Some(prev) if x <= prev.end() as f64 => prev.pitch_cents(),
+                        _ => note.pitch_cents(),
                     };
                     pitches[index] += pitch - base_pitch;
                     index += 1;

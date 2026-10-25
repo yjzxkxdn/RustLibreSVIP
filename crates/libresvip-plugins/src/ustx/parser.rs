@@ -228,6 +228,7 @@ impl<'a> UstxParser<'a> {
 
         let mut pitches = self.base_pitch_generator.base_pitch(part);
 
+        let mut deviation_applied = false;
         let curve = part
             .curves
             .iter()
@@ -236,6 +237,31 @@ impl<'a> UstxParser<'a> {
             if !curve.is_empty() {
                 for (index, pitch) in pitches.iter_mut().enumerate() {
                     *pitch += curve.sample(pitch_start + index as i64 * pitch_interval) as f64;
+                }
+                deviation_applied = true;
+            }
+        }
+
+        // USTX 0.10 masked curves carry absolute pitch in cents, the same unit
+        // the points below use, and only where the user drew them. `pito` is
+        // the user's own override and wins; `rpit` holds what the renderer
+        // produced and is only a fallback for projects that have no `pitd`.
+        let masked = |abbr: &str| {
+            part.masked_curves
+                .iter()
+                .find(|curve| curve.abbr == abbr)
+                .filter(|curve| !curve.is_empty())
+        };
+        let absolute = match masked("pito") {
+            Some(curve) => Some(curve),
+            None if !deviation_applied => masked("rpit"),
+            None => None,
+        };
+        if let Some(curve) = absolute {
+            for (index, pitch) in pitches.iter_mut().enumerate() {
+                let tick = (pitch_start + index as i64 * pitch_interval) as f64;
+                if let Some(value) = curve.try_sample(tick, pitch_interval) {
+                    *pitch = value;
                 }
             }
         }
@@ -414,4 +440,225 @@ fn normalize_path(path: &Path) -> std::path::PathBuf {
         }
     }
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use libresvip_core::model::base::{Project, Track};
+
+    use super::*;
+    use crate::ustx::model::{UMaskedCurve, UMaskedRun};
+
+    /// A one-note project; the extra keys mirror what OpenUtau 1.571 writes.
+    fn project_yaml(part_extra: &str, note_extra: &str) -> String {
+        format!(
+            "ustx_version: '0.10'\n\
+             tempos:\n\
+             - position: 0\n\
+             \x20 bpm: 120.0\n\
+             time_signatures:\n\
+             - bar_position: 0\n\
+             \x20 beat_per_bar: 4\n\
+             \x20 beat_unit: 4\n\
+             tracks:\n\
+             - track_name: Track 1\n\
+             \x20 singer: Singer\n\
+             voice_parts:\n\
+             - name: Track 1\n\
+             \x20 position: 0\n\
+             \x20 track_no: 0\n\
+             \x20 notes:\n\
+             \x20 - position: 0\n\
+             \x20   duration: 480\n\
+             \x20   tone: 60\n\
+             \x20   lyric: la\n\
+             {note_extra}\
+             {part_extra}"
+        )
+    }
+
+    fn parse(yaml: &str) -> Project {
+        let project: UstxProject = serde_yaml::from_str(yaml).expect("yaml parses");
+        parse_project(&project, &InputOptions::default()).expect("project converts")
+    }
+
+    /// Pitch values of the first singing track, without the `-100` edge markers.
+    fn pitch_values(project: &Project) -> Vec<i64> {
+        let Track::Singing(track) = &project.track_list[0] else {
+            panic!("expected a singing track");
+        };
+        track
+            .edited_params
+            .pitch
+            .points
+            .iter()
+            .map(|point| point.y)
+            .filter(|value| *value != -100)
+            .collect()
+    }
+
+    #[test]
+    fn masked_pitch_overrides_the_base_pitch() {
+        let yaml = project_yaml(
+            "  masked_curves:\n\
+             \x20 - abbr: pito\n\
+             \x20   runs:\n\
+             \x20   - x: 0\n\
+             \x20     ys:\n\
+             \x20     - 6000.0\n\
+             \x20     - 6200.0\n\
+             \x20     - 6300.0\n",
+            "",
+        );
+        let values = pitch_values(&parse(&yaml));
+        assert_eq!(values.len(), 97);
+        assert_eq!(&values[..3], &[6000, 6200, 6300]);
+        // Outside the drawn run the base pitch comes back.
+        assert_eq!(values[3], 6000);
+    }
+
+    #[test]
+    fn pitd_deviation_and_pito_override_combine() {
+        let yaml = project_yaml(
+            "  curves:\n\
+             \x20 - abbr: pitd\n\
+             \x20   xs:\n\
+             \x20   - 0\n\
+             \x20   - 475\n\
+             \x20   ys:\n\
+             \x20   - 0\n\
+             \x20   - 100\n\
+             \x20 masked_curves:\n\
+             \x20 - abbr: pito\n\
+             \x20   runs:\n\
+             \x20   - x: 0\n\
+             \x20     ys:\n\
+             \x20     - 5500.0\n\
+             \x20     - 5500.0\n",
+            "",
+        );
+        let values = pitch_values(&parse(&yaml));
+        // The masked curve wins where it has values …
+        assert_eq!(values[0], 5500);
+        assert_eq!(values[1], 5500);
+        // … and the deviation keeps applying after its run ends at tick 5.
+        assert!(values[2] > 6000, "pitd should still raise the pitch");
+    }
+
+    #[test]
+    fn rendered_pitch_is_only_a_fallback() {
+        let yaml = project_yaml(
+            "  curves:\n\
+             \x20 - abbr: pitd\n\
+             \x20   xs:\n\
+             \x20   - 0\n\
+             \x20   - 475\n\
+             \x20   ys:\n\
+             \x20   - 50\n\
+             \x20   - 50\n\
+             \x20 masked_curves:\n\
+             \x20 - abbr: rpit\n\
+             \x20   runs:\n\
+             \x20   - x: 0\n\
+             \x20     ys:\n\
+             \x20     - 5000.0\n\
+             \x20     - 5000.0\n",
+            "",
+        );
+        // `pitd` has values, so the rendered pitch must not replace it.
+        let values = pitch_values(&parse(&yaml));
+        assert_eq!(values[0], 6050);
+    }
+
+    #[test]
+    fn null_part_lists_are_accepted() {
+        let yaml = "ustx_version: '0.10'\ntracks: []\nvoice_parts: null\nwave_parts: null\n";
+        let project = parse(yaml);
+        assert!(project.track_list.is_empty());
+    }
+
+    #[test]
+    fn note_tuning_shifts_the_pitch() {
+        let yaml = project_yaml("", "    tuning: 50\n");
+        let model: UstxProject = serde_yaml::from_str(&yaml).unwrap();
+        assert_eq!(
+            model.voice_parts[0].notes[0].tuning, 50,
+            "tuning must survive yaml parsing"
+        );
+        let values = pitch_values(&parse(&yaml));
+        assert_eq!(values[0], 6050);
+    }
+
+    #[test]
+    fn expression_registry_with_masked_curve_type_is_tolerated() {
+        // The shape OpenUtau 1.571 writes: the registry carries a `type` tag
+        // (`Curve` / `Numerical` / `Options` / `MaskedCurve`) and the track
+        // keeps descriptors, not values. A reader expecting the old `value`
+        // field rejects the file outright.
+        let yaml = "ustx_version: '0.10'\n\
+             tempos:\n\
+             - position: 0\n\
+             \x20 bpm: 120.0\n\
+             expressions:\n\
+             \x20 pitd:\n\
+             \x20   name: pitch deviation (curve)\n\
+             \x20   abbr: pitd\n\
+             \x20   type: Curve\n\
+             \x20   min: -1200\n\
+             \x20   max: 1200\n\
+             \x20   default_value: 0\n\
+             \x20 pito:\n\
+             \x20   name: pitch override (masked curve)\n\
+             \x20   abbr: pito\n\
+             \x20   type: MaskedCurve\n\
+             \x20   min: 2400\n\
+             \x20   max: 10800\n\
+             \x20   default_value: 6000\n\
+             tracks:\n\
+             - track_name: Track 1\n\
+             \x20 singer: Singer\n\
+             \x20 track_expressions:\n\
+             \x20 - name: breath\n\
+             \x20   abbr: bre\n\
+             \x20   type: Numerical\n\
+             \x20   min: 0\n\
+             \x20   max: 100\n\
+             \x20   default_value: 0\n\
+             voice_parts:\n\
+             - name: Track 1\n\
+             \x20 position: 0\n\
+             \x20 track_no: 0\n\
+             \x20 notes:\n\
+             \x20 - position: 0\n\
+             \x20   duration: 480\n\
+             \x20   tone: 60\n\
+             \x20   lyric: la\n";
+        let project = parse(yaml);
+        assert_eq!(project.track_list.len(), 1);
+        let singing = project.track_list[0].as_singing().expect("singing track");
+        assert_eq!(singing.title, "Track 1");
+        assert_eq!(singing.note_list.len(), 1);
+    }
+
+    #[test]
+    fn masked_curve_samples_only_inside_its_runs() {
+        let curve = UMaskedCurve {
+            abbr: "pito".to_owned(),
+            runs: vec![
+                UMaskedRun {
+                    x: 0,
+                    ys: vec![1.0, 2.0],
+                },
+                UMaskedRun {
+                    x: 100,
+                    ys: vec![5.0],
+                },
+            ],
+        };
+        assert_eq!(curve.try_sample(0.0, 5), Some(1.0));
+        assert_eq!(curve.try_sample(2.5, 5), Some(1.5));
+        assert_eq!(curve.try_sample(5.0, 5), Some(2.0));
+        assert_eq!(curve.try_sample(7.5, 5), None);
+        assert_eq!(curve.try_sample(100.0, 5), Some(5.0));
+    }
 }

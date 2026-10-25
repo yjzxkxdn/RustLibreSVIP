@@ -158,6 +158,7 @@ impl<'a> UstxGenerator<'a> {
             comment: Some(String::new()),
             notes: Vec::new(),
             curves: Vec::new(),
+            masked_curves: Vec::new(),
             duration: 0,
         };
         if !os_track.note_list.is_empty() {
@@ -239,6 +240,7 @@ impl<'a> UstxGenerator<'a> {
                 position: os_note.start_pos,
                 duration: os_note.length,
                 tone: os_note.key_number,
+                tuning: 0,
                 lyric,
                 pitch: UPitch {
                     snap_first: Some(snap_first),
