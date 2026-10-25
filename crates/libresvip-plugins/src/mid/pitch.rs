@@ -29,6 +29,12 @@ pub const DEFAULT_PITCH_BEND_SENSITIVITY: i64 = 2;
 /// `MAX_PITCH_BEND_SENSITIVITY`.
 pub const MAX_PITCH_BEND_SENSITIVITY: i64 = 24;
 
+/// Widest gap the curve filler will densify; see the note on the same constant
+/// in `vsqx::vocaloid::pitch`. Projects store the pitch tail as a run of the
+/// same value up to the end marker, so a gap can cover most of the tick range
+/// even though no real transition does.
+const MAX_INTERPOLATED_GAP: i64 = 100_000;
+
 /// Python's `round()` (ties to even) as `i64`.
 
 pub use libresvip_core::core::compat::py_round as round_to_i64;
@@ -421,6 +427,14 @@ impl RelativePitchCurve {
         let mut prev_x: Option<i64> = None;
         let mut prev_y: Option<f64> = None;
         for point in points {
+            // Same guard as the VSQX handler: the `x` sentinels bracket the
+            // curve, so a point on one is never a musical position. Upstream
+            // only drops them when they carry the `-100` marker, which lets a
+            // real value stored on the end marker stretch the gap filler below
+            // over 2^30-1 ticks (hundreds of millions of lookups).
+            if !to_absolute && (point.x == START_POINT_X || point.x == END_POINT_X) {
+                continue;
+            }
             let position = point.x + pitch_offset;
             let cur_x = point.x + converted_offset;
             let base_key = match pitch_value_map.get(&position) {
@@ -449,7 +463,11 @@ impl RelativePitchCurve {
                 (Some(y), Some(rel_y))
             };
             if let (Some(y), Some(prev_x_value), Some(prev_y_value)) = (y, prev_x, prev_y) {
-                if !converted_data.is_empty() && cur_x - prev_x_value > self.pitch_interval {
+                let gap = cur_x - prev_x_value;
+                if !converted_data.is_empty()
+                    && gap > self.pitch_interval
+                    && gap <= MAX_INTERPOLATED_GAP
+                {
                     let mut tick = prev_x_value + self.pitch_interval;
                     while tick < cur_x {
                         let key_position = if to_absolute {

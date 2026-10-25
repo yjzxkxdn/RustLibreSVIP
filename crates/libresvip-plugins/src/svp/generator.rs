@@ -319,33 +319,30 @@ impl SynthVGenerator {
                 })
             },
         )?;
-        // Python divides by the raw value and raises ZeroDivisionError on a
-        // zero sample; erroring is more useful than emitting `Infinity`
-        // (serde_json would silently write `null`).
-        let invert = |value: i64| -> Result<f64, LibreSvipError> {
-            if value == 0 {
-                Err(LibreSvipError::msg("division by zero in parameter curve"))
-            } else {
-                Ok(1000.0 / value as f64)
-            }
-        };
+        // Python passes `(1000.0).__rtruediv__` and `(-1000.0).__rtruediv__`,
+        // i.e. `value / 1000.0` and `-(value / 1000.0)` -- the reflected form
+        // divides *by* 1000, it does not invert the sample. Reading it as
+        // `1000.0 / value` divided by zero on every silent sample (the ACEP
+        // fixture starts with `[(-192000, 0), …]`) and, when it did not fail,
+        // wrote a completely different tension/breath/gender curve.
+        let scale = |value: i64| -> Result<f64, LibreSvipError> { Ok(value as f64 / 1000.0) };
         let tension = self.generate_param_curve(
             &parameters.strength.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &invert,
+            &scale,
         )?;
         let breathiness = self.generate_param_curve(
             &parameters.breath.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &invert,
+            &scale,
         )?;
         let gender = self.generate_param_curve(
             &parameters.gender.reduce_sample_rate(down_sample, 0),
             0,
             0.0,
-            &|value: i64| Ok(-invert(value)?),
+            &|value: i64| Ok(-(value as f64) / 1000.0),
         )?;
         let mut sv_params = SVParameters {
             loudness,

@@ -1,4 +1,4 @@
-//! DeepVocal project binary model 鈥?port of `libresvip.plugins.dv.model`.
+//! DeepVocal project binary model — port of `libresvip.plugins.dv.model`.
 //!
 //! The Python model is a `construct` / `construct_typed` tree; the byte layout is
 //! reproduced explicitly here.

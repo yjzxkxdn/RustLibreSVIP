@@ -13,7 +13,7 @@ use libresvip_core::core::tick_counter::find_bar_index;
 use libresvip_core::core::time_sync::TimeSynchronizer;
 use libresvip_core::error::{LibreSvipError, Result};
 use libresvip_core::model::base::{Note, ParamCurve, TimeSignature};
-use libresvip_core::model::point::Point;
+use libresvip_core::model::point::{Point, END_POINT_X, START_POINT_X};
 
 use super::controllers::{
     py_round, ControllerCurve, ControllerEvent, DEFAULT_PITCH_BEND_SENSITIVITY,
@@ -22,6 +22,19 @@ use super::controllers::{
 
 /// `MAX_PITCH_BEND_SENSITIVITY // 2` is used as the reset offset.
 const PITCH_SECTION_BREAK_HALF: i64 = MIN_BREAK_LENGTH_BETWEEN_PITCH_SECTIONS / 2;
+
+/// Widest gap the curve filler will densify.
+///
+/// The filler samples the curve every `pitch_interval` ticks between two
+/// control points. Real projects store the pitch *tail* of the last note as a
+/// run of the same value up to the end marker, and some of them put that run
+/// start slightly below `2^30-1` (`爷爷的故乡.svip` has `(106629, 7293)` and
+/// then `(1073741813, 7293)`), so the sentinel check alone cannot catch it:
+/// at a 5-tick interval that gap is 215 M points -- minutes of CPU, gigabytes
+/// of scratch and an allocation trap in the wasm build. No real pitch
+/// transition spans 100 000 ticks (over three minutes at 120 bpm), so wider
+/// gaps are padding and are not interpolated.
+const MAX_INTERPOLATED_GAP: i64 = 100_000;
 
 // ---------------------------------------------------------------------------
 // PortamentoPitch
@@ -488,6 +501,17 @@ impl RelativePitchCurve {
         let mut prev_x: Option<i64> = None;
         let mut prev_y: Option<f64> = None;
         for point in points {
+            // The two `x` sentinels mark the ends of the curve, so a point that
+            // sits on one is never a musical position and must not reach the
+            // gap filler below. Upstream only drops them when they also carry
+            // the `-100` marker, so a project that stores a *real* value on the
+            // end marker (`暮卷残阳.svip` has `(1073741823, 7287)`) makes the
+            // filler walk from the last note to 2^30-1 in `pitch_interval`
+            // steps: 215 M lookups, 129 s and a 4.8 GB scratch heap, which is
+            // also what traps the wasm build (allocation failure).
+            if !to_absolute && (point.x == START_POINT_X || point.x == END_POINT_X) {
+                continue;
+            }
             let pos = point.x + pitch_offset;
             let cur_x = point.x + converted_offset;
             let base_key = lookup(pos, simulator);
@@ -495,7 +519,7 @@ impl RelativePitchCurve {
                 None => (None, None),
                 Some(base_key) => {
                     if !to_absolute && point.y == -100 {
-                        if point.x == -192_000 || point.x == 1_073_741_823 {
+                        if point.x == START_POINT_X || point.x == END_POINT_X {
                             continue;
                         }
                         (Some(0.0), Some(0.0))
@@ -511,7 +535,11 @@ impl RelativePitchCurve {
                 }
             };
             if let (Some(y), Some(prev_x_value), Some(prev_y_value)) = (y, prev_x, prev_y) {
-                if !converted_data.is_empty() && cur_x - prev_x_value > self.pitch_interval {
+                let gap = cur_x - prev_x_value;
+                if !converted_data.is_empty()
+                    && gap > self.pitch_interval
+                    && gap <= MAX_INTERPOLATED_GAP
+                {
                     let mut tick = prev_x_value + self.pitch_interval;
                     while tick < cur_x {
                         let tick_key = if to_absolute {
@@ -856,5 +884,69 @@ impl VocaloidPitchHandler {
         }
         sections.retain(|section| !section.is_empty());
         sections
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use libresvip_core::model::base::SongTempo;
+
+    /// `暮卷残阳.svip` stores a real pitch value on the end marker
+    /// `(1073741823, 7287)`. The gap filler used to treat it as a musical
+    /// point and interpolate from the last note to 2^30-1, which is 215 M
+    /// lookups, 129 s and a 4.8 GB scratch heap (it also trapped the wasm
+    /// build). A curve that puts a value on the marker must be as cheap as one
+    /// that leaves the `-100` marker there.
+    #[test]
+    fn an_end_marker_with_a_value_is_not_interpolated() {
+        let synchronizer = TimeSynchronizer::new_owned(
+            vec![SongTempo {
+                position: 0,
+                bpm: 120.0,
+            }],
+            false,
+            120.0,
+        );
+        let note = Note {
+            start_pos: 0,
+            length: 1920,
+            key_number: 60,
+            ..Note::default()
+        };
+        let time_signatures = [TimeSignature::default()];
+        let mut simulator = PitchSimulator::new(
+            synchronizer,
+            PortamentoPitch::no_portamento(),
+            &[note],
+            &time_signatures,
+        )
+        .expect("a one-note song has no overlapping notes");
+        let points = [
+            Point::new(START_POINT_X, -100),
+            Point::new(0, 6000),
+            Point::new(1920, 6000),
+            // A *different* value, like `暮卷残阳.svip`'s `(1073741823, 7287)`:
+            // with the marker skipped nothing is interpolated, without the skip
+            // the filler emits one point per `pitch_interval` from here to
+            // 2^30-1.
+            Point::new(END_POINT_X, 6700),
+        ];
+        let curve = RelativePitchCurve {
+            // The real handler uses 5; with the marker skipped the interval
+            // cannot influence the result, and this keeps a regression fast
+            // instead of letting it run for minutes.
+            pitch_interval: 1_000_000,
+            ..RelativePitchCurve::new(TICKS_IN_BEAT * 4)
+        };
+        let converted = curve.from_absolute(&points, &mut simulator);
+        // Only the note's own point survives: the `(0, 6000)` point sits before
+        // the first note (no pitch there) and the end marker is dropped. With
+        // the marker interpolated this would be ~1074 points.
+        assert_eq!(
+            converted,
+            vec![Point::new(0, 0)],
+            "the end marker must not become a musical point"
+        );
     }
 }

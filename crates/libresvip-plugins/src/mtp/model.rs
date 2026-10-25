@@ -1,4 +1,4 @@
-﻿//! Muta project binary model 鈥?port of `libresvip.plugins.mtp.model`.
+//! Muta project binary model — port of `libresvip.plugins.mtp.model`.
 //!
 //! Python uses `construct`; the byte layout (including the `\n` separators of
 //! `muta_prefixed_array`) is reproduced explicitly here.
