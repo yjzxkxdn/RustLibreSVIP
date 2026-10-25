@@ -24,3 +24,6 @@ Thumbs.db
 
 # Benchmark scratch (old binaries, separate target dir)
 /target_bench/
+
+# Web demo test dependencies (jsdom)
+/web/node_modules/

@@ -1,0 +1,16 @@
+{
+  "name": "libresvip-web",
+  "private": true,
+  "version": "1.1.1",
+  "description": "Regression checks for the WebAssembly demo. No runtime dependencies; jsdom is only used by check-ui.",
+  "type": "module",
+  "scripts": {
+    "build": "node build-web.mjs",
+    "check-ui": "node check-ui.mjs libresvip-single.html",
+    "check-abi": "node check-abi.mjs libresvip_web.wasm ../testdata/simple.json",
+    "check-page": "node check-page.mjs index.html"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

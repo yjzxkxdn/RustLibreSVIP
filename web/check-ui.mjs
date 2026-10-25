@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const { JSDOM, VirtualConsole } = require("jsdom");
 
-const page = process.argv[2];
+const page = process.argv[2] ?? "libresvip-single.html";
 const html = readFileSync(page, "utf8");
 const logs = [];
 const virtualConsole = new VirtualConsole();

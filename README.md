@@ -95,9 +95,9 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 
 | 产物 | 大小 |
 | --- | --- |
-| `libresvip_web.wasm` | 6.01 MB（6,015,525 字节） |
-| gzip / brotli（部署时传输） | 2.28 MB / **1.81 MB** |
-| `libresvip-single.html`（wasm 内联，双击即用） | 3.07 MB |
+| `libresvip_web.wasm` | 5.06 MB（5,061,056 字节，经 binaryen `-Oz`） |
+| gzip / brotli（部署时传输） | 2.36 MB / **1.89 MB** |
+| `libresvip-single.html`（wasm 内联，双击即用） | 3.20 MB |
 
 ### 下载与发布
 
@@ -126,8 +126,20 @@ cargo build --profile fast -p libresvip-gui
 # 网页版
 rustup target add wasm32-unknown-unknown
 cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
-node web/build-web.mjs
+node web/build-web.mjs        # 有 wasm-opt 在 PATH 上时会先跑 binaryen -Oz
 ```
+
+网页版的回归检查（需要 Node 18+）：
+
+```powershell
+cd web
+npm install                   # 只装 devDependency jsdom
+npm run check-ui              # 在 jsdom 里真实启动单文件版并断言 UI
+npm run check-abi             # 直接驱动 wasm 的 C ABI，跑一次 json→ustx
+npm run check-page            # 页面静态 id 检查，不需要 wasm
+```
+
+`check-ui` 会验证：43 个格式都注册了、Ustx 的 5 个输入选项与 ACE 的 8 个输出选项都渲染出来、每个控件都带 `data-side`（这正是 1.1.1 修的那个崩溃）、翻转开关后角标变成"1 项已改"、控制台无异常。任何一条不满足就返回非零。
 
 GUI 安装（重置完整性标签 + 开始菜单快捷方式）：
 
@@ -211,7 +223,7 @@ MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody（岁月静好_初
 * **From LibreSVIP 2.9.2**: all 40 format plugins, the hub model and the CLI/GUI/RPC surface — byte-identical output for the golden fixtures (40/40), plus four intentional fixes of upstream bugs (recorded per format in `testdata/golden/*/meta.json`).
 * **From UtaFormatix3** (design only, no code copied): the format-capability matrix, structured warnings, the pitch-semantics layer (RDP / resampling / interpolation / absolute↔relative), vibrato expansion, Japanese lyric detection with CV↔VCV, phoneme mapping and intermediate-format version negotiation. Its template-generator scheme (T9) was not adopted.
 * **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 14.89 s → **0.24 s** (a 4-minute, 937-note project). On a corpus of 111 real projects (352 native conversions, one process at a time) the median speed-up over the Python reference is **140×**, and a median **13.8×** over UtaFormatix3 (10.6×–22.0× per target format); converting continuously in one process costs **10.3 ms** per project (31.1 ms cold) and the wasm build settles at **15.9 ms** — see [docs/benchmark.md](docs/benchmark.md).
-* **WebAssembly ready**: the same core builds to a zero-import `.wasm` (6.01 MB, 1.81 MB brotli); conversions run in the browser and the server only serves static files.
+* **WebAssembly ready**: the same core builds to a zero-import `.wasm` (5.06 MB after binaryen `-Oz`, 1.89 MB brotli); conversions run in the browser and the server only serves static files.
 * **Targets**: native CLI, native GUI (egui) and the web build share one engine. Release artifacts: `libresvip-cli.exe`, `libresvip-gui.exe`, `libresvip-web.zip`.
 
 ```powershell
@@ -222,6 +234,7 @@ cargo build --profile fast -p libresvip-gui
 rustup target add wasm32-unknown-unknown
 cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
 node web/build-web.mjs
+cd web; npm install; npm run check-ui; npm run check-abi
 cargo test --workspace
 ```
 
