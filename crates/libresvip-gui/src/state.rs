@@ -271,6 +271,39 @@ pub fn dir_valid(value: &str) -> bool {
     (!path.is_absolute() || path.exists()) && path.is_dir()
 }
 
+/// Clean up a folder path typed or pasted into the output-folder field.
+///
+/// Explorer's "Copy as path" wraps the path in double quotes, and a paste
+/// often drags whitespace along; without this the text never validates and the
+/// field silently keeps the previous folder.
+pub fn normalize_save_folder(value: &str) -> String {
+    let trimmed = value.trim();
+    let unquoted = if trimmed.len() >= 2 {
+        let bytes = trimmed.as_bytes();
+        let first = bytes[0];
+        let last = bytes[trimmed.len() - 1];
+        if (first == b'"' && last == b'"') || (first == b'\'' && last == b'\'') {
+            &trimmed[1..trimmed.len() - 1]
+        } else {
+            trimmed
+        }
+    } else {
+        trimmed
+    };
+    unquoted.trim().to_owned()
+}
+
+/// Make `path` a directory, creating it (and its parents) when missing.
+///
+/// Typing a folder that does not exist yet is the normal case for an export
+/// location, so the field creates it instead of rejecting the input.
+pub fn ensure_output_dir(path: &Path) -> Result<(), String> {
+    if path.is_dir() {
+        return Ok(());
+    }
+    std::fs::create_dir_all(path).map_err(|error| error.to_string())
+}
+
 /// `TaskManager.output_dir`.
 pub fn output_dir(save_folder: &Path, task: &Task) -> PathBuf {
     let dir = if save_folder.is_absolute() {
@@ -337,6 +370,26 @@ mod tests {
             output_dir(Path::new(r"C:\out"), &task),
             PathBuf::from(r"C:\out")
         );
+    }
+
+    #[test]
+    fn normalize_strips_quotes_and_whitespace() {
+        // Explorer's "Copy as path" produces the quoted form.
+        assert_eq!(normalize_save_folder(r#"  "D:\out\v2"  "#), r"D:\out\v2");
+        assert_eq!(normalize_save_folder("'E:\\x'"), r"E:\x");
+        assert_eq!(normalize_save_folder(" C:\\plain "), r"C:\plain");
+        assert_eq!(normalize_save_folder(""), "");
+        assert_eq!(normalize_save_folder("\""), "\"");
+    }
+
+    #[test]
+    fn ensure_output_dir_creates_missing_folders() {
+        let root = std::env::temp_dir().join(format!("libresvip-gui-{}-out", std::process::id()));
+        let nested = root.join("a").join("b");
+        let _ = std::fs::remove_dir_all(&root);
+        assert!(ensure_output_dir(&nested).is_ok());
+        assert!(nested.is_dir());
+        let _ = std::fs::remove_dir_all(&root);
     }
 
     #[test]

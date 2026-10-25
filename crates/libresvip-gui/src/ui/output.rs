@@ -67,6 +67,15 @@ pub fn show(app: &mut App, ui: &mut Ui, rect: Rect) {
                             app.apply_save_folder();
                         }
                     });
+                    if app.save_folder_invalid {
+                        ui.label(
+                            egui::RichText::new(app.t(
+                                "Cannot create the output folder; check the path and permissions.",
+                            ))
+                            .color(pal.error)
+                            .size(Palette::small()),
+                        );
+                    }
                     ui.horizontal(|ui| {
                         ui.label(
                             egui::RichText::new(app.t("Deal with Conflicts"))

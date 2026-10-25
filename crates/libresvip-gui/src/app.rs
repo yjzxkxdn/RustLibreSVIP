@@ -14,8 +14,8 @@ use libresvip_plugins::plugin_by_suffix;
 use crate::convert::{self, JobConfig, JobResult};
 use crate::i18n::{Lang, Translator};
 use crate::state::{
-    all_format_entries, dir_valid, input_formats, output_dir, output_file_name, output_formats,
-    FieldState, FormatEntry, MiddlewareState, Task,
+    all_format_entries, ensure_output_dir, input_formats, normalize_save_folder, output_dir,
+    output_file_name, output_formats, FieldState, FormatEntry, MiddlewareState, Task,
 };
 use crate::theme::{self, Palette};
 use crate::ui;
@@ -479,6 +479,16 @@ impl App {
             }
             return;
         }
+        // The folder field commits on focus loss, which a click on "Start" can
+        // beat: reconcile here so the conversion always uses what is on screen.
+        if normalize_save_folder(&self.save_folder) != self.settings.save_folder.to_string_lossy() {
+            self.apply_save_folder();
+        }
+        if self.save_folder_invalid {
+            let message = self.t("Cannot create the output folder; check the path and permissions.");
+            self.toast = Some((message, 0.0));
+            return;
+        }
         self.yes_to_all = false;
         self.no_to_all = false;
         self.pending_conflicts.clear();
@@ -730,7 +740,6 @@ impl App {
     // -- settings ----------------------------------------------------------
 
     pub fn persist_settings(&mut self) {
-        self.settings.save_folder = PathBuf::from(&self.save_folder);
         self.settings.language = self.lang.to_settings();
         config::update_settings(|settings| *settings = self.settings.clone());
         let _ = config::save_settings();
@@ -760,13 +769,25 @@ impl App {
     }
 
     pub fn apply_save_folder(&mut self) {
-        if dir_valid(&self.save_folder) {
-            self.settings.save_folder = PathBuf::from(&self.save_folder);
+        let normalized = normalize_save_folder(&self.save_folder);
+        if normalized.is_empty() {
+            self.save_folder = ".".to_owned();
+            self.settings.save_folder = PathBuf::from(".");
             self.save_folder_invalid = false;
             self.persist_settings();
-        } else {
-            self.save_folder = self.settings.save_folder.to_string_lossy().into_owned();
-            self.save_folder_invalid = true;
+            return;
+        }
+        self.save_folder = normalized;
+        match ensure_output_dir(Path::new(&self.save_folder)) {
+            Ok(()) => {
+                self.settings.save_folder = PathBuf::from(&self.save_folder);
+                self.save_folder_invalid = false;
+                self.persist_settings();
+            }
+            // Keep the typed text: the error has to point at what the user
+            // actually entered, and `start_conversion` refuses to run until it
+            // validates.
+            Err(_) => self.save_folder_invalid = true,
         }
     }
 

@@ -271,6 +271,9 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Please select input and output formats first." => "请先选择输入和输出格式。",
         "No tasks" => "暂无任务",
         "The path does not exist or is not a directory." => "路径不存在或不是文件夹。",
+        "Cannot create the output folder; check the path and permissions." => {
+            "无法创建输出文件夹，请检查路径与权限。"
+        }
         "Plugins" => "插件",
         "Enabled" => "已启用",
         "Theme" => "主题",

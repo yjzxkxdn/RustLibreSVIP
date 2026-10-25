@@ -338,7 +338,7 @@ fn save_path_tab(app: &mut App, ui: &mut Ui, pal: &Palette) {
     ui.add_space(4.0);
     ui.horizontal(|ui| {
         let label = app.t("Output Folder");
-        widgets::text_field(
+        let response = widgets::text_field(
             ui,
             pal,
             ui.id().with("settings-save-folder"),
@@ -346,6 +346,9 @@ fn save_path_tab(app: &mut App, ui: &mut Ui, pal: &Palette) {
             &mut app.save_folder,
             Vec2::new(ui.available_width() - 100.0, 40.0),
         );
+        if response.lost_focus() {
+            app.apply_save_folder();
+        }
         if widgets::outlined_button(
             ui,
             pal,
