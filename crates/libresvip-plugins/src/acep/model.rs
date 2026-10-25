@@ -129,6 +129,7 @@ impl<'de> Deserialize<'de> for AcepParamCurve {
             #[serde(rename = "type")]
             curve_type: String,
             offset: i64,
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_vec_opt_f64")]
             values: Vec<Option<f64>>,
             points: Option<Vec<f64>>,
             #[serde(rename = "pointsVUV")]

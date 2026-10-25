@@ -136,7 +136,10 @@ impl BinarySvipParser {
             edited_phones: None,
             vibrato: None,
         };
-        let pronouncing = note.string("pronouncing")?;
+        // `pronouncing` is null for notes that never got a phoneme; the Python
+        // reference reads it as `if pronunciation := note.pronouncing`, i.e. a
+        // missing value is simply skipped.
+        let pronouncing = note.string_or_empty("pronouncing")?;
         if !pronouncing.is_empty() {
             result.pronunciation = Some(pronouncing.to_owned());
         }
