@@ -82,13 +82,19 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 
 原生单文件程序，无外部依赖：CLI 11.0 MB，GUI 12.5 MB。
 
+本机真实工程语料（4,706 个文件里挑 111 个，522 次转换，逐个串行跑）的完整结果见
+[docs/benchmark.md](docs/benchmark.md)：对 Python 参考实现中位提速 **140×**（n=23，61×–416×），
+对 UtaFormatix3 中位 **13.8×**（n=118，按目标格式 10.6×–22.0×）；同一进程内连续转换（warm）中位 **10.3 ms**（冷启动 31.1 ms），wasm 稳态 **15.9 ms**；同一输入下与 Python 的音符**逐字节一致率 99.9%**、
+音高曲线完全一致，与 UtaFormatix3 的音高曲线中位差 **0.11 半音**。复现脚本在
+[scripts/bench_corpus](scripts/bench_corpus)。
+
 ### WebAssembly
 
 `crates/libresvip-web` 把同一套核心编译成 `.wasm`：**零 import**，不需要 WASI，也不需要 wasm-bindgen，`WebAssembly.instantiate(bytes, {})` 即可运行。转换完全在浏览器本地完成，服务器只发静态文件。
 
 | 产物 | 大小 |
 | --- | --- |
-| `libresvip_web.wasm` | 6.01 MB（6,013,921 字节） |
+| `libresvip_web.wasm` | 6.01 MB（6,015,525 字节） |
 | gzip / brotli（部署时传输） | 2.28 MB / **1.81 MB** |
 | `libresvip-single.html`（wasm 内联，双击即用） | 3.07 MB |
 
@@ -129,7 +135,7 @@ powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
 
 * **不要把仓库放在“低完整性”目录里运行编译产物**（某些 sandbox / agent 工作区会给目录打上 Low 标签）。在那里编出来的 exe 会被 Windows 当作不可信程序：双击弹“安全警告”，进程以低权限启动，连 `%TEMP%` 都写不了。用 `install-gui.ps1` 复制到 `%LOCALAPPDATA%\Programs` 并重置完整性级别即可。
 * 程序未做代码签名，首次运行可能触发 SmartScreen，选“仍要运行”；从命令行启动不会弹。
-* wasm 构建需要 `wasm32-unknown-unknown` target；`[profile.wasm]` 使用 `opt-level="z"`（体积优先，转换约慢 7%）。部署形态按 **brotli -11 压缩后**的体积算：当前 1,895,549 字节（原始 6,013,921）；相对移植前的 1,791,914（原始 5,614,286）增加约 5.8%，来源是新增的 gj / msq / vsp / ppsf-legacy 四个格式与语义层。
+* wasm 构建需要 `wasm32-unknown-unknown` target；`[profile.wasm]` 使用 `opt-level="z"`（体积优先，转换约慢 7%）。部署形态按 **brotli -11 压缩后**的体积算：当前 1,894,858 字节（原始 6,015,525）；相对移植前的 1,791,914（原始 5,614,286）增加约 5.8%，来源是新增的 gj / msq / vsp / ppsf-legacy 四个格式与语义层。
 * 测试：`cargo test --workspace`（158 个测试 + 逐格式 golden 对比 + 43 格式能力表一致性检查）。
 * 网页版支持多文件批量转换和每个格式的选项面板（输入/输出选项由 `options_json` 动态渲染）；`split` / `merge` 目前在 CLI 和 GUI 中。
 
@@ -198,7 +204,7 @@ MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者；Uta
 
 * **From LibreSVIP 2.9.2**: all 40 format plugins, the hub model and the CLI/GUI/RPC surface — byte-identical output for the golden fixtures (40/40), plus four intentional fixes of upstream bugs (recorded per format in `testdata/golden/*/meta.json`).
 * **From UtaFormatix3** (design only, no code copied): the format-capability matrix, structured warnings, the pitch-semantics layer (RDP / resampling / interpolation / absolute↔relative), vibrato expansion, Japanese lyric detection with CV↔VCV, phoneme mapping and intermediate-format version negotiation. Its template-generator scheme (T9) was not adopted.
-* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 14.89 s → **0.24 s** (a 4-minute, 937-note project).
+* **Fast**: `ustx → acep` 24.7 s → **0.15 s**; `ustx → svp` 15.0 s → **0.06 s**; `ustx → vsqx` 14.89 s → **0.24 s** (a 4-minute, 937-note project). On a corpus of 111 real projects (352 native conversions, one process at a time) the median speed-up over the Python reference is **140×**, and a median **13.8×** over UtaFormatix3 (10.6×–22.0× per target format); converting continuously in one process costs **10.3 ms** per project (31.1 ms cold) and the wasm build settles at **15.9 ms** — see [docs/benchmark.md](docs/benchmark.md).
 * **WebAssembly ready**: the same core builds to a zero-import `.wasm` (6.01 MB, 1.81 MB brotli); conversions run in the browser and the server only serves static files.
 * **Targets**: native CLI, native GUI (egui) and the web build share one engine. Release artifacts: `libresvip-cli.exe`, `libresvip-gui.exe`, `libresvip-web.zip`.
 

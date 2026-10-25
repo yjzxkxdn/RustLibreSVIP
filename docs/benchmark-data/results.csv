@@ -1,0 +1,523 @@
+ts,tool,tier,source_ext,path,input_bytes,target,rep,seconds,inner_ms,ok,out_bytes,rc,error
+2026-10-25T01:41:55,rust,core,ustx,D:\Downloads\pp.ustx,7225,ufdata,1,0.0253,,1,591658,0,
+2026-10-25T01:41:55,uf3,core,ustx,D:\Downloads\pp.ustx,7225,ufdata,1,0.2076,41.1,1,2053,0,
+2026-10-25T01:41:56,rust,core,ustx,D:\Downloads\pp.ustx,7225,svp,1,0.0239,,1,216756,0,
+2026-10-25T01:41:56,uf3,core,ustx,D:\Downloads\pp.ustx,7225,svp,1,0.2082,48.9,1,4850,0,
+2026-10-25T01:41:56,rust,core,ustx,D:\Downloads\pp.ustx,7225,vsqx,1,0.0385,,1,921754,0,
+2026-10-25T01:41:56,uf3,core,ustx,D:\Downloads\pp.ustx,7225,vsqx,1,0.2325,53.2,1,13543,0,
+2026-10-25T01:41:57,rust,core,ustx,D:\Documents\x\我用什么把你留住.ustx,335981,ufdata,1,0.0665,,1,317587,0,
+2026-10-25T01:41:58,uf3,core,ustx,D:\Documents\x\我用什么把你留住.ustx,335981,ufdata,1,1.3591,1192.9,1,319687,0,
+2026-10-25T01:41:59,rust,core,ustx,D:\Documents\x\我用什么把你留住.ustx,335981,svp,1,0.0728,,1,169068,0,无效的音频文件： D:\Documents\x\我用什么把你留住_Data\1_1_1_福禄寿乐队-我用什么把你留住_(Vocals)_(Vocals)_(No Other).wav 无效的音频文件： D:\Documents\1_福禄寿乐队-我用什么把你留住_(Instrumental).wav 
+2026-10-25T01:42:01,uf3,core,ustx,D:\Documents\x\我用什么把你留住.ustx,335981,svp,1,1.3962,1214.2,1,838725,0,
+2026-10-25T01:42:02,rust,core,ustx,D:\Documents\x\我用什么把你留住.ustx,335981,vsqx,1,0.1385,,1,1175444,0,无效的音频文件： D:\Documents\x\我用什么把你留住_Data\1_1_1_福禄寿乐队-我用什么把你留住_(Vocals)_(Vocals)_(No Other).wav 
+2026-10-25T01:42:03,rust,core,ustx,E:\2026V吧赛\新-autosave.ustx,625546,ufdata,1,0.1162,,1,5758980,0,
+2026-10-25T01:42:07,uf3,core,ustx,E:\2026V吧赛\新-autosave.ustx,625546,ufdata,1,3.8319,3601.3,1,1502806,0,
+2026-10-25T01:42:11,rust,core,ustx,E:\2026V吧赛\新-autosave.ustx,625546,svp,1,0.1270,,1,2209514,0,无效的音频文件： C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1770563782372\寻味於心-无和声伴奏.wav 
+2026-10-25T01:42:15,uf3,core,ustx,E:\2026V吧赛\新-autosave.ustx,625546,svp,1,4.0513,3822.0,1,3581263,0,
+2026-10-25T01:42:19,rust,core,ustx,E:\2026V吧赛\新-autosave.ustx,625546,vsqx,1,0.4355,,1,15977665,0,无效的音频文件： C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1770563782372\寻味於心-无和声伴奏.wav 
+2026-10-25T01:42:20,rust,core,ustx,D:\Documents\x\我不曾忘记.ustx,3374909,ufdata,1,0.1791,,1,3280302,0,
+2026-10-25T01:42:20,rust,core,ustx,D:\Documents\x\我不曾忘记.ustx,3374909,svp,1,0.2128,,1,1352098,0,无效的音频文件： C:\Users\ztl\Music\花玲 _ 张安琪 _ 沐霏 - 我不曾忘记 (伴奏).flac 
+2026-10-25T01:42:21,rust,core,ustx,D:\Documents\x\我不曾忘记.ustx,3374909,vsqx,1,0.3205,,1,8585114,0,无效的音频文件： C:\Users\ztl\Music\花玲 _ 张安琪 _ 沐霏 - 我不曾忘记 (伴奏).flac 
+2026-10-25T01:42:21,rust,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,ufdata,1,0.0402,,1,254207,0,
+2026-10-25T01:42:22,uf3,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,ufdata,1,0.5607,364.1,1,31625,0,
+2026-10-25T01:42:22,rust,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,svp,1,0.0377,,1,100170,0,无效的音频文件： C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年_曲VC.mp3 无效的音频文件： C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年_曲BG.mp3 
+2026-10-25T01:42:23,uf3,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,svp,1,0.5496,379.3,1,82402,0,
+2026-10-25T01:42:23,rust,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,vsqx,1,0.0372,,1,1067125,0,无效的音频文件： C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年_曲VC.mp3 
+2026-10-25T01:42:24,uf3,core,ustx,C:\Users\newztl\Downloads\【2025元旦】不问天改词缩短版\不问天2025拜年.ustx,30386,vsqx,1,0.6176,415.4,1,145060,0,
+2026-10-25T01:42:25,rust,core,ustx,D:\Downloads\桃改.ustx,129537,ufdata,1,0.0959,,0,0,1,Error: Notes overlapped near bar 57 
+2026-10-25T01:42:25,uf3,core,ustx,D:\Downloads\桃改.ustx,129537,ufdata,1,0.3900,222.6,1,125837,0,
+2026-10-25T01:42:26,rust,core,ustx,D:\Downloads\桃改.ustx,129537,svp,1,0.0718,,0,0,1,Error: Notes overlapped near bar 57 
+2026-10-25T01:42:26,uf3,core,ustx,D:\Downloads\桃改.ustx,129537,svp,1,0.4386,244.5,1,285209,0,
+2026-10-25T01:42:27,rust,core,ustx,D:\Downloads\桃改.ustx,129537,vsqx,1,0.0812,,0,0,1,Error: Notes overlapped near bar 57 
+2026-10-25T01:42:27,uf3,core,ustx,D:\Downloads\桃改.ustx,129537,vsqx,1,0.5877,425.1,1,598068,0,
+2026-10-25T01:42:28,rust,core,ustx,D:\Downloads\09_IKnowIKnow_vocal_forutau_190.ustx,1718676,ufdata,1,0.1450,,1,965577,0,
+2026-10-25T01:42:45,uf3,core,ustx,D:\Downloads\09_IKnowIKnow_vocal_forutau_190.ustx,1718676,ufdata,1,16.3300,16119.0,1,259163,0,
+2026-10-25T01:43:01,rust,core,ustx,D:\Downloads\09_IKnowIKnow_vocal_forutau_190.ustx,1718676,svp,1,0.0947,,1,399608,0,
+2026-10-25T01:43:23,uf3,core,ustx,D:\Downloads\09_IKnowIKnow_vocal_forutau_190.ustx,1718676,svp,1,21.6428,21324.7,1,704627,0,
+2026-10-25T01:43:39,rust,core,ustx,D:\Downloads\09_IKnowIKnow_vocal_forutau_190.ustx,1718676,vsqx,1,0.1664,,1,3886547,0,
+2026-10-25T01:43:40,rust,core,ustx,D:\Documents\x\被风吹过的夏天-backup.ustx,2276194,ufdata,1,0.1550,,1,1293911,0,
+2026-10-25T01:43:40,rust,core,ustx,D:\Documents\x\被风吹过的夏天-backup.ustx,2276194,svp,1,0.1433,,1,551624,0,无效的音频文件： E:\【vsqx分享平台】工程文件1649730699475\【调音者：ly50247】【青溯】被风吹过的夏天\被风吹过的夏天\伴奏.flac 
+2026-10-25T01:43:40,rust,core,ustx,D:\Documents\x\被风吹过的夏天-backup.ustx,2276194,vsqx,1,0.1988,,1,2519869,0,无效的音频文件： E:\【vsqx分享平台】工程文件1649730699475\【调音者：ly50247】【青溯】被风吹过的夏天\被风吹过的夏天\伴奏.flac 
+2026-10-25T01:43:41,rust,core,ustx,D:\Documents\x\同学.ustx,11618,ufdata,1,0.0980,,1,5337,0,
+2026-10-25T01:43:41,uf3,core,ustx,D:\Documents\x\同学.ustx,11618,ufdata,1,0.2308,43.3,1,3644,0,
+2026-10-25T01:43:41,rust,core,ustx,D:\Documents\x\同学.ustx,11618,svp,1,0.0627,,1,6534,0,无效的音频文件： D:\z1\同学_Data\Untitled.wav 
+2026-10-25T01:43:41,uf3,core,ustx,D:\Documents\x\同学.ustx,11618,svp,1,0.2358,49.0,1,11464,0,
+2026-10-25T01:43:42,rust,core,ustx,D:\Documents\x\同学.ustx,11618,vsqx,1,0.0495,,1,26410,0,无效的音频文件： D:\z1\同学_Data\Untitled.wav 
+2026-10-25T01:43:42,uf3,core,ustx,D:\Documents\x\同学.ustx,11618,vsqx,1,0.2317,55.3,1,31356,0,
+2026-10-25T01:43:42,rust,core,ustx,D:\Documents\迷航-autosave-midi来自初梦yume.ustx,286718,ufdata,1,0.0575,,1,670871,0,
+2026-10-25T01:43:43,uf3,core,ustx,D:\Documents\迷航-autosave-midi来自初梦yume.ustx,286718,ufdata,1,0.9784,795.3,1,884261,0,
+2026-10-25T01:43:44,rust,core,ustx,D:\Documents\迷航-autosave-midi来自初梦yume.ustx,286718,svp,1,0.0539,,1,308735,0,无效的音频文件： D:\Documents\1_mihang_(Instrumental).wav 无效的音频文件： D:\Documents\1_mihang_(Vocals).wav 
+2026-10-25T01:43:46,uf3,core,ustx,D:\Documents\迷航-autosave-midi来自初梦yume.ustx,286718,svp,1,1.0728,890.2,1,2063126,0,
+2026-10-25T01:43:47,rust,core,ustx,D:\Documents\迷航-autosave-midi来自初梦yume.ustx,286718,vsqx,1,0.0654,,1,1867270,0,无效的音频文件： D:\Documents\1_mihang_(Instrumental).wav 
+2026-10-25T01:43:47,rust,core,ustx,D:\Documents\x\我们都拥有海洋单2.ustx,596790,ufdata,1,0.1020,,1,822100,0,
+2026-10-25T01:43:56,uf3,core,ustx,D:\Documents\x\我们都拥有海洋单2.ustx,596790,ufdata,1,8.9714,8759.2,1,931196,0,
+2026-10-25T01:44:05,rust,core,ustx,D:\Documents\x\我们都拥有海洋单2.ustx,596790,svp,1,0.0796,,1,352524,0,
+2026-10-25T01:44:14,uf3,core,ustx,D:\Documents\x\我们都拥有海洋单2.ustx,596790,svp,1,9.1000,8872.3,1,2337613,0,
+2026-10-25T01:44:23,rust,core,ustx,D:\Documents\x\我们都拥有海洋单2.ustx,596790,vsqx,1,0.1557,,1,2587999,0,
+2026-10-25T01:44:24,rust,core,ustx,D:\Documents\x\只看藏腔就行但是没咋动.ustx,3512230,ufdata,1,0.1688,,1,2032290,0,
+2026-10-25T01:44:24,rust,core,ustx,D:\Documents\x\只看藏腔就行但是没咋动.ustx,3512230,svp,1,0.1726,,1,848021,0,无效的音频文件： D:\Documents\x\0.wav 
+2026-10-25T01:44:24,rust,core,ustx,D:\Documents\x\只看藏腔就行但是没咋动.ustx,3512230,vsqx,1,0.2094,,1,4129751,0,无效的音频文件： D:\Documents\x\0.wav 
+2026-10-25T01:44:25,rust,core,ustx,D:\Documents\x\01.ustx,5637,ufdata,1,0.0820,,1,14394,0,
+2026-10-25T01:44:25,uf3,core,ustx,D:\Documents\x\01.ustx,5637,ufdata,1,0.2057,31.4,1,1595,0,
+2026-10-25T01:44:25,rust,core,ustx,D:\Documents\x\01.ustx,5637,svp,1,0.0795,,1,8002,0,
+2026-10-25T01:44:25,uf3,core,ustx,D:\Documents\x\01.ustx,5637,svp,1,0.2189,40.9,1,4058,0,
+2026-10-25T01:44:26,rust,core,ustx,D:\Documents\x\01.ustx,5637,vsqx,1,0.0552,,1,68377,0,
+2026-10-25T01:44:26,uf3,core,ustx,D:\Documents\x\01.ustx,5637,vsqx,1,0.2149,38.7,1,9685,0,
+2026-10-25T01:44:26,rust,core,ustx,D:\Documents\x\【调音者：1041723931】【夏语遥】这世界那么多人-autosave.ustx,472866,ufdata,1,0.0714,,1,443755,0,
+2026-10-25T01:44:28,uf3,core,ustx,D:\Documents\x\【调音者：1041723931】【夏语遥】这世界那么多人-autosave.ustx,472866,ufdata,1,2.2707,2076.3,1,458741,0,
+2026-10-25T01:44:31,rust,core,ustx,D:\Documents\x\【调音者：1041723931】【夏语遥】这世界那么多人-autosave.ustx,472866,svp,1,0.0448,,1,219146,0,无效的音频文件： D:\Documents\歌mp3\f52537d2d4aa7cd80b0e18dedca65c53.wav 
+2026-10-25T01:44:33,uf3,core,ustx,D:\Documents\x\【调音者：1041723931】【夏语遥】这世界那么多人-autosave.ustx,472866,svp,1,2.3725,2173.0,1,1188489,0,
+2026-10-25T01:44:36,rust,core,ustx,D:\Documents\x\【调音者：1041723931】【夏语遥】这世界那么多人-autosave.ustx,472866,vsqx,1,0.1082,,1,1537052,0,无效的音频文件： D:\Documents\歌mp3\f52537d2d4aa7cd80b0e18dedca65c53.wav 
+2026-10-25T01:44:36,rust,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,ufdata,1,0.1077,,1,1235369,0,
+2026-10-25T01:44:47,uf3,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,ufdata,1,10.7299,10486.4,1,1055463,0,
+2026-10-25T01:44:58,rust,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,svp,1,0.1001,,1,496817,0,
+2026-10-25T01:45:09,uf3,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,svp,1,10.9805,10669.3,1,2521967,0,
+2026-10-25T01:45:20,rust,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,vsqx,1,0.1444,,1,3604313,0,
+2026-10-25T01:45:21,rust,core,ustx,D:\Documents\x\生活在别处的你.ustx,2883373,ufdata,1,0.1891,,1,2255566,0,
+2026-10-25T01:45:21,rust,core,ustx,D:\Documents\x\生活在别处的你.ustx,2883373,svp,1,0.1637,,1,875871,0,
+2026-10-25T01:45:21,rust,core,ustx,D:\Documents\x\生活在别处的你.ustx,2883373,vsqx,1,0.2420,,1,4387521,0,
+2026-10-25T01:45:22,rust,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,ufdata,1,0.0638,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T01:45:22,uf3,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,ufdata,1,0.2748,102.0,1,22772,0,
+2026-10-25T01:45:22,rust,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,svp,1,0.0238,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T01:45:23,uf3,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,svp,1,0.2840,110.4,1,49338,0,
+2026-10-25T01:45:23,rust,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,vsqx,1,0.0235,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T01:45:23,uf3,core,ustx,E:\2026V吧赛\最最最差劲神明\最最最差劲神明_和声.ustx,64763,vsqx,1,0.3274,150.6,1,160042,0,
+2026-10-25T01:45:24,rust,core,ustx,D:\Documents\x\拥挤.ustx,351248,ufdata,1,0.1169,,1,185179,0,
+2026-10-25T01:45:25,uf3,core,ustx,D:\Documents\x\拥挤.ustx,351248,ufdata,1,0.8485,664.3,1,150175,0,
+2026-10-25T01:45:26,rust,core,ustx,D:\Documents\x\拥挤.ustx,351248,svp,1,0.0691,,1,99807,0,无效的音频文件： D:\z1\本兮\轻轻\拥挤_Data\1_1_茶二娘 _ 小田音乐社 - 拥挤_(Vocals)_(Vocals).wav 
+2026-10-25T01:45:27,uf3,core,ustx,D:\Documents\x\拥挤.ustx,351248,svp,1,0.9116,703.8,1,408665,0,
+2026-10-25T01:45:27,rust,core,ustx,D:\Documents\x\拥挤.ustx,351248,vsqx,1,0.0763,,1,686137,0,无效的音频文件： D:\z1\本兮\轻轻\拥挤_Data\1_1_茶二娘 _ 小田音乐社 - 拥挤_(Vocals)_(Vocals).wav 
+2026-10-25T01:45:28,rust,core,ustx,D:\Documents\x\闪烁最美的光.ustx,610639,ufdata,1,0.0694,,1,740840,0,
+2026-10-25T01:45:30,uf3,core,ustx,D:\Documents\x\闪烁最美的光.ustx,610639,ufdata,1,2.2304,2041.3,1,285471,0,
+2026-10-25T01:45:32,rust,core,ustx,D:\Documents\x\闪烁最美的光.ustx,610639,svp,1,0.0509,,1,304677,0,
+2026-10-25T01:45:35,uf3,core,ustx,D:\Documents\x\闪烁最美的光.ustx,610639,svp,1,2.2934,2113.6,1,721655,0,
+2026-10-25T01:45:37,rust,core,ustx,D:\Documents\x\闪烁最美的光.ustx,610639,vsqx,1,0.0793,,1,2256140,0,
+2026-10-25T01:45:37,rust,core,ustx,D:\Documents\x\七秒.ustx,2825499,ufdata,1,0.1543,,1,3189494,0,
+2026-10-25T01:45:37,rust,core,ustx,D:\Documents\x\七秒.ustx,2825499,svp,1,0.1362,,1,1230830,0,
+2026-10-25T01:45:38,rust,core,ustx,D:\Documents\x\七秒.ustx,2825499,vsqx,1,0.2899,,1,8888270,0,
+2026-10-25T01:45:38,rust,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,ufdata,1,0.0502,,1,7941,0,
+2026-10-25T01:45:38,uf3,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,ufdata,1,0.2235,43.2,1,7545,0,
+2026-10-25T01:45:39,rust,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,svp,1,0.0304,,1,7302,0,
+2026-10-25T01:45:39,uf3,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,svp,1,0.2400,52.6,1,19368,0,
+2026-10-25T01:45:39,rust,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,vsqx,1,0.0485,,1,27865,0,
+2026-10-25T01:45:40,uf3,core,ustx,D:\Documents\x\ysqd-autosave.ustx,14254,vsqx,1,0.2475,64.6,1,49829,0,
+2026-10-25T01:45:40,rust,core,ustx,D:\Documents\x\这世界那么多人.ustx,465943,ufdata,1,0.0849,,1,448676,0,
+2026-10-25T01:45:42,uf3,core,ustx,D:\Documents\x\这世界那么多人.ustx,465943,ufdata,1,2.2571,2039.3,1,470633,0,
+2026-10-25T01:45:45,rust,core,ustx,D:\Documents\x\这世界那么多人.ustx,465943,svp,1,0.0795,,1,224009,0,无效的音频文件： D:\Documents\1_莫文蔚 - 这世界那么多人_(Instrumental).wav 无效的音频文件： D:\Documents\这世界那么多人.flac 
+2026-10-25T01:45:47,uf3,core,ustx,D:\Documents\x\这世界那么多人.ustx,465943,svp,1,2.3138,2127.2,1,1198379,0,
+2026-10-25T01:45:49,rust,core,ustx,D:\Documents\x\这世界那么多人.ustx,465943,vsqx,1,0.1080,,1,1527367,0,无效的音频文件： D:\Documents\1_莫文蔚 - 这世界那么多人_(Instrumental).wav 
+2026-10-25T01:45:50,rust,core,ustx,D:\Documents\x\透明.ustx,1522301,ufdata,1,0.1021,,1,2531736,0,
+2026-10-25T01:46:12,uf3,core,ustx,D:\Documents\x\透明.ustx,1522301,ufdata,1,22.1984,21944.8,1,1367192,0,
+2026-10-25T01:46:33,rust,core,ustx,D:\Documents\x\透明.ustx,1522301,svp,1,0.0986,,1,1094667,0,无效的音频文件： D:\Documents\【vsqx分享平台】工程文件1619928561806\【调音者：一道下划线_】【G.E.M.邓紫棋】透明【和声付】\伴奏.mp3 
+2026-10-25T01:46:55,uf3,core,ustx,D:\Documents\x\透明.ustx,1522301,svp,1,22.0118,21692.2,1,3405461,0,
+2026-10-25T01:47:18,rust,core,ustx,D:\Documents\x\透明.ustx,1522301,vsqx,1,0.2025,,1,6523484,0,无效的音频文件： D:\Documents\【vsqx分享平台】工程文件1619928561806\【调音者：一道下划线_】【G.E.M.邓紫棋】透明【和声付】\伴奏.mp3 
+2026-10-25T01:47:18,rust,core,ustx,D:\Documents\x\万千花蕊慈母悲哀.ustx,4160269,ufdata,1,0.2452,,1,2545048,0,
+2026-10-25T01:47:19,rust,core,ustx,D:\Documents\x\万千花蕊慈母悲哀.ustx,4160269,svp,1,0.2073,,1,1124662,0,
+2026-10-25T01:47:19,rust,core,ustx,D:\Documents\x\万千花蕊慈母悲哀.ustx,4160269,vsqx,1,0.3027,,1,6505140,0,
+2026-10-25T01:47:19,rust,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,ufdata,1,0.0889,,1,338561,0,
+2026-10-25T01:47:20,uf3,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,ufdata,1,0.4032,224.6,1,34150,0,
+2026-10-25T01:47:20,rust,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,svp,1,0.0564,,1,163346,0,
+2026-10-25T01:47:21,uf3,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,svp,1,0.4214,236.7,1,72179,0,
+2026-10-25T01:47:21,rust,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,vsqx,1,0.0744,,1,973113,0,
+2026-10-25T01:47:22,uf3,core,ustx,D:\Documents\x\掰掰掰2.ustx,84126,vsqx,1,0.5363,303.2,1,242521,0,
+2026-10-25T01:47:23,rust,core,ustx,D:\Documents\x\阿刁 - 斯圣君.ustx,392974,ufdata,1,0.1017,,1,1041417,0,
+2026-10-25T01:47:27,uf3,core,ustx,D:\Documents\x\阿刁 - 斯圣君.ustx,392974,ufdata,1,4.0061,3793.6,1,681617,0,
+2026-10-25T01:47:31,rust,core,ustx,D:\Documents\x\阿刁 - 斯圣君.ustx,392974,svp,1,0.0833,,1,428756,0,
+2026-10-25T01:47:35,uf3,core,ustx,D:\Documents\x\阿刁 - 斯圣君.ustx,392974,svp,1,4.2284,3983.1,1,1679304,0,
+2026-10-25T01:47:39,rust,core,ustx,D:\Documents\x\阿刁 - 斯圣君.ustx,392974,vsqx,1,0.1678,,1,3268345,0,
+2026-10-25T01:47:40,rust,core,ustx,D:\Documents\wdgswxw.ustx,1124626,ufdata,1,0.1282,,1,2477670,0,
+2026-10-25T01:48:13,uf3,core,ustx,D:\Documents\wdgswxw.ustx,1124626,ufdata,1,33.1753,32899.7,1,2509902,0,
+2026-10-25T01:48:47,rust,core,ustx,D:\Documents\wdgswxw.ustx,1124626,svp,1,0.1094,,1,1004402,0,无效的音频文件： C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1669520149664\【调音者：ly50247】【沨漪】我的故事未写完\我的故事未写完\伴奏.flac 
+2026-10-25T01:49:21,uf3,core,ustx,D:\Documents\wdgswxw.ustx,1124626,svp,1,33.7753,33531.1,1,6076920,0,
+2026-10-25T01:49:55,rust,core,ustx,D:\Documents\wdgswxw.ustx,1124626,vsqx,1,0.2437,,1,7487533,0,无效的音频文件： C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1669520149664\【调音者：ly50247】【沨漪】我的故事未写完\我的故事未写完\伴奏.flac 
+2026-10-25T01:50:02,rust,core,ustx,E:\2026歌影\0\112.ustx,2474197,ufdata,1,6.6532,,1,1400852,0,
+2026-10-25T01:50:03,rust,core,ustx,E:\2026歌影\0\112.ustx,2474197,svp,1,0.2591,,1,665088,0,
+2026-10-25T01:50:03,rust,core,ustx,E:\2026歌影\0\112.ustx,2474197,vsqx,1,0.1791,,1,3439299,0,
+2026-10-25T01:50:03,rust,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,ufdata,1,0.0406,,1,52115,0,
+2026-10-25T01:50:03,uf3,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,ufdata,1,0.2612,84.5,1,47868,0,
+2026-10-25T01:50:04,rust,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,svp,1,0.0255,,1,25555,0,
+2026-10-25T01:50:04,uf3,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,svp,1,0.2687,99.6,1,117248,0,
+2026-10-25T01:50:04,rust,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,vsqx,1,0.0275,,1,138897,0,
+2026-10-25T01:50:05,uf3,core,ustx,C:\Users\newztl\Downloads\拆尾韵.ustx,33069,vsqx,1,0.3506,170.8,1,216773,0,
+2026-10-25T01:50:05,rust,core,ustx,D:\Documents\14.ustx,450876,ufdata,1,0.0633,,1,911956,0,
+2026-10-25T01:50:10,uf3,core,ustx,D:\Documents\14.ustx,450876,ufdata,1,4.8587,4626.5,1,913433,0,
+2026-10-25T01:50:15,rust,core,ustx,D:\Documents\14.ustx,450876,svp,1,0.0938,,1,387681,0,无效的音频文件： D:\Documents\1_伴奏_(Instrumental).wav 
+2026-10-25T01:50:20,uf3,core,ustx,D:\Documents\14.ustx,450876,svp,1,5.2884,5069.6,1,2270681,0,
+2026-10-25T01:50:26,rust,core,ustx,D:\Documents\14.ustx,450876,vsqx,1,0.1041,,1,2874248,0,无效的音频文件： D:\Documents\1_伴奏_(Instrumental).wav 
+2026-10-25T01:50:26,rust,core,ustx,D:\Documents\x\大概-backup.ustx,579821,ufdata,1,0.1023,,1,500584,0,
+2026-10-25T01:50:29,uf3,core,ustx,D:\Documents\x\大概-backup.ustx,579821,ufdata,1,2.8864,2666.1,1,555933,0,
+2026-10-25T01:50:32,rust,core,ustx,D:\Documents\x\大概-backup.ustx,579821,svp,1,0.0820,,1,271608,0,无效的音频文件： D:\Documents\大概_Data\1_1_【诗岸】大概【五维介质2021调校赛】_(Vocals)_(Vocals).wav 无效的音频文件： D:\Documents\1_【诗岸】大概【五维介质2021调校赛】_(Instrumental).wav 
+2026-10-25T01:50:35,uf3,core,ustx,D:\Documents\x\大概-backup.ustx,579821,svp,1,2.9772,2756.7,1,1427512,0,
+2026-10-25T01:50:38,rust,core,ustx,D:\Documents\x\大概-backup.ustx,579821,vsqx,1,0.1022,,1,1672634,0,无效的音频文件： D:\Documents\大概_Data\1_1_【诗岸】大概【五维介质2021调校赛】_(Vocals)_(Vocals).wav 
+2026-10-25T01:50:39,rust,core,ustx,E:\2026歌影\0\113.ustx,2472461,ufdata,1,0.6473,,1,1400595,0,
+2026-10-25T01:50:39,rust,core,ustx,E:\2026歌影\0\113.ustx,2472461,svp,1,0.1167,,1,662109,0,
+2026-10-25T01:50:39,rust,core,ustx,E:\2026歌影\0\113.ustx,2472461,vsqx,1,0.1943,,1,3436128,0,
+2026-10-25T01:50:39,rust,core,ustx,D:\Documents\x\漠河.ustx,476111,ufdata,1,0.0576,,1,1015552,0,
+2026-10-25T01:50:42,uf3,core,ustx,D:\Documents\x\漠河.ustx,476111,ufdata,1,2.4277,2237.6,1,425610,0,
+2026-10-25T01:50:44,rust,core,ustx,D:\Documents\x\漠河.ustx,476111,svp,1,0.0494,,1,452917,0,无效的音频文件： D:\Documents\1_柳爽 - 漠河舞厅_(Instrumental).wav 
+2026-10-25T01:50:47,uf3,core,ustx,D:\Documents\x\漠河.ustx,476111,svp,1,2.5065,2297.6,1,1064489,0,
+2026-10-25T01:50:50,rust,core,ustx,D:\Documents\x\漠河.ustx,476111,vsqx,1,0.1128,,1,3988514,0,无效的音频文件： D:\Documents\1_柳爽 - 漠河舞厅_(Instrumental).wav 
+2026-10-25T01:50:50,rust,core,ustx,D:\Documents\x\【调音者：络霏】蒲公英之路【JUSF周存】.ustx,2038583,ufdata,1,0.1411,,1,1189514,0,
+2026-10-25T01:50:50,rust,core,ustx,D:\Documents\x\【调音者：络霏】蒲公英之路【JUSF周存】.ustx,2038583,svp,1,0.1277,,1,484736,0,
+2026-10-25T01:50:50,rust,core,ustx,D:\Documents\x\【调音者：络霏】蒲公英之路【JUSF周存】.ustx,2038583,vsqx,1,0.1736,,1,2526439,0,
+2026-10-25T01:50:51,rust,core,svp,D:\Documents\x\好想你.svp,11838,ufdata,1,0.0645,,1,21451,0,
+2026-10-25T01:50:51,uf3,core,svp,D:\Documents\x\好想你.svp,11838,ufdata,1,0.2399,60.4,1,41778,0,
+2026-10-25T01:50:51,rust,core,svp,D:\Documents\x\好想你.svp,11838,vsqx,1,0.0575,,1,90909,0,无效的音频文件： F:\Kugou\朱主爱 - 好想你 (原版伴奏).mp3 
+2026-10-25T01:50:52,uf3,core,svp,D:\Documents\x\好想你.svp,11838,vsqx,1,0.3127,121.0,1,160219,0,
+2026-10-25T01:50:52,rust,core,svp,D:\Documents\x\好想你.svp,11838,ustx,1,0.0356,,1,51558,0,无效的音频文件： F:\Kugou\朱主爱 - 好想你 (原版伴奏).mp3 无效的音频文件： F:\Kugou\朱主爱 - 好想你.flac 
+2026-10-25T01:50:52,uf3,core,svp,D:\Documents\x\好想你.svp,11838,ustx,1,0.2565,74.5,1,65548,0,
+2026-10-25T01:50:53,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\yi.svp,388056,ufdata,1,0.0570,,1,57441,0,
+2026-10-25T01:50:53,uf3,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\yi.svp,388056,ufdata,1,0.2383,64.0,1,61686,0,
+2026-10-25T01:50:53,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\yi.svp,388056,vsqx,1,0.0450,,1,362968,0,
+2026-10-25T01:50:53,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\yi.svp,388056,ustx,1,0.0447,,1,385948,0,
+2026-10-25T01:50:54,uf3,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\yi.svp,388056,ustx,1,0.2823,101.8,1,368827,0,
+2026-10-25T01:50:54,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\test.svp,1020983,ufdata,1,0.0570,,1,787987,0,
+2026-10-25T01:50:54,uf3,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\test.svp,1020983,ufdata,1,0.2755,70.7,1,54065,0,
+2026-10-25T01:50:55,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\test.svp,1020983,vsqx,1,0.1039,,1,3170827,0,
+2026-10-25T01:50:55,rust,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\test.svp,1020983,ustx,1,0.0670,,1,1677493,0,
+2026-10-25T01:50:55,uf3,core,svp,C:\Users\newztl\Downloads\sv-timing-extractor\sv-timing-extractor\data\svp\test.svp,1020983,ustx,1,0.2954,107.9,1,325604,0,
+2026-10-25T01:50:56,rust,core,svp,D:\Downloads\哈基山的基米.svp,4545718,ufdata,1,0.1253,,1,32939,0,
+2026-10-25T01:50:56,rust,core,svp,D:\Downloads\哈基山的基米.svp,4545718,vsqx,1,0.1043,,1,147490,0,
+2026-10-25T01:50:56,rust,core,svp,D:\Downloads\哈基山的基米.svp,4545718,ustx,1,0.0976,,1,75583,0,
+2026-10-25T01:50:56,rust,core,svp,D:\Documents\x\你的答案.svp,54100,ufdata,1,0.0462,,1,125026,0,
+2026-10-25T01:50:57,uf3,core,svp,D:\Documents\x\你的答案.svp,54100,ufdata,1,0.6579,475.9,1,257995,0,
+2026-10-25T01:50:57,rust,core,svp,D:\Documents\x\你的答案.svp,54100,vsqx,1,0.0770,,1,491764,0,无效的音频文件： D:\z1\测试\1_阿冗 - 你的答案_(Instrumental).wav 
+2026-10-25T01:50:59,uf3,core,svp,D:\Documents\x\你的答案.svp,54100,vsqx,1,1.4274,1239.8,1,906886,0,
+2026-10-25T01:51:00,rust,core,svp,D:\Documents\x\你的答案.svp,54100,ustx,1,0.0614,,1,351030,0,无效的音频文件： D:\z1\测试\1_阿冗 - 你的答案_(Instrumental).wav 
+2026-10-25T01:51:01,uf3,core,svp,D:\Documents\x\你的答案.svp,54100,ustx,1,0.6972,526.7,1,367884,0,
+2026-10-25T01:51:02,rust,core,svp,D:\Documents\x\人间应又雪.svp,252832,ufdata,1,0.0704,,1,634685,0,
+2026-10-25T02:08:28,uf3,core,svp,D:\Documents\x\人间应又雪.svp,252832,ufdata,1,240.1436,,0,0,-9,timeout
+2026-10-25T02:08:28,rust,core,svp,D:\Documents\x\人间应又雪.svp,252832,vsqx,1,0.2901,,1,2382764,0,
+2026-10-25T02:08:29,rust,core,svp,D:\Documents\x\人间应又雪.svp,252832,ustx,1,0.0772,,1,1379268,0,
+2026-10-25T02:08:29,rust,core,svp,D:\Documents\x\我的心是不夜城.svp,961522,ufdata,1,0.0602,,1,377900,0,
+2026-10-25T02:08:44,uf3,core,svp,D:\Documents\x\我的心是不夜城.svp,961522,ufdata,1,15.3470,15130.2,1,938096,0,
+2026-10-25T02:08:44,rust,core,svp,D:\Documents\x\我的心是不夜城.svp,961522,vsqx,1,0.0654,,1,1458738,0,
+2026-10-25T02:08:44,rust,core,svp,D:\Documents\x\我的心是不夜城.svp,961522,ustx,1,0.0523,,1,1032213,0,
+2026-10-25T02:08:59,uf3,core,svp,D:\Documents\x\我的心是不夜城.svp,961522,ustx,1,15.1401,14892.6,1,1326262,0,
+2026-10-25T02:08:59,rust,core,svp,D:\Documents\x\老男孩.svp,2145021,ufdata,1,0.0794,,1,736875,0,
+2026-10-25T02:08:59,rust,core,svp,D:\Documents\x\老男孩.svp,2145021,vsqx,1,0.1455,,1,2959905,0,无效的音频文件： E:\\老男孩_Data\1_老男孩_(Vocals).wav 
+2026-10-25T02:09:00,rust,core,svp,D:\Documents\x\老男孩.svp,2145021,ustx,1,0.1242,,1,2544528,0,无效的音频文件： E:\\老男孩_Data\1_老男孩_(Vocals).wav 无效的音频文件： E:\\老男孩_Data\老男孩.wav 无效的音频文件： E:\\老男孩_Data\老男孩bz.wav 
+2026-10-25T02:09:00,rust,core,svp,D:\Documents\音节.svp,19998,ufdata,1,0.0497,,1,48474,0,
+2026-10-25T02:09:00,uf3,core,svp,D:\Documents\音节.svp,19998,ufdata,1,0.2685,71.7,1,41010,0,
+2026-10-25T02:09:00,rust,core,svp,D:\Documents\音节.svp,19998,vsqx,1,0.0652,,1,291767,0,
+2026-10-25T02:09:00,uf3,core,svp,D:\Documents\音节.svp,19998,vsqx,1,0.3037,131.5,1,148503,0,
+2026-10-25T02:09:00,rust,core,svp,D:\Documents\音节.svp,19998,ustx,1,0.0276,,1,116589,0,
+2026-10-25T02:09:01,uf3,core,svp,D:\Documents\音节.svp,19998,ustx,1,0.2770,84.4,1,50317,0,
+2026-10-25T02:09:01,rust,core,svp,D:\Documents\x\还没到家.svp,109000,ufdata,1,0.0665,,1,187345,0,
+2026-10-25T02:13:01,uf3,core,svp,D:\Documents\x\还没到家.svp,109000,ufdata,1,240.1312,,0,0,-9,timeout
+2026-10-25T02:13:01,rust,core,svp,D:\Documents\x\还没到家.svp,109000,vsqx,1,0.1200,,1,754191,0,
+2026-10-25T02:13:01,rust,core,svp,D:\Documents\x\还没到家.svp,109000,ustx,1,0.0719,,1,427619,0,
+2026-10-25T02:13:01,rust,core,svp,D:\Documents\x\如烟.svp,646333,ufdata,1,0.0560,,1,583555,0,
+2026-10-25T02:13:02,uf3,core,svp,D:\Documents\x\如烟.svp,646333,ufdata,1,0.7731,598.8,1,320718,0,
+2026-10-25T02:13:02,rust,core,svp,D:\Documents\x\如烟.svp,646333,vsqx,1,0.1303,,1,2271408,0,无效的音频文件： D:\Documents\x\如烟_Data\1_1_听一次哭一次！五月天阿信最佳神作词《如烟》_(Vocals)_(Vocals)d.wav 
+2026-10-25T02:13:02,rust,core,svp,D:\Documents\x\如烟.svp,646333,ustx,1,0.0649,,1,1181513,0,无效的音频文件： D:\Documents\x\如烟_Data\1_1_听一次哭一次！五月天阿信最佳神作词《如烟》_(Vocals)_(Vocals)d.wav 
+2026-10-25T02:13:03,uf3,core,svp,D:\Documents\x\如烟.svp,646333,ustx,1,0.8011,638.1,1,510387,0,
+2026-10-25T02:13:03,rust,core,svp,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1713364856506-绝体绝命\绝体绝命.svp,2153885,ufdata,1,0.0802,,1,452741,0,
+2026-10-25T02:13:03,rust,core,svp,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1713364856506-绝体绝命\绝体绝命.svp,2153885,vsqx,1,0.1397,,1,1743514,0,无效的音频文件： C:/Users/locke/Desktop/banzou.wav 
+2026-10-25T02:13:03,rust,core,svp,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1713364856506-绝体绝命\绝体绝命.svp,2153885,ustx,1,0.0813,,1,991478,0,无效的音频文件： C:/Users/locke/Desktop/banzou.wav 
+2026-10-25T02:13:03,rust,core,svp,D:\Documents\yw.svp,87903,ufdata,1,0.0517,,1,78541,0,
+2026-10-25T02:13:03,uf3,core,svp,D:\Documents\yw.svp,87903,ufdata,1,0.2002,29.8,1,6529,0,
+2026-10-25T02:13:03,rust,core,svp,D:\Documents\yw.svp,87903,vsqx,1,0.0255,,1,344536,0,
+2026-10-25T02:13:04,uf3,core,svp,D:\Documents\yw.svp,87903,vsqx,1,0.2184,46.4,1,64927,0,
+2026-10-25T02:13:04,rust,core,svp,D:\Documents\yw.svp,87903,ustx,1,0.0342,,1,471765,0,
+2026-10-25T02:13:04,uf3,core,svp,D:\Documents\yw.svp,87903,ustx,1,0.2091,43.7,1,39640,0,
+2026-10-25T02:13:04,rust,core,svp,D:\Documents\x\破牢.svp,181349,ufdata,1,0.0483,,1,104082,0,
+2026-10-25T02:17:04,uf3,core,svp,D:\Documents\x\破牢.svp,181349,ufdata,1,240.1399,,0,0,-9,timeout
+2026-10-25T02:17:04,rust,core,svp,D:\Documents\x\破牢.svp,181349,vsqx,1,0.0716,,1,427844,0,无效的音频文件： D:\Documents\破牢_Data\1_【高中生原创】16岁独立作曲填词编曲的歌曲《破牢》，可以听听吗_(Vocals).wav 
+2026-10-25T02:17:04,rust,core,svp,D:\Documents\x\破牢.svp,181349,ustx,1,0.0385,,1,534955,0,无效的音频文件： D:\Documents\破牢_Data\1_【高中生原创】16岁独立作曲填词编曲的歌曲《破牢》，可以听听吗_(Vocals).wav 无效的音频文件： D:\qqw\2375319874\FileRecv\破牢1.wav 
+2026-10-25T02:17:04,rust,core,svp,D:\Documents\x\比较.svp,854606,ufdata,1,0.0770,,1,268414,0,
+2026-10-25T02:21:04,uf3,core,svp,D:\Documents\x\比较.svp,854606,ufdata,1,240.1341,,0,0,-9,timeout
+2026-10-25T02:21:04,rust,core,svp,D:\Documents\x\比较.svp,854606,vsqx,1,0.0994,,1,1192384,0,无效的音频文件： D:\Documents\比较_Data\1_说笑讥笑苦笑，是有人在做比较 (6)_(Vocals).wav 
+2026-10-25T02:21:05,rust,core,svp,D:\Documents\x\比较.svp,854606,ustx,1,0.0833,,1,697497,0,无效的音频文件： D:\Documents\比较_Data\1_说笑讥笑苦笑，是有人在做比较 (6)_(Vocals).wav 无效的音频文件： D:\Documents\比较_Data\1_说笑讥笑苦笑，是有人在做比较 (6)_(Instrumental).wav 
+2026-10-25T02:21:05,rust,core,svp,D:\Documents\ue.svp,8267,ufdata,1,0.0452,,1,4541,0,
+2026-10-25T02:21:05,uf3,core,svp,D:\Documents\ue.svp,8267,ufdata,1,0.2044,30.2,1,10774,0,
+2026-10-25T02:21:05,rust,core,svp,D:\Documents\ue.svp,8267,vsqx,1,0.0273,,1,21330,0,
+2026-10-25T02:21:05,uf3,core,svp,D:\Documents\ue.svp,8267,vsqx,1,0.2174,47.3,1,38443,0,
+2026-10-25T02:21:05,rust,core,svp,D:\Documents\ue.svp,8267,ustx,1,0.0256,,1,11354,0,
+2026-10-25T02:21:05,uf3,core,svp,D:\Documents\ue.svp,8267,ustx,1,0.2196,41.6,1,16600,0,
+2026-10-25T02:21:05,rust,core,svp,D:\Documents\x\某个心跳.svp,276944,ufdata,1,0.0872,,1,765466,0,
+2026-10-25T02:23:29,uf3,core,svp,D:\Documents\x\人间应又雪.svp,252832,ustx,1,120.0816,,0,0,-9,timeout
+2026-10-25T02:25:29,uf3,core,svp,D:\Documents\x\还没到家.svp,109000,vsqx,1,120.0680,,0,0,-9,timeout
+2026-10-25T02:27:29,uf3,core,svp,D:\Documents\x\破牢.svp,181349,vsqx,1,120.0767,,0,0,-9,timeout
+2026-10-25T02:29:54,uf3,core,svp,D:\Documents\x\某个心跳.svp,276944,ufdata,1,60.0301,,0,0,-9,timeout
+2026-10-25T02:29:55,rust,core,svp,D:\Documents\x\某个心跳.svp,276944,vsqx,1,0.0965,,1,2944506,0,无效的音频文件： D:\Documents\某个心跳_Data\1_1_1_本兮 - 某个心跳_(Vocals)_(Vocals)_(No Reverb).wav 
+2026-10-25T02:29:55,rust,core,svp,D:\Documents\x\某个心跳.svp,276944,ustx,1,0.0516,,1,1701240,0,无效的音频文件： D:\Documents\某个心跳_Data\1_1_1_本兮 - 某个心跳_(Vocals)_(Vocals)_(No Reverb).wav 无效的音频文件： D:\Documents\某个心跳_Data\1_本兮 - 某个心跳_(Instrumental).wav 
+2026-10-25T02:29:55,rust,core,svp,D:\Documents\x\五十.svp,936499,ufdata,1,0.0650,,1,356110,0,
+2026-10-25T02:30:55,uf3,core,svp,D:\Documents\x\五十.svp,936499,ufdata,1,60.0739,,0,0,-9,timeout
+2026-10-25T02:30:55,rust,core,svp,D:\Documents\x\五十.svp,936499,vsqx,1,0.1194,,1,1843021,0,无效的音频文件： E:\\五十_Data\五十f.wav 
+2026-10-25T02:30:55,rust,core,svp,D:\Documents\x\五十.svp,936499,ustx,1,0.0518,,1,812259,0,无效的音频文件： E:\\五十_Data\五十f.wav 无效的音频文件： E:\\五十_Data\五十.wav 无效的音频文件： D:\Documents\oCam\五十伴奏.wav 
+2026-10-25T02:30:55,rust,core,svp,D:\Documents\曲.svp,83631,ufdata,1,0.0350,,1,47886,0,
+2026-10-25T02:30:55,uf3,core,svp,D:\Documents\曲.svp,83631,ufdata,1,0.2100,31.7,1,6309,0,
+2026-10-25T02:30:55,rust,core,svp,D:\Documents\曲.svp,83631,vsqx,1,0.0617,,1,204063,0,
+2026-10-25T02:30:55,uf3,core,svp,D:\Documents\曲.svp,83631,vsqx,1,0.2280,47.8,1,60391,0,
+2026-10-25T02:30:55,rust,core,svp,D:\Documents\曲.svp,83631,ustx,1,0.0329,,1,111499,0,
+2026-10-25T02:30:56,uf3,core,svp,D:\Documents\曲.svp,83631,ustx,1,0.2272,44.7,1,40665,0,
+2026-10-25T02:30:56,rust,core,svp,E:\2024V\tsan\天生爱你1.svp,382500,ufdata,1,0.0658,,1,404832,0,
+2026-10-25T02:31:56,uf3,core,svp,E:\2024V\tsan\天生爱你1.svp,382500,ufdata,1,60.0637,,0,0,-9,timeout
+2026-10-25T02:31:56,rust,core,svp,E:\2024V\tsan\天生爱你1.svp,382500,vsqx,1,0.1754,,1,1584255,0,
+2026-10-25T02:31:56,rust,core,svp,E:\2024V\tsan\天生爱你1.svp,382500,ustx,1,0.1779,,1,1306834,0,无效的音频文件： D:/Documents/1_天生爱你_(Instrumental).wav 
+2026-10-25T02:31:56,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\旧\Musv Dash喵斯维快跑\404 Not Found.svp,1373798,ufdata,1,0.0583,,0,0,1,Error: Notes overlapped near bar 11 
+2026-10-25T02:31:56,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\旧\Musv Dash喵斯维快跑\404 Not Found.svp,1373798,vsqx,1,0.0432,,0,0,1,Error: Notes overlapped near bar 11 
+2026-10-25T02:31:56,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\旧\Musv Dash喵斯维快跑\404 Not Found.svp,1373798,ustx,1,0.0426,,0,0,1,Error: Notes overlapped near bar 11 
+2026-10-25T02:31:56,rust,core,svp,D:\Documents\wdx.svp,85104,ufdata,1,0.0348,,1,179659,0,
+2026-10-25T02:31:57,uf3,core,svp,D:\Documents\wdx.svp,85104,ufdata,1,0.2123,38.1,1,10688,0,
+2026-10-25T02:31:57,rust,core,svp,D:\Documents\wdx.svp,85104,vsqx,1,0.0531,,1,750180,0,
+2026-10-25T02:31:57,uf3,core,svp,D:\Documents\wdx.svp,85104,vsqx,1,0.2666,64.7,1,100340,0,
+2026-10-25T02:31:57,rust,core,svp,D:\Documents\wdx.svp,85104,ustx,1,0.0282,,1,430930,0,
+2026-10-25T02:31:57,uf3,core,svp,D:\Documents\wdx.svp,85104,ustx,1,0.2270,53.6,1,66948,0,
+2026-10-25T02:31:57,rust,core,svp,D:\Documents\x\暗里着迷.svp,207182,ufdata,1,0.0351,,1,108439,0,
+2026-10-25T02:31:58,uf3,core,svp,D:\Documents\x\暗里着迷.svp,207182,ufdata,1,0.3845,192.9,1,157591,0,
+2026-10-25T02:31:58,rust,core,svp,D:\Documents\x\暗里着迷.svp,207182,vsqx,1,0.0301,,1,442691,0,
+2026-10-25T02:31:58,rust,core,svp,D:\Documents\x\暗里着迷.svp,207182,ustx,1,0.0353,,1,287463,0,
+2026-10-25T02:31:58,uf3,core,svp,D:\Documents\x\暗里着迷.svp,207182,ustx,1,0.4128,219.8,1,260112,0,
+2026-10-25T02:31:58,rust,core,svp,D:\Documents\x\m.svp,861236,ufdata,1,0.0636,,1,323352,0,
+2026-10-25T02:31:59,uf3,core,svp,D:\Documents\x\m.svp,861236,ufdata,1,0.4119,242.7,1,153353,0,
+2026-10-25T02:31:59,rust,core,svp,D:\Documents\x\m.svp,861236,vsqx,1,0.1003,,1,1353266,0,
+2026-10-25T02:31:59,rust,core,svp,D:\Documents\x\m.svp,861236,ustx,1,0.1066,,1,839799,0,
+2026-10-25T02:31:59,uf3,core,svp,D:\Documents\x\m.svp,861236,ustx,1,0.4707,289.0,1,432139,0,
+2026-10-25T02:31:59,rust,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ufdata,1,0.0372,,1,688,0,
+2026-10-25T02:31:59,uf3,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ufdata,1,0.1795,19.2,1,553,0,
+2026-10-25T02:31:59,rust,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,vsqx,1,0.0239,,1,4164,0,
+2026-10-25T02:32:00,uf3,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,vsqx,1,0.1940,23.1,1,5768,0,
+2026-10-25T02:32:00,rust,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ustx,1,0.0211,,1,2790,0,
+2026-10-25T02:32:00,uf3,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ustx,1,0.1972,30.0,1,4896,0,
+2026-10-25T02:32:00,rust,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ufdata,1,0.0437,,1,489100,0,
+2026-10-25T02:32:20,uf3,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ufdata,1,19.6737,19450.5,1,1029230,0,
+2026-10-25T02:32:20,rust,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,vsqx,1,0.0980,,1,1801312,0,
+2026-10-25T02:32:20,rust,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ustx,1,0.0599,,1,1712422,0,
+2026-10-25T02:32:40,uf3,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ustx,1,19.9163,19696.1,1,1432584,0,
+2026-10-25T02:32:40,rust,core,svp,D:\Documents\x\斜阳.svp,597288,ufdata,1,0.0403,,1,188446,0,
+2026-10-25T02:32:40,uf3,core,svp,D:\Documents\x\斜阳.svp,597288,ufdata,1,0.4107,224.8,1,151445,0,
+2026-10-25T02:32:40,rust,core,svp,D:\Documents\x\斜阳.svp,597288,vsqx,1,0.1004,,1,788788,0,无效的音频文件： E:/人声数据集/MedleyDB/V1/干净/1_暮卷斜阳 (9)_(Instrumental).wav 
+2026-10-25T02:32:40,rust,core,svp,D:\Documents\x\斜阳.svp,597288,ustx,1,0.0580,,1,498533,0,无效的音频文件： E:/人声数据集/MedleyDB/V1/干净/1_暮卷斜阳 (9)_(Instrumental).wav 无效的音频文件： E:/人声数据集/MedleyDB/V1/干净/1_暮卷斜阳 (9)_(Vocals).wav 
+2026-10-25T02:32:41,uf3,core,svp,D:\Documents\x\斜阳.svp,597288,ustx,1,0.4320,265.0,1,310610,0,
+2026-10-25T02:32:41,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,ufdata,1,0.0577,,1,6702,0,
+2026-10-25T02:32:41,uf3,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,ufdata,1,0.2016,33.3,1,7104,0,
+2026-10-25T02:32:41,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,vsqx,1,0.0254,,1,43710,0,
+2026-10-25T02:32:41,uf3,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,vsqx,1,0.2287,50.3,1,67905,0,
+2026-10-25T02:32:41,rust,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,ustx,1,0.0299,,1,45774,0,
+2026-10-25T02:32:41,uf3,core,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\自动预览音符音高.svp,48596,ustx,1,0.2343,47.9,1,45712,0,
+2026-10-25T02:32:42,rust,core,svp,D:\Documents\x\生活在别处的你.svp,331697,ufdata,1,0.0515,,1,440828,0,
+2026-10-25T02:32:48,uf3,core,svp,D:\Documents\x\生活在别处的你.svp,331697,ufdata,1,6.1935,5978.8,1,1062470,0,
+2026-10-25T02:32:48,rust,core,svp,D:\Documents\x\生活在别处的你.svp,331697,vsqx,1,0.0948,,1,1707772,0,
+2026-10-25T02:32:48,rust,core,svp,D:\Documents\x\生活在别处的你.svp,331697,ustx,1,0.0771,,1,3562483,0,
+2026-10-25T02:32:54,uf3,core,svp,D:\Documents\x\生活在别处的你.svp,331697,ustx,1,6.3647,6114.8,1,931392,0,
+2026-10-25T02:32:54,rust,core,svp,E:\2026歌影\0\11.svp,1704047,ufdata,1,0.0891,,1,678646,0,
+2026-10-25T02:32:54,rust,core,svp,E:\2026歌影\0\11.svp,1704047,vsqx,1,0.1060,,1,2747198,0,无效的音频文件： E:\2026歌影\0\2026歌影\0\617.wav 
+2026-10-25T02:32:55,rust,core,svp,E:\2026歌影\0\11.svp,1704047,ustx,1,0.0931,,1,2472577,0,无效的音频文件： E:\2026歌影\0\2026歌影\0\617.wav 
+2026-10-25T02:32:55,rust,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,ufdata,1,0.0651,,1,35659,0,
+2026-10-25T02:32:55,uf3,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,ufdata,1,0.2486,72.6,1,40851,0,
+2026-10-25T02:32:55,rust,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,svp,1,0.0348,,1,100719,0,
+2026-10-25T02:32:55,uf3,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,svp,1,0.2565,92.5,1,57741,0,
+2026-10-25T02:32:55,rust,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,ustx,1,0.0298,,1,243015,0,
+2026-10-25T02:32:55,uf3,core,vsqx,C:\Users\newztl\Downloads\【vsqx分享平台】工程文件1563175134111.vsqx,238814,ustx,1,0.2835,111.0,1,237555,0,
+2026-10-25T02:32:56,rust,core,vsqx,D:\Downloads\Sleepwalk.vsqx,1941480,ufdata,1,0.0841,,1,204613,0,
+2026-10-25T02:32:56,rust,core,vsqx,D:\Downloads\Sleepwalk.vsqx,1941480,svp,1,0.0614,,1,646790,0,
+2026-10-25T02:32:56,rust,core,vsqx,D:\Downloads\Sleepwalk.vsqx,1941480,ustx,1,0.1087,,1,3127545,0,
+2026-10-25T02:32:56,rust,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,ufdata,1,0.0756,,1,67014,0,
+2026-10-25T02:32:56,uf3,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,ufdata,1,0.2367,63.9,1,55342,0,
+2026-10-25T02:32:56,rust,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,svp,1,0.0268,,1,107029,0,
+2026-10-25T02:32:56,uf3,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,svp,1,0.2370,69.5,1,106842,0,
+2026-10-25T02:32:56,rust,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,vsqx,1,0.0222,,1,321733,0,
+2026-10-25T02:32:57,uf3,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,vsqx,1,0.3290,158.8,1,379576,0,
+2026-10-25T02:32:57,rust,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,ustx,1,0.0270,,1,734173,0,
+2026-10-25T02:32:57,uf3,core,ust,D:\Documents\x\海岛_演唱轨.ust,55131,ustx,1,0.2548,87.4,1,203850,0,
+2026-10-25T02:32:57,rust,core,ust,D:\Downloads\ust.ust,19972,ufdata,1,0.0480,,1,27220,0,
+2026-10-25T02:32:57,uf3,core,ust,D:\Downloads\ust.ust,19972,ufdata,1,0.2007,24.5,1,22881,0,
+2026-10-25T02:32:57,rust,core,ust,D:\Downloads\ust.ust,19972,svp,1,0.0257,,1,76986,0,
+2026-10-25T02:32:57,uf3,core,ust,D:\Downloads\ust.ust,19972,svp,1,0.2148,35.9,1,40442,0,
+2026-10-25T02:32:58,rust,core,ust,D:\Downloads\ust.ust,19972,vsqx,1,0.0547,,1,165686,0,
+2026-10-25T02:32:58,uf3,core,ust,D:\Downloads\ust.ust,19972,vsqx,1,0.2738,82.2,1,256500,0,
+2026-10-25T02:32:58,rust,core,ust,D:\Downloads\ust.ust,19972,ustx,1,0.0225,,1,177135,0,
+2026-10-25T02:32:58,uf3,core,ust,D:\Downloads\ust.ust,19972,ustx,1,0.2363,52.5,1,169717,0,
+2026-10-25T02:32:58,rust,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,svp,1,0.0473,,1,66693,0,
+2026-10-25T02:32:58,uf3,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,svp,1,0.2182,37.3,1,36617,0,
+2026-10-25T02:32:58,rust,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,vsqx,1,0.0216,,1,149833,0,
+2026-10-25T02:32:59,uf3,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,vsqx,1,0.2463,77.6,1,233257,0,
+2026-10-25T02:32:59,rust,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,ustx,1,0.0253,,1,159623,0,
+2026-10-25T02:32:59,uf3,core,ufdata,D:\Downloads\gy.mid.ufdata,20436,ustx,1,0.2292,48.9,1,154346,0,
+2026-10-25T02:32:59,rust,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,svp,1,0.0520,,1,68977,0,
+2026-10-25T02:32:59,uf3,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,svp,1,0.1984,37.5,1,39611,0,
+2026-10-25T02:32:59,rust,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,vsqx,1,0.0356,,1,155205,0,
+2026-10-25T02:32:59,uf3,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,vsqx,1,0.2808,84.7,1,246017,0,
+2026-10-25T02:32:59,rust,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,ustx,1,0.0290,,1,782284,0,
+2026-10-25T02:33:00,uf3,core,ufdata,D:\Downloads\摘苹果 (15).ufdata,64729,ustx,1,0.2346,53.1,1,162315,0,
+2026-10-25T02:33:00,rust,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,ufdata,1,0.0787,,1,42419,0,
+2026-10-25T02:33:00,uf3,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,ufdata,1,0.2498,82.5,1,46272,0,
+2026-10-25T02:33:00,rust,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,svp,1,0.0413,,1,121345,0,
+2026-10-25T02:33:00,uf3,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,svp,1,0.2593,92.4,1,66220,0,
+2026-10-25T02:33:00,rust,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,vsqx,1,0.0390,,1,268446,0,
+2026-10-25T02:33:00,rust,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,ustx,1,0.0336,,1,288261,0,
+2026-10-25T02:33:01,uf3,core,vpr,C:\Users\newztl\Downloads\nenene.vpr,399484,ustx,1,0.2807,113.0,1,279095,0,
+2026-10-25T02:33:01,rust,core,s5p,D:\Downloads\光年之外.s5p,1295131,ufdata,1,0.0661,,1,622768,0,
+2026-10-25T02:33:01,rust,core,s5p,D:\Downloads\光年之外.s5p,1295131,svp,1,0.0426,,1,353989,0,无效的音频文件： D:\Downloads 
+2026-10-25T02:33:01,rust,core,s5p,D:\Downloads\光年之外.s5p,1295131,vsqx,1,0.1254,,1,2603496,0,无效的音频文件： D:\Downloads 
+2026-10-25T02:33:01,rust,core,s5p,D:\Downloads\光年之外.s5p,1295131,ustx,1,0.0665,,1,1665321,0,无效的音频文件： D:\Downloads 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\旧梦一场男声key-填词模板_save_2024_01_16_14_02_21_090.acep,5263,ufdata,1,0.0662,,1,20066,0,
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\旧梦一场男声key-填词模板_save_2024_01_16_14_02_21_090.acep,5263,svp,1,0.0620,,1,81473,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/旧梦一场女key伴奏_pitch_shifted.wav 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\旧梦一场男声key-填词模板_save_2024_01_16_14_02_21_090.acep,5263,vsqx,1,0.0639,,1,128721,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/旧梦一场女key伴奏_pitch_shifted.wav 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\旧梦一场男声key-填词模板_save_2024_01_16_14_02_21_090.acep,5263,ustx,1,0.0623,,1,136900,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\旧梦一场DJ男声key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/旧梦一场女key伴奏_pitch_shifted.wav 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\千千万万女key-填词模板_save_2024_01_16_17_20_23_044.acep,7539,ufdata,1,0.0716,,1,32030,0,
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\千千万万女key-填词模板_save_2024_01_16_17_20_23_044.acep,7539,svp,1,0.0621,,1,105062,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./samples/14_深海鱼子酱 - 千千万万_(Instrumental).flac 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\千千万万女key-填词模板_save_2024_01_16_17_20_23_044.acep,7539,vsqx,1,0.0561,,1,204289,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./samples/14_深海鱼子酱 - 千千万万_(Instrumental).flac 
+2026-10-25T02:33:01,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\千千万万女key-填词模板_save_2024_01_16_17_20_23_044.acep,7539,ustx,1,0.0579,,1,218262,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\千千万万女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./samples/14_深海鱼子酱 - 千千万万_(Instrumental).flac 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,ufdata,1,0.0574,,1,31118,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,svp,1,0.1180,,1,123182,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,vsqx,1,0.0766,,1,197634,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,ustx,1,0.0751,,1,210630,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第六批【搜索小程序”资料塔“免费领价值10万的资料】\春风何时来男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\春风何时来男key-填词模板_save_2024_03_29_19_22_33_191.acep,8479,ufdata,1,0.0696,,1,25399,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第六批【搜索小程序”资料塔“免费领价值10万的资料】\春风何时来男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\春风何时来男key-填词模板_save_2024_03_29_19_22_33_191.acep,8479,svp,1,0.0759,,1,97408,0,无效的音频文件： C:/Users/86178/Downloads/1_1-【Hi-Res无损】巴扎黑-春风何时来「我的春风何时来 带我走向大海」动态歌词-480P 清晰-AVC_(Instrumental).wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第六批【搜索小程序”资料塔“免费领价值10万的资料】\春风何时来男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\春风何时来男key-填词模板_save_2024_03_29_19_22_33_191.acep,8479,vsqx,1,0.0815,,1,162449,0,无效的音频文件： C:/Users/86178/Downloads/1_1-【Hi-Res无损】巴扎黑-春风何时来「我的春风何时来 带我走向大海」动态歌词-480P 清晰-AVC_(Instrumental).wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第六批【搜索小程序”资料塔“免费领价值10万的资料】\春风何时来男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\春风何时来男key-填词模板_save_2024_03_29_19_22_33_191.acep,8479,ustx,1,0.0726,,1,173531,0,无效的音频文件： C:/Users/86178/Downloads/1_1-【Hi-Res无损】巴扎黑-春风何时来「我的春风何时来 带我走向大海」动态歌词-480P 清晰-AVC_(Instrumental).wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\无情画dj男key-填词模板_save_2024_01_22_16_26_05_207.acep,8027,ufdata,1,0.0368,,1,25656,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\无情画dj男key-填词模板_save_2024_01_22_16_26_05_207.acep,8027,svp,1,0.0260,,1,94616,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/3_王唯旖 - 无情画 (刘雅松热播版)_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\无情画dj男key-填词模板_save_2024_01_22_16_26_05_207.acep,8027,vsqx,1,0.0252,,1,164528,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/3_王唯旖 - 无情画 (刘雅松热播版)_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\无情画dj男key-填词模板_save_2024_01_22_16_26_05_207.acep,8027,ustx,1,0.0284,,1,176107,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第三批【搜索小程序”资料塔“免费领价值10万的资料】\无情画dj男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/3_王唯旖 - 无情画 (刘雅松热播版)_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\精卫男key-填词模板_save_2024_01_08_14_24_35_923.acep,7327,ufdata,1,0.0794,,1,29014,0,
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\精卫男key-填词模板_save_2024_01_08_14_24_35_923.acep,7327,svp,1,0.0569,,1,111994,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_30年前，50年后 - 精卫 (1)_(Instrumental).wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\精卫男key-填词模板_save_2024_01_08_14_24_35_923.acep,7327,vsqx,1,0.0551,,1,185906,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_30年前，50年后 - 精卫 (1)_(Instrumental).wav 
+2026-10-25T02:33:02,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\精卫男key-填词模板_save_2024_01_08_14_24_35_923.acep,7327,ustx,1,0.0669,,1,197875,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\精卫男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_30年前，50年后 - 精卫 (1)_(Instrumental).wav 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,ufdata,1,0.0433,,0,0,1,"Error: invalid vocal track: invalid type: string ""-0.009"", expected f64 "
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,svp,1,0.0170,,0,0,1,"Error: invalid vocal track: invalid type: string ""-0.009"", expected f64 "
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,vsqx,1,0.0193,,0,0,1,"Error: invalid vocal track: invalid type: string ""-0.009"", expected f64 "
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,ustx,1,0.0195,,0,0,1,"Error: invalid vocal track: invalid type: string ""-0.009"", expected f64 "
+2026-10-25T02:33:03,rust,extra,acep,E:\2026歌影\未命名\未命名.acep,38855,ufdata,1,0.0464,,1,45915,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\2026歌影\未命名\未命名.acep,38855,svp,1,0.1757,,1,173923,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\2026歌影\未命名\未命名.acep,38855,vsqx,1,0.0644,,1,290305,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\2026歌影\未命名\未命名.acep,38855,ustx,1,0.0988,,1,311878,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\霍元甲男key-填词模板_save_2024_01_10_17_56_27_951.acep,8319,ufdata,1,0.0761,,1,42970,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\霍元甲男key-填词模板_save_2024_01_10_17_56_27_951.acep,8319,svp,1,0.0624,,1,162180,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_周杰伦 - 霍元甲_(Instrumental).mp3 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\霍元甲男key-填词模板_save_2024_01_10_17_56_27_951.acep,8319,vsqx,1,0.0629,,1,271587,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_周杰伦 - 霍元甲_(Instrumental).mp3 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\霍元甲男key-填词模板_save_2024_01_10_17_56_27_951.acep,8319,ustx,1,0.0767,,1,289844,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\霍元甲男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/1_周杰伦 - 霍元甲_(Instrumental).mp3 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\人间烟火男key-填词模板_save_2024_01_16_14_55_38_041.acep,6663,ufdata,1,0.0427,,1,24963,0,
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\人间烟火男key-填词模板_save_2024_01_16_14_55_38_041.acep,6663,svp,1,0.0320,,1,89979,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/4_程响 - 人间烟火_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\人间烟火男key-填词模板_save_2024_01_16_14_55_38_041.acep,6663,vsqx,1,0.0236,,1,159045,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/4_程响 - 人间烟火_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:03,rust,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\人间烟火男key-填词模板_save_2024_01_16_14_55_38_041.acep,6663,ustx,1,0.0258,,1,170165,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第二批\人间烟火男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\./Samples/4_程响 - 人间烟火_(Instrumental)_pitch_shifted.wav 
+2026-10-25T02:33:03,rust,extra,svip,E:\2024V\yil\和.svip,343701,ufdata,1,0.0431,,1,445507,0,
+2026-10-25T02:33:04,rust,extra,svip,E:\2024V\yil\和.svip,343701,svp,1,0.1979,,1,124128,0,
+2026-10-25T02:36:27,rust,extra,svip,E:\2024V\yil\和.svip,343701,vsqx,1,203.1985,,1,2110828,0,
+2026-10-25T02:36:29,rust,extra,svip,E:\2024V\yil\和.svip,343701,ustx,1,2.1483,,1,524230,0,
+2026-10-25T02:36:29,rust,extra,svip,D:\Documents\x\爷爷的故乡.svip,553552,ufdata,1,0.0577,,1,513861,0,
+2026-10-25T02:36:29,rust,extra,svip,D:\Documents\x\爷爷的故乡.svip,553552,svp,1,0.0545,,1,157471,0,无效的音频文件： D:\Documents\x\爷爷的故乡_Data\1_泠鸢yousa - 爷爷的故乡_(Vocals).wav 
+2026-10-25T02:38:11,rust,extra,svip,D:\Documents\x\爷爷的故乡.svip,553552,vsqx,1,101.9331,,1,2009797,0,无效的音频文件： D:\Documents\x\爷爷的故乡_Data\1_泠鸢yousa - 爷爷的故乡_(Vocals).wav 
+2026-10-25T02:38:11,rust,extra,svip,D:\Documents\x\爷爷的故乡.svip,553552,ustx,1,0.0742,,1,576917,0,无效的音频文件： D:\Documents\x\爷爷的故乡_Data\1_泠鸢yousa - 爷爷的故乡_(Vocals).wav 
+2026-10-25T02:38:11,rust,extra,svip,D:\Documents\x\暮卷残阳.svip,292572,ufdata,1,0.0401,,1,441223,0,
+2026-10-25T02:38:11,rust,extra,svip,D:\Documents\x\暮卷残阳.svip,292572,svp,1,0.0475,,1,136260,0,无效的音频文件： D:\Documents\x\暮卷残阳_Data\暮卷斜阳 (9).mp3 无效的音频文件： D:\Documents\x\暮卷残阳_Data\1_暮卷斜阳 (9)_(Vocals).wav 
+2026-10-25T02:39:59,rust,extra,svip,D:\Documents\x\暮卷残阳.svip,292572,vsqx,1,107.5375,,1,1689427,0,无效的音频文件： D:\Documents\x\暮卷残阳_Data\暮卷斜阳 (9).mp3 
+2026-10-25T02:39:59,rust,extra,svip,D:\Documents\x\暮卷残阳.svip,292572,ustx,1,0.4693,,1,503678,0,无效的音频文件： D:\Documents\x\暮卷残阳_Data\暮卷斜阳 (9).mp3 无效的音频文件： D:\Documents\x\暮卷残阳_Data\1_暮卷斜阳 (9)_(Vocals).wav 
+2026-10-25T02:39:59,rust,extra,svip,D:\Documents\x\如烟.svip,568576,ufdata,1,0.0770,,1,779346,0,
+2026-10-25T02:39:59,rust,extra,svip,D:\Documents\x\如烟.svip,568576,svp,1,0.0600,,1,280008,0,无效的音频文件： D:\Documents\x\如烟_Data\1_1_听一次哭一次！五月天阿信最佳神作词《如烟》_(Vocals)_(Vocals)d.wav 
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\x\如烟.svip,568576,vsqx,1,106.2936,,1,3259330,0,无效的音频文件： D:\Documents\x\如烟_Data\1_1_听一次哭一次！五月天阿信最佳神作词《如烟》_(Vocals)_(Vocals)d.wav 
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\x\如烟.svip,568576,ustx,1,0.0796,,1,1200602,0,无效的音频文件： D:\Documents\x\如烟_Data\1_1_听一次哭一次！五月天阿信最佳神作词《如烟》_(Vocals)_(Vocals)d.wav 
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\某个心跳.svip,554079,ufdata,1,0.0464,,0,0,1,"Error: expected a string value, found null "
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\某个心跳.svip,554079,svp,1,0.0434,,0,0,1,"Error: expected a string value, found null "
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\某个心跳.svip,554079,vsqx,1,0.0470,,0,0,1,"Error: expected a string value, found null "
+2026-10-25T02:41:46,rust,extra,svip,D:\Documents\某个心跳.svip,554079,ustx,1,0.0402,,0,0,1,"Error: expected a string value, found null "
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\有心无意.svip3,504656,ufdata,1,0.1491,,1,648317,0,
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\有心无意.svip3,504656,svp,1,0.0457,,1,93764,0,无效的音频文件： D:\Documents\有心无意_Data\本兮 - 依赖成折磨 (伴奏).wav 无效的音频文件： D:\Documents\有心无意_Data\依赖旧.wav 
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\有心无意.svip3,504656,vsqx,1,0.0915,,1,2190868,0,无效的音频文件： D:\Documents\有心无意_Data\本兮 - 依赖成折磨 (伴奏).wav 
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\有心无意.svip3,504656,ustx,1,0.0309,,1,524078,0,无效的音频文件： D:\Documents\有心无意_Data\本兮 - 依赖成折磨 (伴奏).wav 无效的音频文件： D:\Documents\有心无意_Data\依赖旧.wav 
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,ufdata,1,0.0689,,1,1913511,0,
+2026-10-25T02:41:46,rust,extra,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,svp,1,0.0395,,1,275109,0,无效的音频文件： C:/Users/ztl/AppData/Roaming/XiaoIce/X Studio3/work_audio/16633b64e5155acba1fc5d5c2ee2fbdc.wav 
+2026-10-25T02:41:47,rust,extra,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,vsqx,1,0.1950,,1,6761235,0,无效的音频文件： C:/Users/ztl/AppData/Roaming/XiaoIce/X Studio3/work_audio/16633b64e5155acba1fc5d5c2ee2fbdc.wav 
+2026-10-25T02:41:47,rust,extra,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,ustx,1,0.0973,,1,1774028,0,无效的音频文件： C:/Users/ztl/AppData/Roaming/XiaoIce/X Studio3/work_audio/16633b64e5155acba1fc5d5c2ee2fbdc.wav 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\jsbach\WTC1102.MID,6721,ufdata,1,0.0308,,1,42034,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\jsbach\WTC1102.MID,6721,svp,1,0.0568,,1,100219,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\jsbach\WTC1102.MID,6721,vsqx,1,0.0202,,1,244128,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\jsbach\WTC1102.MID,6721,ustx,1,0.0220,,1,187241,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K518.MID,11336,ufdata,1,0.0462,,0,0,1,Error: Notes overlapped near bar 3 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K518.MID,11336,svp,1,0.0189,,0,0,1,Error: Notes overlapped near bar 3 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K518.MID,11336,vsqx,1,0.0179,,0,0,1,Error: Notes overlapped near bar 3 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K518.MID,11336,ustx,1,0.0191,,0,0,1,Error: Notes overlapped near bar 3 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\vl_songs\vl_songs\Tableaux.mid,128402,ufdata,1,0.0367,,0,0,1,Error: Notes overlapped near bar 36 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\vl_songs\vl_songs\Tableaux.mid,128402,svp,1,0.0294,,0,0,1,Error: Notes overlapped near bar 36 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\vl_songs\vl_songs\Tableaux.mid,128402,vsqx,1,0.0159,,0,0,1,Error: Notes overlapped near bar 36 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\vl_songs\vl_songs\Tableaux.mid,128402,ustx,1,0.0202,,0,0,1,Error: Notes overlapped near bar 36 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\tokimeki\KOKUHAKU.MID,40316,ufdata,1,0.0290,,1,515,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\tokimeki\KOKUHAKU.MID,40316,svp,1,0.0218,,1,2272,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\tokimeki\KOKUHAKU.MID,40316,vsqx,1,0.0227,,1,3461,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\tokimeki\KOKUHAKU.MID,40316,ustx,1,0.0187,,1,1502,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Bach_Suite_no4_BWV1006a_Gavotte_en_Rondeau.mid,8464,ufdata,1,0.0280,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Bach_Suite_no4_BWV1006a_Gavotte_en_Rondeau.mid,8464,svp,1,0.0200,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Bach_Suite_no4_BWV1006a_Gavotte_en_Rondeau.mid,8464,vsqx,1,0.0240,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Bach_Suite_no4_BWV1006a_Gavotte_en_Rondeau.mid,8464,ustx,1,0.0147,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K532.MID,11114,ufdata,1,0.0201,,0,0,1,Error: Notes overlapped near bar 40 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K532.MID,11114,svp,1,0.0222,,0,0,1,Error: Notes overlapped near bar 40 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K532.MID,11114,vsqx,1,0.0169,,0,0,1,Error: Notes overlapped near bar 40 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\v5\K532.MID,11114,ustx,1,0.0165,,0,0,1,Error: Notes overlapped near bar 40 
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\uruguay.mid,30645,ufdata,1,0.0234,,1,210,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\uruguay.mid,30645,svp,1,0.0194,,1,453,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\uruguay.mid,30645,vsqx,1,0.0290,,1,1530,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\uruguay.mid,30645,ustx,1,0.0225,,1,326,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,ufdata,1,0.0361,,1,7072,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,svp,1,0.0190,,1,17627,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,vsqx,1,0.0476,,1,41301,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,ustx,1,0.0202,,1,30735,0,
+2026-10-25T02:41:47,rust,extra,mid,D:\linshizhuomian\midi\midi\流行歌250\OKSONG5\OKSONG5\0241.MID,27166,ufdata,1,0.0370,,0,0,1,Error: Notes overlapped near bar 9 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\流行歌250\OKSONG5\OKSONG5\0241.MID,27166,svp,1,0.0498,,0,0,1,Error: Notes overlapped near bar 9 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\流行歌250\OKSONG5\OKSONG5\0241.MID,27166,vsqx,1,0.0181,,0,0,1,Error: Notes overlapped near bar 9 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\流行歌250\OKSONG5\OKSONG5\0241.MID,27166,ustx,1,0.0170,,0,0,1,Error: Notes overlapped near bar 9 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jp3\candle.mid,73011,ufdata,1,0.0199,,0,0,1,Error: Notes overlapped near bar 13 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jp3\candle.mid,73011,svp,1,0.0248,,0,0,1,Error: Notes overlapped near bar 13 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jp3\candle.mid,73011,vsqx,1,0.0235,,0,0,1,Error: Notes overlapped near bar 13 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jp3\candle.mid,73011,ustx,1,0.0228,,0,0,1,Error: Notes overlapped near bar 13 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Senneville_Letter_to_my_mother.mid,5017,ufdata,1,0.0274,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Senneville_Letter_to_my_mother.mid,5017,svp,1,0.0698,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Senneville_Letter_to_my_mother.mid,5017,vsqx,1,0.0157,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\guita\Senneville_Letter_to_my_mother.mid,5017,ustx,1,0.0447,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jazz\magnetic.mid,23416,ufdata,1,0.0278,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jazz\magnetic.mid,23416,svp,1,0.0200,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jazz\magnetic.mid,23416,vsqx,1,0.0236,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\jazz\magnetic.mid,23416,ustx,1,0.0293,,0,0,1,Error: Notes overlapped near bar 1 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\tuvalu.mid,5275,ufdata,1,0.0259,,1,210,0,
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\tuvalu.mid,5275,svp,1,0.0249,,1,453,0,
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\tuvalu.mid,5275,vsqx,1,0.0211,,1,1530,0,
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\gghgq\国歌和国旗\midi\tuvalu.mid,5275,ustx,1,0.0331,,1,326,0,
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,ufdata,1,0.0378,,0,0,1,Error: Notes overlapped near bar 17 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,svp,1,0.0234,,0,0,1,Error: Notes overlapped near bar 17 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,vsqx,1,0.0510,,0,0,1,Error: Notes overlapped near bar 17 
+2026-10-25T02:41:48,rust,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,ustx,1,0.0149,,0,0,1,Error: Notes overlapped near bar 17 
+2026-10-25T02:41:48,rust,extra,dspx,C:\Users\newztl\Downloads\理想主义者的一点人生的经验_1.dspx,6953,ufdata,1,0.0480,,1,39542,0,
+2026-10-25T02:41:48,rust,extra,dspx,C:\Users\newztl\Downloads\理想主义者的一点人生的经验_1.dspx,6953,svp,1,0.0352,,1,112832,0,
+2026-10-25T02:41:48,rust,extra,dspx,C:\Users\newztl\Downloads\理想主义者的一点人生的经验_1.dspx,6953,vsqx,1,0.0548,,1,250714,0,
+2026-10-25T02:41:48,rust,extra,dspx,C:\Users\newztl\Downloads\理想主义者的一点人生的经验_1.dspx,6953,ustx,1,0.0743,,1,267957,0,
+2026-10-25T02:41:48,rust,extra,svip3,D:\Documents\x\我不说\我不说.svip3,253416,ufdata,1,0.0256,,1,321667,0,
+2026-10-25T02:41:48,rust,extra,svip3,D:\Documents\x\我不说\我不说.svip3,253416,svp,1,0.0389,,1,81555,0,
+2026-10-25T02:41:49,rust,extra,svip3,D:\Documents\x\我不说\我不说.svip3,253416,vsqx,1,0.0779,,1,1174724,0,
+2026-10-25T02:41:49,rust,extra,svip3,D:\Documents\x\我不说\我不说.svip3,253416,ustx,1,0.0345,,1,264504,0,
+2026-10-25T02:41:50,rust,stress,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\badapple\badapple3.svp,64033976,ufdata,1,1.6256,,0,0,1,Error: Notes overlapped near bar 501 
+2026-10-25T02:41:52,rust,stress,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\badapple\badapple3.svp,64033976,vsqx,1,1.4924,,0,0,1,Error: Notes overlapped near bar 501 
+2026-10-25T02:41:54,rust,stress,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\badapple\badappple.svp,49001242,ufdata,1,2.4763,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:55,rust,stress,svp,E:\BaiduNetdiskDownload\Synthesizer V scripts\badapple\badappple.svp,49001242,vsqx,1,1.1417,,0,0,1,Error: Notes overlapped near bar 8 
+2026-10-25T02:41:55,rust,stress,svip3,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2025-01\小美满.svip3,4616070,ufdata,1,0.0657,,1,5965551,0,
+2026-10-25T02:41:55,rust,stress,svip3,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2025-01\小美满.svip3,4616070,svp,1,0.0579,,1,576004,0,无效的音频文件： C:/Users/范仲祥/AppData/Roaming/XiaoIce/X Studio3/work_audio/bd3960b318d01a9f771001302d96f59f.mp3 无效的音频文件： C:/Users/范仲祥/AppData/Roaming/XiaoIce/X Studio3/work_audio/3da11f37d3c7dd3c960d400b34027dcb.mp3 无效的音频文件： C:/Users/范仲祥/AppData/Roaming/XiaoIce/X Studio3/work_audio/ef45087620b8c6797d08f1768
+2026-10-25T02:41:55,rust,stress,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,ufdata,1,0.0424,,1,1913511,0,
+2026-10-25T02:41:56,rust,stress,svip3,E:\2024V\yil\依赖成折磨\依赖成折磨.svip3,4105562,svp,1,0.0404,,1,275109,0,无效的音频文件： C:/Users/ztl/AppData/Roaming/XiaoIce/X Studio3/work_audio/16633b64e5155acba1fc5d5c2ee2fbdc.wav 
+2026-10-25T02:49:12,py,core,ustx,D:\Documents\x\01.ustx,5637,ufdata,1,12.4124,,1,14394,0,
+2026-10-25T02:49:15,py,core,ustx,D:\Documents\x\01.ustx,5637,svp,1,3.3500,,1,8002,0,
+2026-10-25T02:49:19,py,core,ustx,D:\Documents\x\01.ustx,5637,vsqx,1,3.4169,,1,68377,0,
+2026-10-25T02:49:29,py,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,ufdata,1,10.0941,,1,1235369,0,
+2026-10-25T02:49:40,py,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,svp,1,11.6590,,1,496817,0,
+2026-10-25T02:50:04,py,core,ustx,D:\Documents\WeChat Files\wxid_b9vmuwqq0x5t22\FileStorage\File\2024-05\我的故事未写完.ustx,512400,vsqx,1,23.0794,,1,3604313,0,
+2026-10-25T02:50:07,py,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ufdata,1,3.5694,,1,688,0,
+2026-10-25T02:50:10,py,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,vsqx,1,3.2343,,1,4164,0,
+2026-10-25T02:50:14,py,core,svp,E:\AI音乐制作\PySVR3Core\PySVR3Core-torch-backend-migration\examples\aiue.svp,5563,ustx,1,3.2803,,1,2790,0,
+2026-10-25T02:50:18,py,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ufdata,1,3.9432,,1,489100,0,
+2026-10-25T02:50:28,py,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,vsqx,1,10.2887,,1,1801312,0,
+2026-10-25T02:50:48,py,core,svp,D:\Documents\x\阿刁 - 斯圣君.svp,347525,ustx,1,19.6874,,1,1712422,0,
+2026-10-25T02:50:51,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,ufdata,1,3.3952,,1,31118,0,
+2026-10-25T02:50:55,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,svp,1,4.0756,,1,123181,0,
+2026-10-25T02:50:59,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,vsqx,1,4.3840,,1,197632,0,
+2026-10-25T02:51:05,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第一批【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\孤勇者女key-填词模板.acep,7807,ustx,1,5.4806,,1,210637,0,
+2026-10-25T02:51:08,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,ufdata,1,3.2332,,1,18932,0,
+2026-10-25T02:51:12,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,svp,1,3.4327,,1,73983,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\Samples\他会魔法吧男key伴奏.flac 
+2026-10-25T02:51:17,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,vsqx,1,5.2960,,0,0,1, │ │ │ │      self = <libresvip.plugins.vsqx.vocaloid_controllers.VsqxControlle… │ │ │ │             object at 0x0000027C51AC5760>                               │ │ │ └─────────────────────────────────────────────────────────────────────────┘ │ └──────────────────────────────────────────────────────
+2026-10-25T02:51:21,py,extra,acep,E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\她会魔法吧男key-填词模板_save_2024_01_23_10_53_43_286.acep,5207,ustx,1,4.3965,,1,130006,0,无效的音频文件： E:\BaiduNetdiskDownload\0009-AI唱解说模版工程\第四批【搜索小程序”资料塔“免费领价值10万的资料】\她会魔法吧男key-填词模板【搜索小程序”资料塔“免费领价值10万的资料】\autosave\Samples\他会魔法吧男key伴奏.flac 
+2026-10-25T02:51:25,py,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,ufdata,1,3.4059,,1,7072,0,
+2026-10-25T02:51:28,py,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,svp,1,3.5477,,1,17627,0,
+2026-10-25T02:51:32,py,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,vsqx,1,3.4599,,1,41301,0,
+2026-10-25T02:51:35,py,extra,mid,D:\linshizhuomian\midi\midi\PAl-Musics\Musics\080.MID,14060,ustx,1,3.5714,,1,30735,0,
+2026-10-25T02:52:12,py,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,ufdata,1,36.2557,,0,0,1,                                        │ │ │ │                  tracks = []                                            │ │ │ │             volume_base = 0.0                                           │ │ │ └─────────────────────────────────────────────────────────────────────────┘ │ └───────────────
+2026-10-25T02:52:43,py,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,svp,1,31.4873,,0,0,1,                                        │ │ │ │                  tracks = []                                            │ │ │ │             volume_base = 0.0                                           │ │ │ └─────────────────────────────────────────────────────────────────────────┘ │ └───────────────
+2026-10-25T02:53:13,py,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,vsqx,1,29.8296,,0,0,1,                                        │ │ │ │                  tracks = []                                            │ │ │ │             volume_base = 0.0                                           │ │ │ └─────────────────────────────────────────────────────────────────────────┘ │ └───────────────
+2026-10-25T02:53:43,py,extra,mid,D:\linshizhuomian\midi\midi\v4\K428.MID,4954,ustx,1,30.5018,,0,0,1,                                        │ │ │ │                  tracks = []                                            │ │ │ │             volume_base = 0.0                                           │ │ │ └─────────────────────────────────────────────────────────────────────────┘ │ └───────────────
