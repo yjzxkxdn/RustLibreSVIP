@@ -45,6 +45,16 @@ codegen-units = 1
 panic = "abort"
 strip = "symbols"
 
+# Iteration profile: same optimisation, no fat LTO and parallel codegen, so an
+# incremental GUI rebuild links in seconds instead of re-running LTO over the
+# whole workspace (~10 min). Use it while developing; ship `--release`.
+#   cargo build --profile fast -p libresvip-gui
+[profile.fast]
+inherits = "release"
+lto = false
+codegen-units = 16
+strip = "none"
+
 # `cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown`
 # Size over speed: ~25% smaller module for ~7% slower conversion.
 [profile.wasm]

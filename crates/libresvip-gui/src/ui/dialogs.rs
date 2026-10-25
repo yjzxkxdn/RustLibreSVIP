@@ -9,7 +9,10 @@ use crate::app::{open_url, App, SettingsTab};
 use crate::i18n::Lang;
 use crate::state::FormatEntry;
 use crate::theme::Palette;
-use crate::ui::titlebar::{AUTHOR_URL, DOCS_URL, REPO_URL};
+use crate::ui::titlebar::{
+    AUTHOR_URL, DOCS_URL, LIBRESVIP_AUTHOR_URL, LIBRESVIP_URL, PROJECT_AUTHOR, REPO_URL,
+    UTAFORMATIX3_AUTHOR_URL, UTAFORMATIX3_URL,
+};
 use crate::widgets;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -73,11 +76,55 @@ fn about(app: &mut App, ctx: &egui::Context) {
                             .size(Palette::body())
                             .color(pal.muted),
                     );
-                    ui.label(
-                        RichText::new(app.t("Author: SoulMelody"))
+                    ui.add_space(2.0);
+                    // One credit line per project: this one, LibreSVIP, UtaFormatix3.
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(
+                            RichText::new(app.t("Project author: "))
+                                .size(Palette::body())
+                                .color(pal.muted),
+                        );
+                        ui.label(RichText::new(PROJECT_AUTHOR).size(Palette::body()));
+                    });
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(
+                            RichText::new("LibreSVIP 2.9.2 · MIT · ")
+                                .size(Palette::body())
+                                .color(pal.muted),
+                        );
+                        if ui.link(RichText::new("SoulMelody").size(Palette::body())).clicked() {
+                            open_url(LIBRESVIP_AUTHOR_URL);
+                        }
+                        ui.label(
+                            RichText::new(format!(
+                                " · {}",
+                                app.t("format plugins and the hub model")
+                            ))
                             .size(Palette::body())
                             .color(pal.muted),
-                    );
+                        );
+                    });
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(
+                            RichText::new(format!(
+                                "UtaFormatix3 {} · Apache-2.0 · ",
+                                libresvip_core::UTAFORMATIX3_REVISION
+                            ))
+                            .size(Palette::body())
+                            .color(pal.muted),
+                        );
+                        if ui.link(RichText::new("SderColin").size(Palette::body())).clicked() {
+                            open_url(UTAFORMATIX3_AUTHOR_URL);
+                        }
+                        ui.label(
+                            RichText::new(format!(
+                                " · {}",
+                                app.t("capability matrix, structured warnings and pitch semantics")
+                            ))
+                            .size(Palette::body())
+                            .color(pal.muted),
+                        );
+                    });
                 });
             });
             ui.add_space(8.0);
@@ -86,6 +133,11 @@ fn about(app: &mut App, ctx: &egui::Context) {
             ui.label(app.t("All people should have the right and freedom to choose. That's why we're committed to giving you a second chance to keep your creations free from the constraints of platforms and coterie."));
             ui.add_space(10.0);
             ui.horizontal(|ui| {
+                ui.label(
+                    RichText::new(app.t("This project:"))
+                        .size(Palette::body())
+                        .color(pal.muted),
+                );
                 if ui.link(app.t("Author's Profile")).clicked() {
                     open_url(AUTHOR_URL);
                 }
@@ -109,6 +161,19 @@ fn about(app: &mut App, ctx: &egui::Context) {
                         app.show_about = false;
                     }
                 });
+            });
+            ui.horizontal(|ui| {
+                ui.label(
+                    RichText::new(app.t("Upstreams:"))
+                        .size(Palette::body())
+                        .color(pal.muted),
+                );
+                if ui.link("LibreSVIP").clicked() {
+                    open_url(LIBRESVIP_URL);
+                }
+                if ui.link("UtaFormatix3").clicked() {
+                    open_url(UTAFORMATIX3_URL);
+                }
             });
         });
     if !open {
@@ -613,12 +678,45 @@ fn format_info(app: &mut App, ctx: &egui::Context) {
                     }
                 }
                 ui.add_space(8.0);
+                // Provenance instead of a bare version number: this plugin is a
+                // port of a plugin that had its own version (not the LibreSVIP
+                // release number), and any deliberate deviation is listed below.
                 ui.label(format!("{}{}", app.t("Version: "), entry.version));
-                ui.horizontal(|ui| {
-                    ui.label(app.t("Author: SoulMelody").replace("SoulMelody", entry.author));
-                });
+                ui.label(format!(
+                    "{}{} {}",
+                    app.t("Migrated from: "),
+                    app.t("original plugin"),
+                    entry.version
+                ));
+                ui.label(format!("{}{}", app.t("Author: "), entry.author));
                 if ui.link(entry.website).clicked() {
                     open_url(entry.website);
+                }
+                let deviations = crate::deviations::for_plugin(entry.id);
+                ui.add_space(6.0);
+                if deviations.is_empty() {
+                    ui.label(
+                        RichText::new(app.t("Modifications: none (plain port)"))
+                            .size(Palette::small())
+                            .color(pal.muted),
+                    );
+                } else {
+                    ui.label(
+                        RichText::new(format!(
+                            "{}{}",
+                            app.t("Modifications: "),
+                            deviations.len()
+                        ))
+                        .size(Palette::small())
+                        .color(pal.muted),
+                    );
+                    for deviation in deviations {
+                        ui.label(
+                            RichText::new(format!("· {}", app.t(deviation)))
+                                .size(Palette::small())
+                                .color(pal.muted),
+                        );
+                    }
                 }
             }
             ui.add_space(10.0);

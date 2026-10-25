@@ -7,6 +7,7 @@
 
 mod app;
 mod convert;
+mod deviations;
 mod i18n;
 mod icons;
 mod platform;

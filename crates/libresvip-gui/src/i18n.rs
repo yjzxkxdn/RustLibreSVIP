@@ -207,6 +207,36 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Skip" => "跳过",
         "About" => "关于",
         "Version: " => "版本：",
+        "Project author: " => "本项目作者：",
+        "format plugins and the hub model" => "格式插件与轴心模型",
+        "capability matrix, structured warnings and pitch semantics" => {
+            "能力矩阵、结构化警告与音高语义层"
+        }
+        "This project:" => "本项目：",
+        "Upstreams:" => "上游：",
+        "Author: " => "作者：",
+        "Migrated from: " => "迁移自：",
+        "original plugin" => "原插件",
+        "Modifications: none (plain port)" => "修改：无（原样移植）",
+        "Modifications: " => "修改：",
+        "pitch points accumulate across items (upstream 2.9.2 self-extend bug, fixed)" => {
+            "音高按 item 顺序累加（上游 2.9.2 的 self-extend bug，已修）"
+        }
+        "the parser does not echo the lyric into the pronunciation field" => {
+            "解析器不把歌词抄写成发音"
+        }
+        "the phoneme layer is off by default (upstream writes normalize_phoneme for every note)" => {
+            "默认不写音素层（上游会给每个音符写 normalize_phoneme）"
+        }
+        "MIDI key 0 (C-1) is a real pitch (upstream treated 0 as \"no pitch\")" => {
+            "MIDI 键号 0（C-1）是真实音高（上游把 0 当作“没有音高”）"
+        }
+        "ZIP timestamps come from the wall clock, so two dumps differ" => {
+            "ZIP 时间戳取系统时钟，两次导出的字节不同"
+        }
+        "no-pitch breaks are inserted only at real gaps (upstream compared an unshifted time with a shifted tick)" => {
+            "只在真实间隙插入断点（上游拿未偏移的时间与已偏移的 tick 比较，短间隙全漏）"
+        }
         "Author: SoulMelody" => "作者：SoulMelody",
         "Author's Profile" => "作者主页",
         "Repo URL" => "仓库地址",

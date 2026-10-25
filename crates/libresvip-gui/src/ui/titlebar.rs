@@ -17,8 +17,15 @@ use crate::i18n::Lang;
 use crate::widgets;
 
 pub const REPO_URL: &str = "https://github.com/yjzxkxdn/RustLibreSVIP";
-pub const DOCS_URL: &str = "https://libresvip.soulmelody.net/";
+pub const DOCS_URL: &str = "https://github.com/yjzxkxdn/RustLibreSVIP#readme";
 pub const AUTHOR_URL: &str = "https://space.bilibili.com/175862486";
+
+/// The two upstreams, each with its own author, repository and licence.
+pub const PROJECT_AUTHOR: &str = "岁月静好_初心不忘";
+pub const LIBRESVIP_URL: &str = "https://github.com/SoulMelody/LibreSVIP";
+pub const LIBRESVIP_AUTHOR_URL: &str = "https://github.com/SoulMelody";
+pub const UTAFORMATIX3_URL: &str = "https://github.com/sdercolin/utaformatix3";
+pub const UTAFORMATIX3_AUTHOR_URL: &str = "https://github.com/sdercolin";
 
 pub fn show(app: &mut App, ctx: &egui::Context) {
     let pal = app.pal;

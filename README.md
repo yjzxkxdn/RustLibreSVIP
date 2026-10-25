@@ -116,8 +116,11 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 git clone https://github.com/yjzxkxdn/RustLibreSVIP
 cd RustLibreSVIP
 
-# 原生 CLI + GUI
+# 原生 CLI + GUI（发布用，fat LTO，约 10 分钟）
 cargo build --release -p libresvip-cli -p libresvip-gui
+
+# 日常迭代：同样的优化级别，不做 LTO、并行 codegen，改完链接几秒到一两分钟
+cargo build --profile fast -p libresvip-gui
 
 # 网页版
 rustup target add wasm32-unknown-unknown
@@ -210,6 +213,9 @@ MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者；Uta
 
 ```powershell
 cargo build --release -p libresvip-cli -p libresvip-gui
+
+# day-to-day: same optimisation, no LTO, parallel codegen
+cargo build --profile fast -p libresvip-gui
 rustup target add wasm32-unknown-unknown
 cargo build --profile wasm -p libresvip-web --target wasm32-unknown-unknown
 node web/build-web.mjs
