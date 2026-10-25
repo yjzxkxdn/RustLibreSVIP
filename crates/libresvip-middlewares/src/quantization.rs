@@ -13,8 +13,8 @@ use libresvip_core::plugin::{Middleware, PluginInfo};
 pub static INFO_PITCH_QUANTIZATION: PluginInfo = PluginInfo {
     id: "pitch_quantization",
     name: "Pitch Quantization",
-    author: "SoulMelody",
-    website: "https://github.com/SoulMelody/LibreSVIP",
+    author: "依旧在星空下等你",
+    website: "https://github.com/yjzxkxdn/RustLibreSVIP",
     file_format: "",
     description: "Snap pitch curve values to the nearest semitone (useful before exporting to step-based engines).",
     suffixes: &[],
@@ -24,8 +24,8 @@ pub static INFO_PITCH_QUANTIZATION: PluginInfo = PluginInfo {
 pub static INFO_RHYTHM_QUANTIZATION: PluginInfo = PluginInfo {
     id: "rhythm_quantization",
     name: "Rhythm Quantization",
-    author: "SoulMelody",
-    website: "https://github.com/SoulMelody/LibreSVIP",
+    author: "依旧在星空下等你",
+    website: "https://github.com/yjzxkxdn/RustLibreSVIP",
     file_format: "",
     description: "Snap note starts and lengths to a tick grid (default 1/32 note = 60 ticks).",
     suffixes: &[],

@@ -10,8 +10,8 @@ use crate::i18n::Lang;
 use crate::state::FormatEntry;
 use crate::theme::Palette;
 use crate::ui::titlebar::{
-    AUTHOR_URL, DOCS_URL, LIBRESVIP_AUTHOR_URL, LIBRESVIP_URL, PROJECT_AUTHOR, REPO_URL,
-    UTAFORMATIX3_AUTHOR_URL, UTAFORMATIX3_URL,
+    AUTHOR_URL, DOCS_URL, LIBRESVIP_AUTHOR_LABEL, LIBRESVIP_AUTHOR_URL, LIBRESVIP_URL,
+    PROJECT_AUTHOR, PROJECT_GITHUB_URL, REPO_URL, UTAFORMATIX3_AUTHOR_URL, UTAFORMATIX3_URL,
 };
 use crate::widgets;
 
@@ -92,7 +92,10 @@ fn about(app: &mut App, ctx: &egui::Context) {
                                 .size(Palette::body())
                                 .color(pal.muted),
                         );
-                        if ui.link(RichText::new("SoulMelody").size(Palette::body())).clicked() {
+                        if ui
+                            .link(RichText::new(LIBRESVIP_AUTHOR_LABEL).size(Palette::body()))
+                            .clicked()
+                        {
                             open_url(LIBRESVIP_AUTHOR_URL);
                         }
                         ui.label(
@@ -140,6 +143,9 @@ fn about(app: &mut App, ctx: &egui::Context) {
                 );
                 if ui.link(app.t("Author's Profile")).clicked() {
                     open_url(AUTHOR_URL);
+                }
+                if ui.link("GitHub").clicked() {
+                    open_url(PROJECT_GITHUB_URL);
                 }
                 if ui.link(app.t("Repo URL")).clicked() {
                     open_url(REPO_URL);

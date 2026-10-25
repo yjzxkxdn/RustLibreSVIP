@@ -15,8 +15,8 @@ use libresvip_core::plugin::{Middleware, PluginInfo};
 pub static INFO_VIBRATO: PluginInfo = PluginInfo {
     id: "vibrato",
     name: "Vibrato",
-    author: "SoulMelody",
-    website: "https://github.com/SoulMelody/LibreSVIP",
+    author: "依旧在星空下等你",
+    website: "https://github.com/yjzxkxdn/RustLibreSVIP",
     file_format: "",
     description: "Bake note vibrato parameters into the pitch curve so engines without a vibrato layer keep the effect.",
     suffixes: &[],

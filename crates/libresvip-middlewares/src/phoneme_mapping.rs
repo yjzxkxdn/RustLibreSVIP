@@ -18,8 +18,8 @@ use libresvip_core::plugin::{Middleware, PluginInfo};
 pub static INFO_PHONEME_MAPPING: PluginInfo = PluginInfo {
     id: "phoneme_mapping",
     name: "Phoneme Mapping",
-    author: "SoulMelody",
-    website: "https://github.com/SoulMelody/LibreSVIP",
+    author: "依旧在星空下等你",
+    website: "https://github.com/yjzxkxdn/RustLibreSVIP",
     file_format: "",
     description: "Rewrite note pronunciations through a user-supplied `from = to` table (longest match first), e.g. `sh a = s a`.",
     suffixes: &[],

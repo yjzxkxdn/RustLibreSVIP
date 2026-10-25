@@ -16,8 +16,8 @@ use libresvip_core::semantics::lyrics::{
 pub static INFO_JAPANESE_LYRICS: PluginInfo = PluginInfo {
     id: "japanese_lyrics",
     name: "Japanese Lyrics Conversion",
-    author: "SoulMelody",
-    website: "https://github.com/SoulMelody/LibreSVIP",
+    author: "依旧在星空下等你",
+    website: "https://github.com/yjzxkxdn/RustLibreSVIP",
     file_format: "",
     description: "Convert Japanese lyrics between kana/romaji and CV/VCV conventions. Tracks whose lyrics type cannot be detected (70% consistency required) are left unchanged.",
     suffixes: &[],

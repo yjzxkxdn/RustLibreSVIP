@@ -20,7 +20,7 @@
 
 | 来源 | 拿来了什么 | 没有拿什么 |
 | --- | --- | --- |
-| **LibreSVIP 2.9.2**（MIT，SoulMelody） | 40 个格式的读写、OpenSVIP `.json` 轴心模型、6 个中间件、CLI/GUI 交互与 RPC 协议 | — |
+| **LibreSVIP 2.9.2**（MIT，SoulMelody／岁月静好_初心不忘） | 40 个格式的读写、OpenSVIP `.json` 轴心模型、6 个中间件、CLI/GUI 交互与 RPC 协议 | — |
 | **UtaFormatix3**（Apache-2.0，SderColin，参考 `f3c8335`／2025-05） | 只借鉴设计与算法并自行实现：格式能力矩阵、结构化警告、音高语义层、颤音展开、日文歌词、音素映射、中间格式版本协商 | 没有引入它的格式集合；没有采用它的模板生成器方案（见 T9） |
 
 > UtaFormatix3 是 Apache-2.0，本仓库是 MIT。因此**没有复制它的代码**，只吸收上面列出的设计与算法思路。
@@ -197,7 +197,9 @@ powershell -ExecutionPolicy Bypass -File .\install-gui.ps1 -Build
 
 ### 许可
 
-MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody 与贡献者；UtaFormatix3 © SderColin 与贡献者（Apache-2.0，仅借鉴设计与算法，未复制代码）。
+**本项目作者**：依旧在星空下等你（[B 站](https://space.bilibili.com/299528104) · [GitHub](https://github.com/yjzxkxdn)）。
+
+MIT，见 [LICENSE](LICENSE)。上游 LibreSVIP © SoulMelody（岁月静好_初心不忘）与贡献者；UtaFormatix3 © SderColin 与贡献者（Apache-2.0，仅借鉴设计与算法，未复制代码）。
 
 ---
 
@@ -226,4 +228,6 @@ Notes: do not run the binaries from a low-integrity (sandboxed) directory — Wi
 
 Differences from the Python build: the parsers never store the lyric as a pronunciation (`ustx` / `mid` / `vspx` / `svip3`); `.svp` defaults to an empty phoneme layer while `.acep` keeps writing syllables; `aisp` / `vspx` pitch assembly, `key_number = 0` handling and the `replace_lyric` middleware follow the intended behaviour instead of the 2.9.2 bugs. Five extra middlewares (Japanese lyrics, phoneme mapping, vibrato baking, pitch and rhythm quantisation) are opt-in: the interactive prompts stay identical to Python's six, and `proj convert --middleware <id>` runs an extra one with its default options.
 
-MIT licensed — see [LICENSE](LICENSE). Upstream LibreSVIP © SoulMelody and contributors; UtaFormatix3 © SderColin and contributors (Apache-2.0, design and algorithms only).
+**Project author**: 依旧在星空下等你 ([Bilibili](https://space.bilibili.com/299528104) · [GitHub](https://github.com/yjzxkxdn)).
+
+MIT licensed — see [LICENSE](LICENSE). Upstream LibreSVIP © SoulMelody (岁月静好_初心不忘) and contributors; UtaFormatix3 © SderColin and contributors (Apache-2.0, design and algorithms only).
