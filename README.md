@@ -54,6 +54,7 @@
 
 * **`.svp` 默认不写音素层**（`write_phonemes=false`）：Python 会给每个音符写 `normalize_phoneme`。打开该选项即按 SynthV 记法写入；`.acep` 的 `write_syllable` 默认 `true`，与 Python 一致。
 * **解析器不把歌词抄成"发音"**（`ustx` / `mid` / `vspx` / `svip3`），否则拼音歌词会被写进音素层。
+* **支持 USTX 0.10（OpenUtau 1.571+）**：`masked_curves` 里的绝对音高曲线会真正导入 —— `pito`（用户覆盖）有值处覆盖音高，没有 `pitd` 时用 `rpit`（渲染音高）兜底；音符 `tuning` 计入音高。上游 2.9.2 只把 `MaskedCurve` 加进了类型联合，字段本身没有接收，数据被 pydantic 静默丢掉。同时 `voice_parts: null` 这类空列表也能读了。
 * 新增三个 CLI 表面：`proj convert --middleware <id>`、`--strict-warnings`、`plugin capabilities [--json]`；**交互提问仍与 Python 完全一致**（6 个中间件，顺序相同），新增的 5 个中间件不参与提问。
 * 新增的 3 个格式后缀（`gj` / `msq` / `vsp`）会出现在"支持的扩展名"报错列表里。
 * `--help` 排版、错误信息文案与 Python 不同；音频时长探测只支持 RIFF/WAVE（上游用 MediaInfo/libsndfile）；`utf-32` 文本编码不受支持。

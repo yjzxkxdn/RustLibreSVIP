@@ -11,8 +11,12 @@ pub fn for_plugin(id: &str) -> &'static [&'static str] {
         "aisp" => &[
             "pitch points accumulate across items (upstream 2.9.2 self-extend bug, fixed)",
         ],
-        "mid" | "svip3" | "ustx" => &[
+        "mid" | "svip3" => &[
             "the parser does not echo the lyric into the pronunciation field",
+        ],
+        "ustx" => &[
+            "the parser does not echo the lyric into the pronunciation field",
+            "reads USTX 0.10 masked pitch curves (pito / rpit) and note tuning; the reference accepts the type tags but drops the values",
         ],
         "svp" => &[
             "the phoneme layer is off by default (upstream writes normalize_phoneme for every note)",

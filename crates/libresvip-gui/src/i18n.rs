@@ -225,6 +225,9 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "the parser does not echo the lyric into the pronunciation field" => {
             "解析器不把歌词抄写成发音"
         }
+        "reads USTX 0.10 masked pitch curves (pito / rpit) and note tuning; the reference accepts the type tags but drops the values" => {
+            "读取 USTX 0.10 的掩码音高曲线（pito / rpit）与音符微调；原实现只接受类型标签，数据被丢弃"
+        }
         "the phoneme layer is off by default (upstream writes normalize_phoneme for every note)" => {
             "默认不写音素层（上游会给每个音符写 normalize_phoneme）"
         }
