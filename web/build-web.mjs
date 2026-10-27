@@ -14,7 +14,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { gzipSync } from "node:zlib";
+import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 import { spawnSync } from "node:child_process";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -58,7 +58,24 @@ const page = readFileSync(join(here, "index.html"), "utf8");
 
 writeFileSync(join(here, "libresvip_web.wasm"), wasm);
 
+// Deployed pages fetch these instead of the raw module (see loadWasm in
+// index.html). The raw file stays for browsers without DecompressionStream.
 const compressed = gzipSync(wasm, { level: 9 });
+writeFileSync(join(here, "libresvip_web.wasm.gz"), compressed);
+
+let brotli = null;
+try {
+  brotli = brotliCompressSync(wasm, {
+    params: {
+      [constants.BROTLI_PARAM_QUALITY]: 11,
+      [constants.BROTLI_PARAM_SIZE_HINT]: wasm.length,
+    },
+  });
+  writeFileSync(join(here, "libresvip_web.wasm.br"), brotli);
+} catch (error) {
+  console.warn(`brotli failed (${error.message}); shipping gzip only`);
+}
+
 const inline = `<script>window.__LIBRESVIP_WASM_GZIP_BASE64__ = "${compressed.toString("base64")}";</script>\n`;
 const single = page.replace('<script>\n"use strict";', `${inline}<script>\n"use strict";`);
 if (single === page) {
@@ -69,4 +86,5 @@ writeFileSync(join(here, "libresvip-single.html"), single);
 const kib = (bytes) => `${(bytes / 1024).toFixed(0)} KiB`;
 console.log(`module      ${kib(wasm.length)} (${wasm.length} bytes)`);
 console.log(`gzip        ${kib(compressed.length)}`);
+if (brotli) console.log(`brotli      ${kib(brotli.length)}`);
 console.log(`single file ${kib(single.length)}`);

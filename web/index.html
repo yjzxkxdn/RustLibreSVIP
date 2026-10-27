@@ -946,6 +946,48 @@ function base64ToBytes(text) {
   return bytes;
 }
 
+function mib(bytes) {
+  return (bytes / 1024 / 1024).toFixed(2);
+}
+
+/* Streaming download with a live counter. A few megabytes on a slow link takes
+   a minute; without a number moving the page looks hung at "正在加载".
+
+   Note on the percentage: GitHub Pages sends the module with
+   `Content-Encoding: gzip`, so `content-length` is the compressed size while
+   the stream yields decoded bytes. Once the decoded count passes the advertised
+   length the ratio is meaningless, so only the byte counter is shown then. */
+async function fetchBytes(url, label) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  const total = Number(response.headers.get("content-length")) || 0;
+  if (!response.body) return new Uint8Array(await response.arrayBuffer());
+  const reader = response.body.getReader();
+  const chunks = [];
+  let received = 0;
+  const report = () => {
+    const usable = total > 0 && received <= total * 1.02;
+    const suffix = usable ? ` / ${mib(total)}` : "";
+    const percent = usable ? ` ${Math.min(100, Math.round((received / total) * 100))}%` : "";
+    setStatus(`正在下载转换引擎 ${mib(received)}${suffix} MiB${percent}（${label}）…`);
+  };
+  report();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.length;
+    report();
+  }
+  const bytes = new Uint8Array(received);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return bytes;
+}
+
 async function loadWasm() {
   // Single-file build: the module is inlined, gzip-compressed + base64.
   if (window.__LIBRESVIP_WASM_GZIP_BASE64__) {
@@ -959,9 +1001,12 @@ async function loadWasm() {
   if (window.__LIBRESVIP_WASM_BASE64__) {
     return base64ToBytes(window.__LIBRESVIP_WASM_BASE64__);
   }
-  const response = await fetch("libresvip_web.wasm");
-  if (!response.ok) throw new Error(`libresvip_web.wasm: HTTP ${response.status}`);
-  return new Uint8Array(await response.arrayBuffer());
+
+  // Deployed build: fetch the raw module — the host compresses it in transit
+  // (5.06 MiB on disk, ~2.49 MiB over the wire). Brotli would be 1.99 MiB, but
+  // DecompressionStream has no "br", so a pre-compressed payload would need a
+  // decoder library; the transfer is already gzipped by the server instead.
+  return fetchBytes("libresvip_web.wasm", "libresvip_web.wasm");
 }
 
 wire();
