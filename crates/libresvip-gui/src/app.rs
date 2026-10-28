@@ -899,6 +899,23 @@ impl eframe::App for App {
     }
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // One line of startup diagnostics: when a report says "the window is
+        // blank", the texture limit and the resolved families decide whether the
+        // renderer or the font is at fault. `max_texture_side` comes from the
+        // backend (GL_MAX_TEXTURE_SIZE on glow, the adapter limit on wgpu), and a
+        // suspiciously small value is the classic cause of invisible text.
+        static DIAGNOSTICS: std::sync::Once = std::sync::Once::new();
+        DIAGNOSTICS.call_once(|| {
+            let max_texture_side = ctx.input(|input| input.max_texture_side);
+            eprintln!(
+                "libresvip-gui: max_texture_side = {max_texture_side}, pixels_per_point = {:.2}",
+                ctx.pixels_per_point()
+            );
+            ctx.fonts(|fonts| {
+                eprintln!("libresvip-gui: font families = {:?}", fonts.families());
+            });
+        });
+
         let now = ctx.input(|input| input.time);
         self.sync_system_theme(ctx);
         self.poll_jobs(ctx);
