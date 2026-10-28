@@ -16,18 +16,41 @@ mod theme;
 mod ui;
 mod widgets;
 
+use std::path::PathBuf;
+
 fn window_icon() -> Option<eframe::egui::IconData> {
     eframe::icon_data::from_png_bytes(include_bytes!("../assets/icon.png")).ok()
 }
 
-fn main() -> eframe::Result<()> {
-    // Files given on the command line are added to the task list, so the GUI
-    // can be used as the target of "Open with" / drag-and-drop from a shell.
-    let initial_files: Vec<std::path::PathBuf> = std::env::args_os()
-        .skip(1)
-        .map(std::path::PathBuf::from)
-        .filter(|path| path.is_file())
-        .collect();
+/// Which renderer to try first.
+///
+/// `wgpu` is the default on Linux: the OpenGL path can draw the window but
+/// leave every glyph invisible on some Mesa/driver combinations, and nothing in
+/// the app can detect that before the first frame is on screen. Elsewhere
+/// `glow` stays the default. `--renderer glow|wgpu` and the `LIBRESVIP_RENDERER`
+/// environment variable override the choice.
+fn preferred_renderer(requested: Option<&str>) -> eframe::Renderer {
+    match requested.map(|value| value.trim().to_ascii_lowercase()).as_deref() {
+        Some("glow") => eframe::Renderer::Glow,
+        Some("wgpu") => eframe::Renderer::Wgpu,
+        _ => {
+            if cfg!(target_os = "linux") {
+                eframe::Renderer::Wgpu
+            } else {
+                eframe::Renderer::Glow
+            }
+        }
+    }
+}
+
+fn alternate(renderer: eframe::Renderer) -> eframe::Renderer {
+    match renderer {
+        eframe::Renderer::Glow => eframe::Renderer::Wgpu,
+        eframe::Renderer::Wgpu => eframe::Renderer::Glow,
+    }
+}
+
+fn launch(renderer: eframe::Renderer, files: Vec<PathBuf>) -> eframe::Result<()> {
     let mut viewport = eframe::egui::ViewportBuilder::default()
         .with_inner_size([1200.0, 800.0])
         .with_min_inner_size([700.0, 600.0])
@@ -39,11 +62,84 @@ fn main() -> eframe::Result<()> {
     }
     let options = eframe::NativeOptions {
         viewport,
+        renderer,
         ..Default::default()
     };
+    eprintln!("libresvip-gui: starting with the {renderer:?} renderer");
     eframe::run_native(
         "LibreSVIP",
         options,
-        Box::new(move |cc| Ok(Box::new(app::App::new(cc, initial_files)))),
+        Box::new(move |cc| Ok(Box::new(app::App::new(cc, files)))),
     )
+}
+
+fn main() -> eframe::Result<()> {
+    // Options can sit before or between file names, so walk the arguments
+    // instead of filtering them: `--renderer wgpu song.ustx` must keep the file.
+    let mut requested: Option<String> = std::env::var("LIBRESVIP_RENDERER").ok();
+    let mut files: Vec<PathBuf> = Vec::new();
+    let mut args = std::env::args_os().skip(1);
+    while let Some(arg) = args.next() {
+        let text = arg.to_string_lossy().to_string();
+        if let Some(value) = text.strip_prefix("--renderer=") {
+            requested = Some(value.to_owned());
+            continue;
+        }
+        if text == "--renderer" {
+            requested = args.next().map(|value| value.to_string_lossy().to_string());
+            continue;
+        }
+        let path = PathBuf::from(&arg);
+        if path.is_file() {
+            files.push(path);
+        }
+    }
+
+    let renderer = preferred_renderer(requested.as_deref());
+    match launch(renderer, files.clone()) {
+        Ok(()) => Ok(()),
+        Err(error) => {
+            // Adapter creation fails outright when a backend is missing, so this
+            // retry covers "no Vulkan on this box" rather than the blank-text
+            // case the default above is about.
+            let fallback = alternate(renderer);
+            eprintln!("libresvip-gui: {renderer:?} failed ({error}); retrying with {fallback:?}");
+            launch(fallback, files)
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_override_beats_the_platform_default() {
+        assert!(matches!(
+            preferred_renderer(Some("wgpu")),
+            eframe::Renderer::Wgpu
+        ));
+        assert!(matches!(
+            preferred_renderer(Some("GLOW")),
+            eframe::Renderer::Glow
+        ));
+        assert!(matches!(
+            preferred_renderer(Some(" glow ")),
+            eframe::Renderer::Glow
+        ));
+        // Junk falls back to the platform default instead of failing.
+        let fallback = preferred_renderer(Some("vulkan"));
+        assert!(matches!(
+            fallback,
+            eframe::Renderer::Glow | eframe::Renderer::Wgpu
+        ));
+        assert!(matches!(
+            alternate(eframe::Renderer::Glow),
+            eframe::Renderer::Wgpu
+        ));
+        assert!(matches!(
+            alternate(eframe::Renderer::Wgpu),
+            eframe::Renderer::Glow
+        ));
+    }
 }

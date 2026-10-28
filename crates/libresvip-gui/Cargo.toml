@@ -18,11 +18,17 @@ libresvip-middlewares = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 eframe = { version = "0.31", default-features = false, features = [
+    # Both renderers: glow is the default on Windows/macOS, wgpu on Linux,
+    # where the GL path can leave every glyph invisible on some drivers.
     "glow",
+    "wgpu",
     "default_fonts",
 ] }
 rfd = "0.15"
 ab_glyph = "0.2"
+# Same version ab_glyph already pulls in, used to pick the right face inside a
+# .ttc collection (Noto Sans CJK keeps JP/KR/SC/TC/HK in one file).
+ttf-parser = "0.25"
 image = { version = "0.25", default-features = false, features = ["png"] }
 
 [build-dependencies]

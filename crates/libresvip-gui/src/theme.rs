@@ -315,11 +315,23 @@ const FONT_HINTS: &[&str] = &[
 /// primary proportional family (egui's built-in fonts stay as fallbacks).
 pub fn install_fonts(ctx: &egui::Context) {
     let mut fonts = FontDefinitions::default();
-    if let Some((path, bytes)) = load_cjk_font() {
-        eprintln!("libresvip-gui: using font {}", path.display());
-        fonts
-            .font_data
-            .insert("ui".to_owned(), Arc::new(FontData::from_owned(bytes)));
+    if let Some((path, bytes, index, family)) = load_cjk_font() {
+        eprintln!(
+            "libresvip-gui: using font {} (face {index}{})",
+            path.display(),
+            if family.is_empty() {
+                String::new()
+            } else {
+                format!(": {family}")
+            }
+        );
+        let mut data = FontData::from_owned(bytes);
+        // A `.ttc` collection often holds JP/KR/SC/TC faces of the same design,
+        // and face 0 is usually the Japanese one. Loading that face renders
+        // Chinese correctly but with Japanese glyph shapes, so use the face
+        // picked for Simplified Chinese.
+        data.index = index;
+        fonts.font_data.insert("ui".to_owned(), Arc::new(data));
         if let Some(family) = fonts.families.get_mut(&FontFamily::Proportional) {
             family.insert(0, "ui".to_owned());
         }
@@ -336,24 +348,90 @@ pub fn install_fonts(ctx: &egui::Context) {
     ctx.set_fonts(fonts);
 }
 
-fn load_cjk_font() -> Option<(std::path::PathBuf, Vec<u8>)> {
+fn load_cjk_font() -> Option<(std::path::PathBuf, Vec<u8>, u32, String)> {
     for path in candidate_paths() {
-        if let Some(bytes) = read_font(&path) {
-            return Some((path, bytes));
+        if let Some((bytes, index, family)) = read_font(&path) {
+            return Some((path, bytes, index, family));
         }
     }
     None
 }
 
-/// Reads `path` and returns its bytes only when ab_glyph agrees it is a font.
-fn read_font(path: &std::path::Path) -> Option<Vec<u8>> {
+/// Scores a collection face by its name records: Simplified Chinese faces win,
+/// Japanese/Korean/Traditional faces lose.
+fn score_names(text: &str) -> i32 {
+    let text = format!(" {}", text.to_ascii_lowercase());
+    let mut score = 0;
+    for marker in [" simplified", " hans", " sc", "gb18030", "gb2312", "chinese"] {
+        if text.contains(marker) {
+            score += 100;
+        }
+    }
+    for marker in [
+        " japan",
+        " jp",
+        "korea",
+        " kr",
+        "traditional",
+        " tc",
+        " hk",
+        "hong kong",
+    ] {
+        if text.contains(marker) {
+            score -= 100;
+        }
+    }
+    score
+}
+
+/// Chooses the face to load out of a possibly-collection font file.
+fn pick_face(bytes: &[u8]) -> (u32, String) {
+    let count = ttf_parser::fonts_in_collection(bytes).unwrap_or(1).max(1);
+    let mut best = (0u32, String::new());
+    let mut best_score = i32::MIN;
+    for index in 0..count {
+        let Ok(face) = ttf_parser::Face::parse(bytes, index) else {
+            continue;
+        };
+        let mut names = String::new();
+        let mut family = String::new();
+        for name in face.names() {
+            if let Some(value) = name.to_string() {
+                names.push(' ');
+                names.push_str(&value);
+                if family.is_empty() && name.name_id == ttf_parser::name_id::FAMILY {
+                    family = value;
+                }
+            }
+        }
+        let mut score = score_names(&names);
+        if face.glyph_index('中').is_some() {
+            score += 10;
+        }
+        if score > best_score {
+            best_score = score;
+            best = (index, family);
+        }
+    }
+    best
+}
+
+/// Reads `path` and returns its bytes (plus the face to use) only when ab_glyph
+/// agrees it is a font.
+fn read_font(path: &std::path::Path) -> Option<(Vec<u8>, u32, String)> {
     let bytes = std::fs::read(path).ok()?;
     // A directory or a truncated file is not worth handing to the parser.
     if bytes.len() < 4 * 1024 {
         return None;
     }
     ab_glyph::FontVec::try_from_vec(bytes.clone()).ok()?;
-    Some(bytes)
+    let (index, family) = pick_face(&bytes);
+    // The chosen face has to parse on its own; a broken collection face must
+    // not take the whole font down with it.
+    if ttf_parser::Face::parse(&bytes, index).is_err() {
+        return None;
+    }
+    Some((bytes, index, family))
 }
 
 /// Every path worth trying, cheapest first: the environment override, the known
@@ -465,5 +543,53 @@ mod font_tests {
         std::fs::write(&tiny, b"not a font").expect("write");
         assert!(read_font(&tiny).is_none());
         let _ = std::fs::remove_file(&tiny);
+    }
+
+    #[test]
+    fn simplified_chinese_faces_beat_the_others_in_a_collection() {
+        // The order inside Noto Sans CJK: JP, KR, SC, TC, HK.
+        let jp = score_names("Noto Sans CJK JP");
+        let kr = score_names("Noto Sans CJK KR");
+        let sc = score_names("Noto Sans CJK SC");
+        let tc = score_names("Noto Sans CJK TC");
+        let hk = score_names("Noto Sans CJK HK");
+        assert!(sc > jp, "SC {sc} must beat JP {jp}");
+        assert!(sc > kr && sc > tc && sc > hk);
+        assert!(sc > 0 && jp < 0 && tc < 0);
+    }
+
+    #[test]
+    fn plain_family_names_are_neutral() {
+        // A single-face font that says nothing about a language must not be
+        // penalised, or the first candidate would win by accident.
+        assert_eq!(score_names("Microsoft YaHei"), 0);
+        assert_eq!(score_names("WenQuanYi Micro Hei"), 0);
+        assert!(score_names("Source Han Sans Hans") > 0);
+    }
+
+    #[test]
+    fn real_collections_resolve_to_a_parsable_face() {
+        // Whatever font this machine has: the picked face must parse, and a
+        // collection should report the family it landed on.
+        let candidates = [
+            r"C:\Windows\Fonts\msyh.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+        ];
+        for path in candidates {
+            let path = std::path::Path::new(path);
+            if !path.exists() {
+                continue;
+            }
+            let (bytes, index, family) =
+                read_font(path).unwrap_or_else(|| panic!("{} should load", path.display()));
+            assert!(
+                ttf_parser::Face::parse(&bytes, index).is_ok(),
+                "face {index} of {} does not parse",
+                path.display()
+            );
+            println!("{} -> face {index} ({family})", path.display());
+            return;
+        }
     }
 }
