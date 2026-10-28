@@ -92,6 +92,42 @@ impl Report {
     }
 }
 
+/// Absolute media paths are resolved against the directory the project was
+/// loaded from, so `project.json` records the checkout that generated it. That
+/// value is only meaningful on the machine that produced the golden files, so
+/// keep the file name, drop the directory, and compare the rest exactly.
+fn normalize_media_paths(value: &mut Value) {
+    match value {
+        Value::Object(map) => {
+            for nested in map.values_mut() {
+                normalize_media_paths(nested);
+            }
+        }
+        Value::Array(items) => {
+            for item in items.iter_mut() {
+                normalize_media_paths(item);
+            }
+        }
+        Value::String(text) => {
+            let absolute = text.contains(":\\")
+                || text.contains(":/")
+                || text.starts_with('/')
+                || text.starts_with("\\\\");
+            if absolute {
+                if let Some(name) = text
+                    .rsplit(|character| character == '/' || character == '\\')
+                    .next()
+                {
+                    if !name.is_empty() {
+                        *text = format!("<media>/{name}");
+                    }
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
 fn check_plugin(plugin: &dyn SvsPlugin, only: Option<&str>) -> Option<Report> {
     let id = plugin.info().id;
     if let Some(only) = only {
@@ -145,6 +181,8 @@ fn check_plugin(plugin: &dyn SvsPlugin, only: Option<&str>) -> Option<Report> {
                 let mut expected = json_value(&expected_project);
                 drop_echoed_pronunciations(&mut actual);
                 drop_echoed_pronunciations(&mut expected);
+                normalize_media_paths(&mut actual);
+                normalize_media_paths(&mut expected);
                 if actual == expected {
                     Ok(())
                 } else {
