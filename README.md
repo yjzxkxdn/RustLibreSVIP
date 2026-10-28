@@ -153,7 +153,8 @@ C ABI（`libresvip.h`）：
 | `libresvip.dll` | 转换引擎动态库（C ABI，Windows x64） |
 | `libresvip.h` | C / C++ 头文件 |
 | `libresvip-python.zip` | Python 绑定：`libresvip.py` + `libresvip.dll` + 示例 |
-| `libresvip-web.zip` | 网页版：`index.html` + `libresvip_web.wasm` + 单文件版 + 说明 |
+
+网页版不进压缩包：它已经部署在 <https://xk.sunyuyo.fun/RustLibreSVIP/>，需要离线包时按下面的构建说明跑一次 `cargo build --profile wasm` + `node web/build-web.mjs`。
 
 ### 构建
 
