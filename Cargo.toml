@@ -1,22 +1,25 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/libresvip",
     "crates/libresvip-core",
     "crates/libresvip-plugins",
     "crates/libresvip-middlewares",
     "crates/libresvip-cli",
     "crates/libresvip-gui",
     "crates/libresvip-web",
+    "crates/libresvip-ffi",
 ]
 
 [workspace.package]
-version = "1.1.2"
+version = "1.2.0"
 edition = "2021"
 rust-version = "1.80"
 license = "MIT"
 repository = "https://github.com/yjzxkxdn/RustLibreSVIP"
 
 [workspace.dependencies]
+libresvip = { path = "crates/libresvip" }
 libresvip-core = { path = "crates/libresvip-core" }
 libresvip-plugins = { path = "crates/libresvip-plugins" }
 libresvip-middlewares = { path = "crates/libresvip-middlewares" }

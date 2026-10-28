@@ -99,6 +99,49 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 | gzip / brotli（部署时传输） | 2.36 MB / **1.89 MB** |
 | `libresvip-single.html`（wasm 内联，双击即用） | 3.20 MB |
 
+### 作为库使用
+
+转换引擎本身就是一个库：Rust 直接依赖，其他语言通过 C ABI。
+
+| 层 | 产物 | 用法 |
+| --- | --- | --- |
+| Rust | `libresvip` crate | `libresvip::convert_bytes(&input, "ustx", "svp", None, None)?` |
+| C / C++ | `libresvip.dll` + `libresvip.h` | `libresvip_convert(...)`；头文件里另有 C++ 的 `libresvip::convert` 包装 |
+| Python | `bindings/python/libresvip.py` | `LibreSVIP().convert(data, "ustx", "svp")` |
+| WebAssembly | `libresvip_web.wasm` | 同一套 JSON 接口 |
+
+```rust
+let output = libresvip::convert_bytes(
+    &std::fs::read("song.ustx")?,
+    "ustx",
+    "svp",
+    None,          // 输入选项，None = 插件默认
+    None,          // 输出选项
+)?;
+```
+
+```python
+from libresvip import LibreSVIP
+
+engine = LibreSVIP()            # 自动在 target/release、LIBRESVIP_LIB 里找
+data = engine.convert(open("song.ustx", "rb").read(), "ustx", "svp")
+open("song.svp", "wb").write(data)
+print(engine.warnings())        # 转换过程中的结构化警告
+```
+
+C ABI（`libresvip.h`）：
+
+| 函数 | 作用 |
+| --- | --- |
+| `libresvip_version()` | 版本字符串 |
+| `libresvip_formats_json()` | 全部格式、后缀、能力、每文件轨道上限 |
+| `libresvip_options_json(in, out)` | 一对格式的选项 schema |
+| `libresvip_convert(...)` | 一次转换（可传 JSON 选项覆盖默认值） |
+| `libresvip_warnings_json()` | 本线程上次转换的警告 |
+| `libresvip_free(ptr, len)` | 释放返回的缓冲区 |
+
+返回的缓冲区归调用方所有，必须用 `libresvip_free` 释放；返回 `0` 表示成功，非 0 时缓冲区里是 UTF-8 错误信息。转换是线程安全的，警告按线程隔离。
+
 ### 下载与发布
 
 发布页提供三样东西：
@@ -107,6 +150,9 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 | --- | --- |
 | `libresvip-cli.exe` | 命令行版，单文件、免安装（Windows x64） |
 | `libresvip-gui.exe` | 桌面版，免安装（Windows x64） |
+| `libresvip.dll` | 转换引擎动态库（C ABI，Windows x64） |
+| `libresvip.h` | C / C++ 头文件 |
+| `libresvip-python.zip` | Python 绑定：`libresvip.py` + `libresvip.dll` + 示例 |
 | `libresvip-web.zip` | 网页版：`index.html` + `libresvip_web.wasm` + 单文件版 + 说明 |
 
 ### 构建
