@@ -77,6 +77,7 @@ fn main() -> eframe::Result<()> {
     // Options can sit before or between file names, so walk the arguments
     // instead of filtering them: `--renderer wgpu song.ustx` must keep the file.
     let mut requested: Option<String> = std::env::var("LIBRESVIP_RENDERER").ok();
+    let mut want_x11 = false;
     let mut files: Vec<PathBuf> = Vec::new();
     let mut args = std::env::args_os().skip(1);
     while let Some(arg) = args.next() {
@@ -89,9 +90,24 @@ fn main() -> eframe::Result<()> {
             requested = args.next().map(|value| value.to_string_lossy().to_string());
             continue;
         }
+        if text == "--x11" {
+            want_x11 = true;
+            continue;
+        }
         let path = PathBuf::from(&arg);
         if path.is_file() {
             files.push(path);
+        }
+    }
+
+    // Wayland never delivers file drops to winit (emilk/egui#1563), so `--x11`
+    // relaunches the window on X11/XWayland where drag and drop works.
+    if want_x11 || std::env::var_os("LIBRESVIP_GUI_X11").is_some() {
+        if crate::platform::prefer_x11() {
+            eprintln!(
+                "libresvip-gui: WAYLAND_DISPLAY cleared; running through X11 so file \
+                 drag and drop works"
+            );
         }
     }
 

@@ -1,5 +1,39 @@
 //! Small platform helpers used for diagnostics.
 
+use std::sync::OnceLock;
+
+static WAYLAND_SESSION: OnceLock<bool> = OnceLock::new();
+static X11_FALLBACK: OnceLock<bool> = OnceLock::new();
+
+/// Whether this process started inside a Wayland session.
+///
+/// Cached because [`prefer_x11`] removes `WAYLAND_DISPLAY`, and the UI still
+/// has to know why file drops stay silent.
+pub fn wayland_session() -> bool {
+    *WAYLAND_SESSION.get_or_init(|| {
+        std::env::var_os("WAYLAND_DISPLAY").is_some_and(|value| !value.is_empty())
+    })
+}
+
+/// Drops `WAYLAND_DISPLAY` so winit falls back to X11/XWayland.
+///
+/// winit still cannot receive Wayland file drops (raw.hovered_files and
+/// raw.dropped_files stay empty, https://github.com/emilk/egui/issues/1563),
+/// while the X11 path works. Returns whether there was anything to clear.
+pub fn prefer_x11() -> bool {
+    let was_wayland = wayland_session();
+    let _ = X11_FALLBACK.set(was_wayland);
+    if was_wayland {
+        std::env::remove_var("WAYLAND_DISPLAY");
+    }
+    was_wayland
+}
+
+/// Whether the X11 fallback was applied at startup.
+pub fn x11_fallback() -> bool {
+    matches!(X11_FALLBACK.get(), Some(true))
+}
+
 /// `` `DOMAIN\user`, integrity level `` — enough to tell an ordinary launch
 /// apart from a sandboxed / restricted one when a write is refused.
 pub fn process_context() -> String {

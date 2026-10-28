@@ -163,6 +163,7 @@ fn zh_table(en: &str) -> Option<&'static str> {
         "Swap Input and Output" => "交换输入输出",
         "Drag and drop files here" => "拖放文件到此处",
         "Release to add files" => "松开以添加文件",
+        "Wayland cannot receive file drops; click Browse or press Ctrl+O (or start with --x11)." => "Wayland 会话收不到拖放的文件；请点「浏览文件」或按 Ctrl+O（或加 --x11 启动）。",
         "or" => "或",
         "Browse Files" => "浏览文件",
         "Direct Mode" => "直接模式",

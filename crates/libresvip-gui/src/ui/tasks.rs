@@ -74,6 +74,17 @@ fn empty_state(app: &mut App, ui: &mut Ui, rect: Rect, pal: &Palette) {
     if button.inner.clicked() {
         app.open_files();
     }
+    // Wayland never delivers drop events (emilk/egui#1563), so say it out loud
+    // instead of leaving the user dragging files at a window that ignores them.
+    if crate::platform::wayland_session() && !crate::platform::x11_fallback() {
+        ui.painter().text(
+            pos2(center.x, center.y + 132.0),
+            Align2::CENTER_CENTER,
+            app.t("Wayland cannot receive file drops; click Browse or press Ctrl+O (or start with --x11)."),
+            FontId::proportional(12.0),
+            pal.muted,
+        );
+    }
 }
 
 fn list(app: &mut App, ui: &mut Ui, rect: Rect, pal: &Palette) {
