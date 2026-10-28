@@ -1912,7 +1912,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-cli"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "bytes",
  "clap",
@@ -1929,7 +1929,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-core"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "anyhow",
  "base64",
@@ -1947,7 +1947,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-gui"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "ab_glyph",
  "eframe",
@@ -1964,7 +1964,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-middlewares"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "libresvip-core",
  "regex",
@@ -1975,7 +1975,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-plugins"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "base64",
  "ciborium",
@@ -1995,7 +1995,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-web"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "libresvip-core",
  "libresvip-plugins",
@@ -2966,7 +2966,7 @@ checksum = "6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97"
 
 [[package]]
 name = "rust-libresvip"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "libresvip-core",
  "libresvip-plugins",
@@ -2975,7 +2975,7 @@ dependencies = [
 
 [[package]]
 name = "rust-libresvip-ffi"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "rust-libresvip",
 ]
