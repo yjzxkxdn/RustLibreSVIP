@@ -4,12 +4,12 @@
     python example.py song.ustx svp song.svp ustx
 
 The engine is found next to this file, in `target/release`, or through
-`LIBRESVIP_LIB`.
+`RUSTLIBRESVIP_LIB`.
 """
 
 import sys
 
-from libresvip import LibreSVIP
+from rustlibresvip import RustLibreSVIP
 
 
 def main(argv: list[str]) -> int:
@@ -17,9 +17,9 @@ def main(argv: list[str]) -> int:
         print("usage: example.py <input> <output-format> <output-file> [input-format]")
         return 2
 
-    engine = LibreSVIP()
+    engine = RustLibreSVIP()
     formats = engine.formats()
-    print(f"libresvip {engine.version} - {len(formats)} formats")
+    print(f"rustlibresvip {engine.version} - {len(formats)} formats")
 
     warnings = engine.convert_file(
         argv[1],

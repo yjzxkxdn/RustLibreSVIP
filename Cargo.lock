@@ -1759,17 +1759,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "libresvip"
-version = "1.2.0"
-dependencies = [
- "libresvip-core",
- "libresvip-plugins",
- "serde_json",
-]
-
-[[package]]
 name = "libresvip-cli"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "bytes",
  "clap",
@@ -1786,7 +1777,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-core"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "anyhow",
  "base64",
@@ -1803,15 +1794,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "libresvip-ffi"
-version = "1.2.0"
-dependencies = [
- "libresvip",
-]
-
-[[package]]
 name = "libresvip-gui"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "ab_glyph",
  "eframe",
@@ -1827,7 +1811,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-middlewares"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "libresvip-core",
  "regex",
@@ -1838,7 +1822,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-plugins"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "base64",
  "ciborium",
@@ -1858,7 +1842,7 @@ dependencies = [
 
 [[package]]
 name = "libresvip-web"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "libresvip-core",
  "libresvip-plugins",
@@ -2741,6 +2725,22 @@ name = "roxmltree"
 version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97"
+
+[[package]]
+name = "rust-libresvip"
+version = "1.2.1"
+dependencies = [
+ "libresvip-core",
+ "libresvip-plugins",
+ "serde_json",
+]
+
+[[package]]
+name = "rust-libresvip-ffi"
+version = "1.2.1"
+dependencies = [
+ "rust-libresvip",
+]
 
 [[package]]
 name = "rustc_version"

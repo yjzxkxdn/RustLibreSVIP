@@ -1,11 +1,11 @@
 [package]
-name = "libresvip"
+name = "rust-libresvip"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Byte-oriented embedding API for the LibreSVIP conversion engine"
+description = "Byte-oriented embedding API for the RustLibreSVIP conversion engine"
 keywords = ["svip", "converter", "vocaloid", "music"]
 categories = ["multimedia::audio", "api-bindings"]
 

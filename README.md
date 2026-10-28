@@ -103,15 +103,26 @@ Vocaloid 系与音高密集的格式，按 937 音符的真实工程（同一台
 
 转换引擎本身就是一个库：Rust 直接依赖，其他语言通过 C ABI。
 
+**库的名字统一带 `rust` 前缀**。老的 Python 版叫 LibreSVIP、包名是 `libresvip`；这一版的库叫 `rustlibresvip`，两者可以装在同一台机器上而不冲突（`import libresvip` 和 `import rustlibresvip` 是两个模块）。
+
 | 层 | 产物 | 用法 |
 | --- | --- | --- |
-| Rust | `libresvip` crate | `libresvip::convert_bytes(&input, "ustx", "svp", None, None)?` |
-| C / C++ | `libresvip.dll` + `libresvip.h` | `libresvip_convert(...)`；头文件里另有 C++ 的 `libresvip::convert` 包装 |
-| Python | `bindings/python/libresvip.py` | `LibreSVIP().convert(data, "ustx", "svp")` |
+| Rust | `rust-libresvip` crate | `rust_libresvip::convert_bytes(&input, "ustx", "svp", None, None)?` |
+| C / C++ | `rustlibresvip.dll` + `rustlibresvip.h` | `rustlibresvip_convert(...)`；头文件里另有 C++ 的 `rustlibresvip::convert` 包装 |
+| Python | `bindings/python/rustlibresvip.py` | `from rustlibresvip import RustLibreSVIP` |
 | WebAssembly | `libresvip_web.wasm` | 同一套 JSON 接口 |
 
+```toml
+# Cargo.toml
+[dependencies]
+rust-libresvip = { git = "https://github.com/yjzxkxdn/RustLibreSVIP", branch = "main" }
+# 或者指向本地路径：rust-libresvip = { path = "../RustLibreSVIP/crates/rust-libresvip" }
+```
+
 ```rust
-let output = libresvip::convert_bytes(
+use rust_libresvip::convert_bytes;
+
+let output = convert_bytes(
     &std::fs::read("song.ustx")?,
     "ustx",
     "svp",
@@ -121,38 +132,47 @@ let output = libresvip::convert_bytes(
 ```
 
 ```python
-from libresvip import LibreSVIP
+from rustlibresvip import RustLibreSVIP
 
-engine = LibreSVIP()            # 自动在 target/release、LIBRESVIP_LIB 里找
+engine = RustLibreSVIP()        # 自动在 target/release、RUSTLIBRESVIP_LIB 里找
 data = engine.convert(open("song.ustx", "rb").read(), "ustx", "svp")
 open("song.svp", "wb").write(data)
 print(engine.warnings())        # 转换过程中的结构化警告
 ```
 
-C ABI（`libresvip.h`）：
+```c
+#include "rustlibresvip.h"
+
+unsigned char *out = NULL;
+size_t out_len = 0;
+int status = rustlibresvip_convert(data, data_len, "ustx", "svp",
+                                   NULL, NULL, &out, &out_len);
+if (status == 0) fwrite(out, 1, out_len, file);
+rustlibresvip_free(out, out_len);
+```
+
+C ABI（`rustlibresvip.h`）：
 
 | 函数 | 作用 |
 | --- | --- |
-| `libresvip_version()` | 版本字符串 |
-| `libresvip_formats_json()` | 全部格式、后缀、能力、每文件轨道上限 |
-| `libresvip_options_json(in, out)` | 一对格式的选项 schema |
-| `libresvip_convert(...)` | 一次转换（可传 JSON 选项覆盖默认值） |
-| `libresvip_warnings_json()` | 本线程上次转换的警告 |
-| `libresvip_free(ptr, len)` | 释放返回的缓冲区 |
+| `rustlibresvip_version()` | 版本字符串 |
+| `rustlibresvip_formats_json()` | 全部格式、后缀、能力、每文件轨道上限 |
+| `rustlibresvip_options_json(in, out)` | 一对格式的选项 schema |
+| `rustlibresvip_convert(...)` | 一次转换（可传 JSON 选项覆盖默认值） |
+| `rustlibresvip_warnings_json()` | 本线程上次转换的警告 |
+| `rustlibresvip_free(ptr, len)` | 释放返回的缓冲区 |
 
-返回的缓冲区归调用方所有，必须用 `libresvip_free` 释放；返回 `0` 表示成功，非 0 时缓冲区里是 UTF-8 错误信息。转换是线程安全的，警告按线程隔离。
+返回的缓冲区归调用方所有，必须用 `rustlibresvip_free` 释放；返回 `0` 表示成功，非 0 时缓冲区里是 UTF-8 错误信息。转换是线程安全的，警告按线程隔离。
 
 ### 下载与发布
-
-发布页提供三样东西：
 
 | 文件 | 说明 |
 | --- | --- |
 | `libresvip-cli.exe` | 命令行版，单文件、免安装（Windows x64） |
 | `libresvip-gui.exe` | 桌面版，免安装（Windows x64） |
-| `libresvip.dll` | 转换引擎动态库（C ABI，Windows x64） |
-| `libresvip.h` | C / C++ 头文件 |
-| `libresvip-python.zip` | Python 绑定：`libresvip.py` + `libresvip.dll` + 示例 |
+| `rustlibresvip.dll` | 转换引擎动态库（C ABI，Windows x64） |
+| `rustlibresvip.h` | C / C++ 头文件，含 C++ 包装 |
+| `rustlibresvip-python.zip` | Python 绑定：`rustlibresvip.py` + `rustlibresvip.dll` + 示例 |
 
 网页版不进压缩包：它已经部署在 <https://xk.sunyuyo.fun/RustLibreSVIP/>，需要离线包时按下面的构建说明跑一次 `cargo build --profile wasm` + `node web/build-web.mjs`。
 

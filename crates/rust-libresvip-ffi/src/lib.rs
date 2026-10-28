@@ -1,4 +1,4 @@
-//! C ABI for the LibreSVIP conversion engine.
+//! C ABI for the RustLibreSVIP conversion engine.
 //!
 //! The same symbols are exported by the WebAssembly module, so a host that can
 //! call a C function (C, C++, C#, Python via `ctypes`, Node via `ffi-napi`,
@@ -7,7 +7,7 @@
 //! Rules for callers:
 //!
 //! * every returned buffer is owned by the caller and must be released with
-//!   [`libresvip_free`] using the length the callee wrote;
+//!   [`rustlibresvip_free`] using the length the callee wrote;
 //! * strings are NUL-terminated UTF-8, buffers are raw bytes;
 //! * return code `0` means success, anything else is an error whose message is
 //!   delivered in the same output buffer;
@@ -22,14 +22,14 @@ const FAILED: i32 = 1;
 const BAD_ARGUMENT: i32 = 2;
 
 thread_local! {
-    /// Warnings of the last conversion on this thread. `libresvip_convert`
-    /// overwrites it, `libresvip_warnings_json` hands it out.
+    /// Warnings of the last conversion on this thread. `rustlibresvip_convert`
+    /// overwrites it, `rustlibresvip_warnings_json` hands it out.
     static LAST_WARNINGS: RefCell<String> = const { RefCell::new(String::new()) };
 }
 
 /// Engine version as a static NUL-terminated string.
 #[no_mangle]
-pub extern "C" fn libresvip_version() -> *const c_char {
+pub extern "C" fn rustlibresvip_version() -> *const c_char {
     concat!(env!("CARGO_PKG_VERSION"), "\0").as_ptr() as *const c_char
 }
 
@@ -39,7 +39,7 @@ pub extern "C" fn libresvip_version() -> *const c_char {
 /// `pointer`/`len` must be exactly what the callee returned, and must not be
 /// released twice.
 #[no_mangle]
-pub unsafe extern "C" fn libresvip_free(pointer: *mut u8, len: usize) {
+pub unsafe extern "C" fn rustlibresvip_free(pointer: *mut u8, len: usize) {
     if pointer.is_null() {
         return;
     }
@@ -89,8 +89,8 @@ unsafe fn read_optional_string(pointer: *const c_char) -> Result<Option<String>,
 /// # Safety
 /// The output pointers must be valid and writable.
 #[no_mangle]
-pub unsafe extern "C" fn libresvip_formats_json(out_ptr: *mut *mut u8, out_len: *mut usize) -> i32 {
-    hand_over(libresvip::formats_json().into_bytes(), out_ptr, out_len);
+pub unsafe extern "C" fn rustlibresvip_formats_json(out_ptr: *mut *mut u8, out_len: *mut usize) -> i32 {
+    hand_over(rust_libresvip::formats_json().into_bytes(), out_ptr, out_len);
     OK
 }
 
@@ -99,14 +99,14 @@ pub unsafe extern "C" fn libresvip_formats_json(out_ptr: *mut *mut u8, out_len: 
 /// # Safety
 /// The string arguments must be valid C strings; the output pointers writable.
 #[no_mangle]
-pub unsafe extern "C" fn libresvip_options_json(
+pub unsafe extern "C" fn rustlibresvip_options_json(
     input_format: *const c_char,
     output_format: *const c_char,
     out_ptr: *mut *mut u8,
     out_len: *mut usize,
 ) -> i32 {
     let attempt = read_string(input_format).and_then(|input| {
-        read_string(output_format).and_then(|output| libresvip::options_json(&input, &output).map_err(|error| error.0))
+        read_string(output_format).and_then(|output| rust_libresvip::options_json(&input, &output).map_err(|error| error.0))
     });
     match attempt {
         Ok(json) => {
@@ -130,7 +130,7 @@ pub unsafe extern "C" fn libresvip_options_json(
 /// `input` must reference `input_len` readable bytes; the string arguments must
 /// be valid C strings; the output pointers must be writable.
 #[no_mangle]
-pub unsafe extern "C" fn libresvip_convert(
+pub unsafe extern "C" fn rustlibresvip_convert(
     input: *const u8,
     input_len: usize,
     input_format: *const c_char,
@@ -153,23 +153,23 @@ pub unsafe extern "C" fn libresvip_convert(
         read_string(output_format).and_then(|output_name| {
             read_optional_string(input_options).and_then(|input_json| {
                 read_optional_string(output_options).and_then(|output_json| {
-                    let (input_fields, _) = libresvip::option_fields(&input_name);
-                    let (_, output_fields) = libresvip::option_fields(&output_name);
+                    let (input_fields, _) = rust_libresvip::option_fields(&input_name);
+                    let (_, output_fields) = rust_libresvip::option_fields(&output_name);
                     let input_options = match input_json {
-                        Some(json) => match libresvip::options_from_json(&input_fields, &json) {
+                        Some(json) => match rust_libresvip::options_from_json(&input_fields, &json) {
                             Ok(options) => Some(options),
                             Err(error) => return Err(error.0),
                         },
                         None => None,
                     };
                     let output_options = match output_json {
-                        Some(json) => match libresvip::options_from_json(&output_fields, &json) {
+                        Some(json) => match rust_libresvip::options_from_json(&output_fields, &json) {
                             Ok(options) => Some(options),
                             Err(error) => return Err(error.0),
                         },
                         None => None,
                     };
-                    libresvip::convert_with_warnings(
+                    rust_libresvip::convert_with_warnings(
                         data,
                         &input_name,
                         &output_name,
@@ -179,7 +179,7 @@ pub unsafe extern "C" fn libresvip_convert(
                     .map_err(|error| error.0)
                     .map(|converted| {
                         LAST_WARNINGS.with(|slot| {
-                            *slot.borrow_mut() = libresvip::warnings_json(&converted.warnings);
+                            *slot.borrow_mut() = rust_libresvip::warnings_json(&converted.warnings);
                         });
                         converted.bytes
                     })
@@ -205,7 +205,7 @@ pub unsafe extern "C" fn libresvip_convert(
 /// # Safety
 /// The output pointers must be valid and writable.
 #[no_mangle]
-pub unsafe extern "C" fn libresvip_warnings_json(out_ptr: *mut *mut u8, out_len: *mut usize) -> i32 {
+pub unsafe extern "C" fn rustlibresvip_warnings_json(out_ptr: *mut *mut u8, out_len: *mut usize) -> i32 {
     let json = LAST_WARNINGS.with(|slot| {
         let stored = slot.borrow();
         if stored.is_empty() {
@@ -239,13 +239,13 @@ mod tests {
     unsafe fn take(pointer: *mut u8, len: usize) -> Vec<u8> {
         assert!(!pointer.is_null() || len == 0, "the library returned a null buffer");
         let bytes = std::slice::from_raw_parts(pointer, len).to_vec();
-        libresvip_free(pointer, len);
+        rustlibresvip_free(pointer, len);
         bytes
     }
 
     #[test]
     fn version_is_shipped() {
-        let version = unsafe { CStr::from_ptr(libresvip_version()) }
+        let version = unsafe { CStr::from_ptr(rustlibresvip_version()) }
             .to_str()
             .expect("utf-8");
         assert_eq!(version, env!("CARGO_PKG_VERSION"));
@@ -259,7 +259,7 @@ mod tests {
         let mut pointer: *mut u8 = std::ptr::null_mut();
         let mut len: usize = 0;
         let status = unsafe {
-            libresvip_convert(
+            rustlibresvip_convert(
                 input.as_ptr(),
                 input.len(),
                 input_format.as_ptr(),
@@ -283,7 +283,7 @@ mod tests {
         let mut pointer: *mut u8 = std::ptr::null_mut();
         let mut len: usize = 0;
         let status = unsafe {
-            libresvip_convert(
+            rustlibresvip_convert(
                 b"x".as_ptr(),
                 1,
                 input_format.as_ptr(),
@@ -303,11 +303,11 @@ mod tests {
     fn formats_and_warnings_round_trip() {
         let mut pointer: *mut u8 = std::ptr::null_mut();
         let mut len: usize = 0;
-        assert_eq!(unsafe { libresvip_formats_json(&mut pointer, &mut len) }, OK);
+        assert_eq!(unsafe { rustlibresvip_formats_json(&mut pointer, &mut len) }, OK);
         let formats = String::from_utf8(unsafe { take(pointer, len) }).expect("utf-8");
         assert!(formats.starts_with('[') && formats.contains("\"ustx\""));
 
-        assert_eq!(unsafe { libresvip_warnings_json(&mut pointer, &mut len) }, OK);
+        assert_eq!(unsafe { rustlibresvip_warnings_json(&mut pointer, &mut len) }, OK);
         let warnings = String::from_utf8(unsafe { take(pointer, len) }).expect("utf-8");
         assert!(warnings.starts_with('['));
     }

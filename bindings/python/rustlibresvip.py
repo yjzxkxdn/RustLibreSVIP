@@ -1,12 +1,12 @@
-"""Python binding for the LibreSVIP conversion engine (via the C ABI).
+"""Python binding for the RustLibreSVIP conversion engine (via the C ABI).
 
     pip install ctypes          # already in the standard library
     # build the shared library once:
-    #   cargo build --release -p libresvip-ffi
-    # then point LIBRESVIP_LIB at it, or copy it next to this file.
+    #   cargo build --release -p rust-libresvip-ffi
+    # then point RUSTLIBRESVIP_LIB at it, or copy it next to this file.
 
-    >>> from libresvip import LibreSVIP
-    >>> engine = LibreSVIP()
+    >>> from rustlibresvip import RustLibreSVIP
+    >>> engine = RustLibreSVIP()
     >>> engine.formats()[:2]                      # doctest: +SKIP
     [{'id': 'acep', ...}, ...]
     >>> data = engine.convert(open("song.ustx", "rb").read(), "ustx", "svp")
@@ -24,16 +24,16 @@ import os
 import sys
 from typing import Any
 
-__all__ = ["LibreSVIP", "LibreSVIPError", "load"]
+__all__ = ["RustLibreSVIP", "RustLibreSVIPError", "load"]
 
 _LIBRARY_NAMES = {
-    "win32": ("libresvip.dll", "libresvip-ffi.dll"),
-    "darwin": ("liblibresvip.dylib", "libresvip.dylib"),
+    "win32": ("rustlibresvip.dll",),
+    "darwin": ("librustlibresvip.dylib", "rustlibresvip.dylib"),
 }
-_DEFAULT_NAMES = ("liblibresvip.so", "libresvip.so")
+_DEFAULT_NAMES = ("librustlibresvip.so", "rustlibresvip.so")
 
 
-class LibreSVIPError(RuntimeError):
+class RustLibreSVIPError(RuntimeError):
     """Raised when the engine rejects a conversion."""
 
 
@@ -46,7 +46,7 @@ def _library_candidates(explicit: str | None) -> list[str]:
     if explicit:
         return [explicit]
     candidates: list[str] = []
-    from_env = os.environ.get("LIBRESVIP_LIB")
+    from_env = os.environ.get("RUSTLIBRESVIP_LIB")
     if from_env:
         candidates.append(from_env)
     here = os.path.dirname(os.path.abspath(__file__))
@@ -62,10 +62,10 @@ def _library_candidates(explicit: str | None) -> list[str]:
     return candidates
 
 
-def load(library: str | None = None) -> "LibreSVIP":
-    """Loads the engine from an explicit path, ``LIBRESVIP_LIB`` or the usual
+def load(library: str | None = None) -> "RustLibreSVIP":
+    """Loads the engine from an explicit path, ``RUSTLIBRESVIP_LIB`` or the usual
     build directories."""
-    return LibreSVIP(library)
+    return RustLibreSVIP(library)
 
 
 def _open_library(path: str | None) -> ctypes.CDLL:
@@ -74,14 +74,14 @@ def _open_library(path: str | None) -> ctypes.CDLL:
         tried.append(candidate)
         if os.path.isfile(candidate):
             return ctypes.CDLL(candidate)
-    raise LibreSVIPError(
-        "libresvip shared library not found; build it with "
-        "`cargo build --release -p libresvip-ffi` or set LIBRESVIP_LIB.\n"
+    raise RustLibreSVIPError(
+        "rustlibresvip shared library not found; build it with "
+        "`cargo build --release -p rust-libresvip-ffi` or set RUSTLIBRESVIP_LIB.\n"
         "tried:\n  " + "\n  ".join(tried)
     )
 
 
-class LibreSVIP:
+class RustLibreSVIP:
     """A loaded engine instance."""
 
     def __init__(self, library: str | None = None):
@@ -92,24 +92,24 @@ class LibreSVIP:
     def _bind(self) -> None:
         lib = self._lib
         pointer = ctypes.POINTER(ctypes.c_ubyte)
-        lib.libresvip_version.restype = ctypes.c_char_p
-        lib.libresvip_version.argtypes = []
-        lib.libresvip_free.restype = None
-        lib.libresvip_free.argtypes = [pointer, ctypes.c_size_t]
-        lib.libresvip_formats_json.restype = ctypes.c_int32
-        lib.libresvip_formats_json.argtypes = [
+        lib.rustlibresvip_version.restype = ctypes.c_char_p
+        lib.rustlibresvip_version.argtypes = []
+        lib.rustlibresvip_free.restype = None
+        lib.rustlibresvip_free.argtypes = [pointer, ctypes.c_size_t]
+        lib.rustlibresvip_formats_json.restype = ctypes.c_int32
+        lib.rustlibresvip_formats_json.argtypes = [
             ctypes.POINTER(pointer),
             ctypes.POINTER(ctypes.c_size_t),
         ]
-        lib.libresvip_options_json.restype = ctypes.c_int32
-        lib.libresvip_options_json.argtypes = [
+        lib.rustlibresvip_options_json.restype = ctypes.c_int32
+        lib.rustlibresvip_options_json.argtypes = [
             ctypes.c_char_p,
             ctypes.c_char_p,
             ctypes.POINTER(pointer),
             ctypes.POINTER(ctypes.c_size_t),
         ]
-        lib.libresvip_convert.restype = ctypes.c_int32
-        lib.libresvip_convert.argtypes = [
+        lib.rustlibresvip_convert.restype = ctypes.c_int32
+        lib.rustlibresvip_convert.argtypes = [
             pointer,
             ctypes.c_size_t,
             ctypes.c_char_p,
@@ -119,8 +119,8 @@ class LibreSVIP:
             ctypes.POINTER(pointer),
             ctypes.POINTER(ctypes.c_size_t),
         ]
-        lib.libresvip_warnings_json.restype = ctypes.c_int32
-        lib.libresvip_warnings_json.argtypes = [
+        lib.rustlibresvip_warnings_json.restype = ctypes.c_int32
+        lib.rustlibresvip_warnings_json.argtypes = [
             ctypes.POINTER(pointer),
             ctypes.POINTER(ctypes.c_size_t),
         ]
@@ -130,7 +130,7 @@ class LibreSVIP:
             return ctypes.string_at(pointer, length) if pointer and length else b""
         finally:
             if pointer:
-                self._lib.libresvip_free(pointer, length)
+                self._lib.rustlibresvip_free(pointer, length)
 
     def _call_buffer(self, function, *args: Any) -> bytes:
         pointer = ctypes.POINTER(ctypes.c_ubyte)()
@@ -138,7 +138,7 @@ class LibreSVIP:
         status = function(*args, ctypes.byref(pointer), ctypes.byref(length))
         payload = self._take(pointer, length.value)
         if status != 0:
-            raise LibreSVIPError(self._decode(payload) or f"engine returned {status}")
+            raise RustLibreSVIPError(self._decode(payload) or f"engine returned {status}")
         return payload
 
     @staticmethod
@@ -149,16 +149,16 @@ class LibreSVIP:
     @property
     def version(self) -> str:
         """Engine version, e.g. ``"1.2.0"``."""
-        return self._lib.libresvip_version().decode("ascii", "replace")
+        return self._lib.rustlibresvip_version().decode("ascii", "replace")
 
     def formats(self) -> list[dict[str, Any]]:
         """Every registered format with its id, name, suffixes and features."""
-        return json.loads(self._call_buffer(self._lib.libresvip_formats_json))
+        return json.loads(self._call_buffer(self._lib.rustlibresvip_formats_json))
 
     def options(self, input_format: str, output_format: str) -> dict[str, Any]:
         """Option schema (``{"input": [...], "output": [...]}``) for a pair."""
         raw = self._call_buffer(
-            self._lib.libresvip_options_json,
+            self._lib.rustlibresvip_options_json,
             input_format.encode("utf-8"),
             output_format.encode("utf-8"),
         )
@@ -183,7 +183,7 @@ class LibreSVIP:
         in_json = json.dumps(input_options).encode("utf-8") if input_options else None
         out_json = json.dumps(output_options).encode("utf-8") if output_options else None
         return self._call_buffer(
-            self._lib.libresvip_convert,
+            self._lib.rustlibresvip_convert,
             ctypes.cast(input_buffer, ctypes.POINTER(ctypes.c_ubyte)),
             len(raw),
             input_format.encode("utf-8"),
@@ -194,7 +194,7 @@ class LibreSVIP:
 
     def warnings(self) -> list[dict[str, str]]:
         """Warnings raised by the last :meth:`convert` call on this thread."""
-        return json.loads(self._call_buffer(self._lib.libresvip_warnings_json))
+        return json.loads(self._call_buffer(self._lib.rustlibresvip_warnings_json))
 
     def convert_file(
         self,
@@ -209,7 +209,7 @@ class LibreSVIP:
             suffix = os.path.splitext(source)[1].lstrip(".").lower()
             input_format = _format_for_suffix(self, suffix)
             if input_format is None:
-                raise LibreSVIPError(f"no format registered for .{suffix}")
+                raise RustLibreSVIPError(f"no format registered for .{suffix}")
         with open(source, "rb") as handle:
             data = handle.read()
         output = self.convert(data, input_format, output_format)
@@ -218,7 +218,7 @@ class LibreSVIP:
         return self.warnings()
 
 
-def _format_for_suffix(engine: LibreSVIP, suffix: str) -> str | None:
+def _format_for_suffix(engine: RustLibreSVIP, suffix: str) -> str | None:
     for entry in engine.formats():
         if suffix in entry["suffixes"]:
             return entry["id"]

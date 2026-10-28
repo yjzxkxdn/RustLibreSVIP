@@ -2,11 +2,11 @@
 //!
 //! This is the crate to depend on when embedding the converter in another Rust
 //! program, and it is the single implementation behind the C ABI in
-//! `libresvip-ffi` and the WebAssembly entry point in `libresvip-web`.
+//! `rust-libresvip-ffi` and the WebAssembly entry point in `libresvip-web`.
 //!
 //! ```no_run
 //! let input = std::fs::read("song.ustx")?;
-//! let output = libresvip::convert_bytes(&input, "ustx", "svp", None, None)?;
+//! let output = rust_libresvip::convert_bytes(&input, "ustx", "svp", None, None)?;
 //! std::fs::write("song.svp", output)?;
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
@@ -84,14 +84,14 @@ fn scratch_path(suffix: &str) -> PathBuf {
     #[cfg(not(target_arch = "wasm32"))]
     {
         let mut path = std::env::temp_dir();
-        path.push(format!("libresvip-{}-{sequence}.{suffix}", std::process::id()));
+        path.push(format!("rustlibresvip-{}-{sequence}.{suffix}", std::process::id()));
         path
     }
     #[cfg(target_arch = "wasm32")]
     {
         // The wasm build has no temp directory: `libresvip_core::io` serves
         // these names from memory, so a relative name is enough.
-        PathBuf::from(format!("libresvip-{sequence}.{suffix}"))
+        PathBuf::from(format!("rustlibresvip-{sequence}.{suffix}"))
     }
 }
 

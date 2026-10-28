@@ -1,0 +1,18 @@
+[package]
+name = "rust-libresvip-ffi"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "C ABI for the RustLibreSVIP conversion engine (C, C++, Python, anything with dlopen)"
+
+[lib]
+# The exported artifact is `rustlibresvip.dll` / `librustlibresvip.so`: the name
+# every binding looks for, and deliberately distinct from the Python LibreSVIP
+# package so both can be installed side by side.
+name = "rustlibresvip"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+rust-libresvip = { workspace = true }
