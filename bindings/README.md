@@ -26,6 +26,23 @@ cargo build --release -p rust-libresvip-ffi
 
 静态库同时也产出（`rustlibresvip.lib` / `librustlibresvip.a`），可以直接链进 C/C++ 程序。
 
+## 可运行的例子
+
+仓库里带三份**能直接编译运行**的示例，不是伪代码：
+
+| 语言 | 文件 | 编译 / 运行 | 实测 |
+| --- | --- | --- | --- |
+| C | [`c/example.c`](c/example.c) | `gcc example.c -I ../../crates/rust-libresvip-ffi/include ../../target/release/rustlibresvip.dll -o example.exe` | `simple.json → ust`，317 字节 |
+| C++ | [`cpp/example.cpp`](cpp/example.cpp) | `g++ example.cpp -I ../../crates/rust-libresvip-ffi/include ../../target/release/rustlibresvip.dll -o example.exe` | `simple.json → svp`，3570 字节 |
+| Python | [`python/example.py`](python/example.py) | `python example.py song.json json svp song.svp` | `simple.json → vsqx`，3422 字节 |
+
+`rustlibresvip.dll` 要和 `.exe` 放在同一目录（或者加到 PATH），Windows 才找得到。
+MinGW 可以直接链 DLL（不必先生成 `.lib`）；MSVC 用 `rustlibresvip.dll.lib`：
+
+```bat
+cl example.c /I ..\..\crates\rust-libresvip-ffi\include rustlibresvip.dll.lib
+```
+
 ## C
 
 ```c
