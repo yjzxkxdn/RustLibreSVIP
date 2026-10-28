@@ -244,14 +244,71 @@ pub fn apply(ctx: &egui::Context, pal: &Palette) {
 
 /// System fonts that contain CJK glyphs, in order of preference. The Python GUI
 /// renders with the system UI font (Microsoft YaHei on Windows).
+///
+/// The Linux entries start with the single-face SC fonts on purpose: inside
+/// `NotoSansCJK-Regular.ttc` face 0 is the Japanese one, whose Han glyphs are
+/// correct but shaped for Japanese typography.
 const FONT_CANDIDATES: &[&str] = &[
+    // Windows
     r"C:\Windows\Fonts\msyh.ttc",
+    r"C:\Windows\Fonts\msyh.ttf",
     r"C:\Windows\Fonts\Deng.ttf",
     r"C:\Windows\Fonts\simhei.ttf",
     r"C:\Windows\Fonts\NotoSansSC-VF.ttf",
     r"C:\Windows\Fonts\simsun.ttc",
-    r"/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    // macOS
     r"/System/Library/Fonts/PingFang.ttc",
+    r"/System/Library/Fonts/STHeiti Light.ttc",
+    r"/Library/Fonts/Arial Unicode.ttf",
+    // Linux - Debian/Ubuntu
+    r"/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf",
+    r"/usr/share/fonts/opentype/noto/NotoSansSC-Regular.otf",
+    r"/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+    r"/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    r"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
+    // Linux - Arch
+    r"/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
+    r"/usr/share/fonts/wenquanyi/wqy-microhei/wqy-microhei.ttc",
+    r"/usr/share/fonts/adobe-source-han-sans/SourceHanSansSC-Regular.otf",
+    // Linux - Fedora / openSUSE / Alpine
+    r"/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/truetype/noto-cjk/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/opentype/noto-cjk/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/noto/NotoSansCJK-Regular.ttc",
+    r"/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+    // Linux - NixOS
+    r"/run/current-system/sw/share/X11/fonts/NotoSansCJK-Regular.ttc",
+    r"/nix/var/nix/profiles/default/share/fonts/NotoSansCJK-Regular.ttc",
+];
+
+/// Directories walked when none of the fixed paths exist. Fontconfig layouts
+/// differ between distributions and a portable binary cannot assume any single
+/// package is installed, so the last resort is to look for the file itself.
+const FONT_DIRS: &[&str] = &[
+    "/usr/share/fonts",
+    "/usr/local/share/fonts",
+    "/usr/share/X11/fonts",
+    "/Library/Fonts",
+    "/System/Library/Fonts",
+];
+
+/// Filename fragments that identify a font with Han coverage (lowercase).
+const FONT_HINTS: &[&str] = &[
+    "notosanscjk",
+    "notosanssc",
+    "notoserifcjk",
+    "sourcehansans",
+    "sourcehanserif",
+    "wqy",
+    "droidsansfallback",
+    "sarasa",
+    "cjk",
+    "msyh",
+    "simhei",
+    "simsun",
+    "pingfang",
 ];
 
 /// Loads a CJK-capable font, validates it with ab_glyph and installs it as the
@@ -270,24 +327,143 @@ pub fn install_fonts(ctx: &egui::Context) {
             family.push("ui".to_owned());
         }
     } else {
-        eprintln!("libresvip-gui: no CJK font found, Chinese text will not render");
+        eprintln!(
+            "libresvip-gui: no CJK font found, Chinese text will not render.\n\
+             Install one (e.g. `fonts-noto-cjk` on Debian/Ubuntu, `noto-fonts-cjk` on Arch) \
+             or point LIBRESVIP_GUI_FONT at a .ttf/.otf/.ttc file."
+        );
     }
     ctx.set_fonts(fonts);
 }
 
 fn load_cjk_font() -> Option<(std::path::PathBuf, Vec<u8>)> {
+    for path in candidate_paths() {
+        if let Some(bytes) = read_font(&path) {
+            return Some((path, bytes));
+        }
+    }
+    None
+}
+
+/// Reads `path` and returns its bytes only when ab_glyph agrees it is a font.
+fn read_font(path: &std::path::Path) -> Option<Vec<u8>> {
+    let bytes = std::fs::read(path).ok()?;
+    // A directory or a truncated file is not worth handing to the parser.
+    if bytes.len() < 4 * 1024 {
+        return None;
+    }
+    ab_glyph::FontVec::try_from_vec(bytes.clone()).ok()?;
+    Some(bytes)
+}
+
+/// Every path worth trying, cheapest first: the environment override, the known
+/// locations, whatever fontconfig reports, then a directory walk.
+fn candidate_paths() -> Vec<std::path::PathBuf> {
     let mut candidates: Vec<std::path::PathBuf> = Vec::new();
     if let Some(path) = std::env::var_os("LIBRESVIP_GUI_FONT") {
         candidates.push(std::path::PathBuf::from(path));
     }
     candidates.extend(FONT_CANDIDATES.iter().map(std::path::PathBuf::from));
-    for path in candidates {
-        let Ok(bytes) = std::fs::read(&path) else {
-            continue;
+    candidates.extend(fc_match_candidates());
+    candidates.extend(scan_font_dirs());
+    candidates
+}
+
+/// Asks fontconfig which file would actually be used for Chinese text. This is
+/// the only query that resolves user-installed fonts and fontconfig aliases.
+fn fc_match_candidates() -> Vec<std::path::PathBuf> {
+    let mut found = Vec::new();
+    for query in ["sans-serif:lang=zh-cn", "Noto Sans CJK SC", "sans-serif"] {
+        let Ok(output) = std::process::Command::new("fc-match")
+            .args(["-f", "%{file}", query])
+            .output()
+        else {
+            // No fontconfig CLI on this system: the fixed list and the walk
+            // still cover the common cases.
+            break;
         };
-        if ab_glyph::FontVec::try_from_vec(bytes.clone()).is_ok() {
-            return Some((path, bytes));
+        if !output.status.success() {
+            continue;
+        }
+        let path = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+        if !path.is_empty() {
+            found.push(std::path::PathBuf::from(path));
         }
     }
-    None
+    found
+}
+
+/// Walks the usual font roots and collects filenames that look CJK-capable.
+fn scan_font_dirs() -> Vec<std::path::PathBuf> {
+    let mut roots: Vec<std::path::PathBuf> = FONT_DIRS.iter().map(std::path::PathBuf::from).collect();
+    for key in ["HOME", "USERPROFILE"] {
+        if let Some(home) = std::env::var_os(key) {
+            let home = std::path::PathBuf::from(home);
+            roots.push(home.join(".fonts"));
+            roots.push(home.join(".local/share/fonts"));
+            roots.push(home.join("AppData/Local/Microsoft/Windows/Fonts"));
+        }
+    }
+    let mut found = Vec::new();
+    for root in roots {
+        walk_fonts(&root, 0, &mut found);
+        if found.len() >= 32 {
+            break;
+        }
+    }
+    found
+}
+
+fn walk_fonts(dir: &std::path::Path, depth: usize, found: &mut Vec<std::path::PathBuf>) {
+    if depth > 5 || found.len() >= 32 {
+        return;
+    }
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        match entry.file_type() {
+            Ok(kind) if kind.is_dir() => walk_fonts(&path, depth + 1, found),
+            Ok(kind) if kind.is_file() => {
+                let name = path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .unwrap_or_default()
+                    .to_ascii_lowercase();
+                let font = name.ends_with(".ttf") || name.ends_with(".ttc") || name.ends_with(".otf");
+                if font && FONT_HINTS.iter().any(|hint| name.contains(hint)) {
+                    found.push(path);
+                }
+            }
+            _ => {}
+        }
+        if found.len() >= 32 {
+            return;
+        }
+    }
+}
+
+#[cfg(test)]
+mod font_tests {
+    use super::*;
+
+    #[test]
+    fn candidates_are_non_empty_and_start_with_the_override() {
+        // SAFETY: this test owns the variable; no other test reads it.
+        unsafe { std::env::set_var("LIBRESVIP_GUI_FONT", "/nonexistent/font.ttf") };
+        let paths = candidate_paths();
+        assert!(!paths.is_empty());
+        assert_eq!(paths[0], std::path::PathBuf::from("/nonexistent/font.ttf"));
+        unsafe { std::env::remove_var("LIBRESVIP_GUI_FONT") };
+    }
+
+    #[test]
+    fn missing_or_tiny_files_are_rejected() {
+        assert!(read_font(std::path::Path::new("/nonexistent/font.ttf")).is_none());
+        let tiny = std::env::temp_dir().join("libresvip-tiny-font.bin");
+        std::fs::write(&tiny, b"not a font").expect("write");
+        assert!(read_font(&tiny).is_none());
+        let _ = std::fs::remove_file(&tiny);
+    }
 }
