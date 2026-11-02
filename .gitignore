@@ -6,6 +6,8 @@
 
 # Web demo artifacts (built by `node web/build-web.mjs`)
 /web/libresvip_web.wasm
+/web/libresvip_web.wasm.gz
+/web/libresvip_web.wasm.br
 /web/libresvip-single.html
 
 # Test harness state (recreated by scripts)
