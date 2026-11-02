@@ -63,8 +63,12 @@ fn run_with(
 
     // The plugins take paths; on wasm they are served by `libresvip_core::io`
     // from memory, so any name works.
-    let input_path = Path::new("input.dat").to_path_buf();
-    let output_path = Path::new("output.dat").to_path_buf();
+    //
+    // The name must still be unique per call on native targets, where these are
+    // real files: `cargo test` runs the tests in parallel, and a shared name
+    // let one test delete the file another one was still writing.
+    let input_path = Path::new(&scratch_name("input")).to_path_buf();
+    let output_path = Path::new(&scratch_name("output")).to_path_buf();
 
     // The virtual files must not outlive the call: wasm linear memory only
     // grows, so dropping them here keeps repeated conversions from doubling
@@ -73,6 +77,17 @@ fn run_with(
     let _ = libresvip_core::io::remove_file(&input_path);
     let _ = libresvip_core::io::remove_file(&output_path);
     outcome
+}
+
+/// A per-call scratch file name (`input.dat`, `input-1.dat`, …).
+///
+/// Only the native test builds touch the real filesystem; wasm keeps them in
+/// memory and ignores the name entirely.
+fn scratch_name(stem: &str) -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    let index = NEXT.fetch_add(1, Ordering::Relaxed);
+    format!("{stem}-{index}.dat")
 }
 
 fn convert_via_files(
@@ -425,8 +440,18 @@ fn escape(text: &str) -> String {
 mod tests {
     use super::*;
 
+    /// Serializes the tests: `RESULT` and `LAST_WARNINGS` are single global
+    /// buffers, so two tests calling `formats_json()` at once would read each
+    /// other's payload.
+    static SERIAL: Mutex<()> = Mutex::new(());
+
+    fn serial() -> std::sync::MutexGuard<'static, ()> {
+        SERIAL.lock().unwrap_or_else(|error| error.into_inner())
+    }
+
     #[test]
     fn every_registered_format_is_listed() {
+        let _serial = serial();
         assert_eq!(formats_json(), 0);
         let json = String::from_utf8(RESULT.lock().unwrap().clone()).expect("utf-8");
         assert!(json.starts_with('[') && json.ends_with(']'));
@@ -441,6 +466,7 @@ mod tests {
 
     #[test]
     fn converts_a_project_through_the_memory_file_system() {
+        let _serial = serial();
         let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("..")
             .join("..")
@@ -448,9 +474,6 @@ mod tests {
             .join("simple.json");
         let input = std::fs::read(&source).expect("read testdata/simple.json");
         let output = run(&input, "json", "ust").expect("json -> ust works");
-        // On native targets the same code writes real files next to the crate.
-        let _ = std::fs::remove_file("input.dat");
-        let _ = std::fs::remove_file("output.dat");
         assert!(!output.is_empty(), "the output file must not be empty");
         assert!(
             String::from_utf8_lossy(&output).contains("Tempo"),
@@ -460,12 +483,14 @@ mod tests {
 
     #[test]
     fn unknown_formats_are_reported() {
+        let _serial = serial();
         let error = run(b"", "nope", "acep").expect_err("unknown input format");
         assert!(error.contains("unknown input format"));
     }
 
     #[test]
     fn formats_json_carries_capabilities() {
+        let _serial = serial();
         assert_eq!(formats_json(), 0);
         let json = String::from_utf8(RESULT.lock().unwrap().clone()).expect("utf-8");
         assert!(
@@ -480,6 +505,7 @@ mod tests {
 
     #[test]
     fn warnings_json_reports_the_last_conversion() {
+        let _serial = serial();
         let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("..")
             .join("..")

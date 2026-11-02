@@ -128,6 +128,7 @@ impl<'de> Deserialize<'de> for AcepParamCurve {
         struct Raw {
             #[serde(rename = "type")]
             curve_type: String,
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             offset: i64,
             #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_vec_opt_f64")]
             values: Vec<Option<f64>>,
@@ -379,8 +380,11 @@ pub struct AcepVibrato {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct AcepNote {
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub pos: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub dur: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub pitch: i64,
     pub uuid: Option<String>,
     pub language: String,
@@ -391,6 +395,7 @@ pub struct AcepNote {
     #[serde(rename = "newLine")]
     pub new_line: bool,
     #[serde(rename = "consonantLen")]
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub consonant_len: Option<i64>,
     #[serde(rename = "headConsonants")]
     pub head_consonants: Option<Vec<f64>>,
@@ -470,7 +475,9 @@ pub struct AcepAnalysedBeat {
     #[serde(rename = "beatTimes")]
     pub beat_times: Vec<f64>,
     pub length: f64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub offset: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_vec_i64")]
     pub scales: Vec<i64>,
 }
 
@@ -632,8 +639,11 @@ impl Default for AcepInstrumentPattern {
 #[serde(default)]
 pub struct AcepChord {
     pub addeds: Vec<String>,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub bass: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub dur: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub root: i64,
     #[serde(rename = "type")]
     pub type_: String,
@@ -687,6 +697,7 @@ pub struct AcepTrackProperties {
     pub mute: bool,
     pub solo: bool,
     pub record: bool,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub channel: Option<i64>,
     pub listen: Option<bool>,
     pub uuid: Option<String>,
@@ -746,6 +757,7 @@ pub struct AcepAudioTrack {
     pub type_: String,
     pub patterns: Vec<AcepAudioPattern>,
     #[serde(rename = "inputChannelIndex")]
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub input_channel_index: Option<i64>,
 }
 
@@ -808,6 +820,7 @@ impl Default for AcepChordTrack {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct AcepSeedComposition {
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub code: i64,
     pub lock: bool,
     pub style: f64,
@@ -832,8 +845,11 @@ pub struct AcepCustomSinger {
     pub state: String,
     pub name: String,
     #[serde(rename = "id")]
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub singer_id: Option<i64>,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub head: Option<i64>,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
     pub router: Option<i64>,
     pub group: Option<String>,
 }
@@ -872,8 +888,11 @@ impl<'de> Deserialize<'de> for AcepSingerRef {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> std::result::Result<Self, D::Error> {
         let value = Value::deserialize(deserializer)?;
         match value {
+            // CBOR from ACE Studio 2.0.7+ writes whole numbers as floats, so
+            // `as_i64()` alone would reject `"singer": 18.0` — pydantic coerces it.
             Value::Number(number) => number
                 .as_i64()
+                .or_else(|| number.as_f64().map(|float| float as i64))
                 .map(AcepSingerRef::Id)
                 .ok_or_else(|| D::Error::custom("singer id must be an integer")),
             Value::Object(_) => serde_json::from_value(value)
@@ -893,6 +912,7 @@ pub struct AcepSingerConfig {
     pub gain: f64,
     pub mute: bool,
     #[serde(rename = "randomSeed")]
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub random_seed: i64,
 }
 
@@ -1078,6 +1098,7 @@ impl<'de> Deserialize<'de> for AcepTrack {
 #[serde(default)]
 pub struct AcepTempo {
     pub bpm: f64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub position: i64,
     #[serde(rename = "isLerp")]
     pub is_lerp: Option<bool>,
@@ -1099,8 +1120,11 @@ impl Default for AcepTempo {
 #[serde(default)]
 pub struct AcepTimeSignature {
     #[serde(rename = "barPos")]
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub bar_pos: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub numerator: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub denominator: i64,
 }
 
@@ -1118,7 +1142,9 @@ impl Default for AcepTimeSignature {
 #[serde(default)]
 pub struct AcepLoop {
     pub active: bool,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub end: i64,
+    #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
     pub start: i64,
     pub valid: bool,
 }
@@ -1327,20 +1353,25 @@ impl<'de> Deserialize<'de> for AcepProject {
         #[serde(default)]
         struct Raw {
             #[serde(rename = "beatsPerBar")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             beats_per_bar: i64,
             #[serde(rename = "chordTrack")]
             chors_track: Option<JsonMap>,
             #[serde(rename = "colorIndex")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             color_index: i64,
             #[serde(rename = "patternIndividualColorIndex")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             pattern_individual_color_index: Option<i64>,
             #[serde(rename = "debugInfo")]
             debug_info: JsonMap,
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             duration: i64,
             #[serde(rename = "extraInfo")]
             extra_info: JsonMap,
             master: AcepMaster,
             #[serde(rename = "pianoCells")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             piano_cells: i64,
             #[serde(rename = "tempoBrushOn")]
             tempo_brush_on: Option<bool>,
@@ -1350,32 +1381,41 @@ impl<'de> Deserialize<'de> for AcepProject {
             #[serde(rename = "minBpm")]
             min_bpm: Option<f64>,
             #[serde(rename = "trackCells")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             track_cells: i64,
             tracks: Vec<AcepTrack>,
             #[serde(rename = "loop")]
             loop_: Option<LoopValue>,
             #[serde(rename = "loopStart")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             loop_start: Option<i64>,
             #[serde(rename = "loopEnd")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             loop_end: Option<i64>,
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             version: i64,
             #[serde(rename = "versionRevision")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             version_revision: Option<i64>,
             #[serde(rename = "mergedPatternIndex")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             merged_pattern_index: i64,
             #[serde(rename = "recordPatternIndex")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_i64")]
             record_pattern_index: i64,
             #[serde(rename = "singer_library_id")]
             singer_library_id: Option<String>,
             #[serde(rename = "timeSignatures")]
             time_signatures: Vec<AcepTimeSignature>,
             #[serde(rename = "trackControlPanelW")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             track_control_panel_w: Option<i64>,
             #[serde(rename = "svcResults")]
             svc_results: Vec<JsonMap>,
             #[serde(rename = "pianoDisplayConfig")]
             piano_display_config: Option<JsonMap>,
             #[serde(rename = "tempoTrackHeight")]
+            #[serde(deserialize_with = "libresvip_core::model::serde_util::lenient_opt_i64")]
             tempo_track_height: Option<i64>,
             #[serde(rename = "videoTrack")]
             video_track: Option<JsonMap>,
@@ -1464,5 +1504,75 @@ impl<'de> Deserialize<'de> for AcepProject {
         };
         project.migrate_time_signatures();
         Ok(project)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// ACE Studio 2.0.7+ stores the project as CBOR, and its writer encodes
+    /// whole numbers as floats (`"tempoTrackHeight": 120.0`, `"position": 0.0`).
+    /// pydantic coerces those silently; a plain `i64` rejected the whole file
+    /// with `invalid type: floating point 120.0, expected i64`.
+    #[test]
+    fn integral_floats_are_accepted_where_python_accepts_them() {
+        let payload = serde_json::json!({
+            "tempoTrackHeight": 120.0,
+            "trackControlPanelW": 0.0,
+            "duration": 301440.0,
+            "version": 22.0,
+            "loopStart": 0.0,
+            "loopEnd": 7680.0,
+            "tempos": [{ "bpm": 146.00032120070665, "position": 0.0, "bend": 0.0 }],
+            "timeSignatures": [{ "barPos": 0.0, "numerator": 4.0, "denominator": 4.0 }],
+            "tracks": [{
+                "type": "sing",
+                "name": "singer",
+                "singers": [{
+                    "singer": { "id": 18.0, "head": -1.0, "router": 1.0 },
+                    "randomSeed": 0.0,
+                }],
+                "patterns": [{
+                    "pos": 0.0,
+                    "clipPos": 0.0,
+                    "clipDur": 263040.0,
+                    "notes": [{ "pos": 29160.0, "dur": 480.0, "pitch": 51.0 }],
+                    "parameters": {
+                        "energy": [{ "type": "data", "offset": 0.0, "values": [1.0] }],
+                    },
+                }],
+            }],
+            "canvas": { "frameRate": 30.0 },
+        });
+
+        let project: AcepProject =
+            serde_json::from_value(payload).expect("integral floats must deserialize");
+        assert_eq!(project.tempo_track_height, Some(120));
+        assert_eq!(project.duration, 301_440);
+        assert_eq!(project.version, 22);
+        assert_eq!(project.tempos[0].position, 0);
+        assert_eq!(project.time_signatures[0].numerator, 4);
+        let track = project.tracks[0].as_vocal().expect("vocal track");
+        assert_eq!(track.singers[0].singer.singer_id, Some(18));
+        assert_eq!(track.patterns[0].notes[0].pos, 29_160);
+        assert_eq!(track.patterns[0].notes[0].pitch, 51);
+        assert_eq!(track.patterns[0].parameters.energy.0[0].offset, 0);
+    }
+
+    /// A fractional value is a real type error in pydantic too, so it stays one.
+    #[test]
+    fn fractional_numbers_are_still_rejected() {
+        let payload = serde_json::json!({ "duration": 1.5 });
+        assert!(serde_json::from_value::<AcepProject>(payload).is_err());
+    }
+
+    /// `analyzedBeat.scales` is `list[int]`, written as `[3.0]` by the CBOR path.
+    #[test]
+    fn integer_lists_accept_floats() {
+        let payload = serde_json::json!({ "scales": [3.0, 4.0] });
+        let beat: AcepAnalysedBeat =
+            serde_json::from_value(payload).expect("float list must deserialize");
+        assert_eq!(beat.scales, vec![3, 4]);
     }
 }
